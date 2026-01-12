@@ -1,16 +1,14 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
+import { defineConfig, globalIgnores } from 'eslint/config';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import prettier from 'eslint-config-prettier';
 
-const eslintConfig = defineConfig([
+export default defineConfig([
+  // 1. Next.js Core Web Vitals 규칙
   ...nextVitals,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
-]);
 
-export default eslintConfig;
+  // 2. Prettier와 충돌하는 ESLint 규칙 비활성화
+  prettier,
+
+  // 3. Ignore 설정
+  globalIgnores(['.next/**', 'out/**', 'build/**', 'node_modules/**']),
+]);
