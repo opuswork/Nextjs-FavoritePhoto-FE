@@ -1,0 +1,21 @@
+/* DropDown.module.css */
+.drop-down {
+    width: 100%;
+    background-color: #fff;
+    color: #000;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    &:hover {
+        background-color: #f0f0f0;
+    }
+    &:focus {
+        outline: none;
+    }
+    &:disabled {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+    }
+}
