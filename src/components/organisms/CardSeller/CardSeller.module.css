@@ -2,9 +2,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     background-color: #000000;
     padding: 20px;
+    padding-top: 10px;
 }
 
 .cardSeller {
@@ -56,6 +56,14 @@
 
 /* Description */
 .description {
+    padding-bottom: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.wishDescription {
+    padding-bottom: 100px;
     color: rgba(255, 255, 255, 0.8);
     font-size: 16px;
     line-height: 1.6;
@@ -63,17 +71,40 @@
 
 /* Info Row */
 .infoRow {
-    display: flex;
-    gap: 32px;
-}
-
-.infoItem {
+    margin-bottom: 16px;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+.infoItem {
+    color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.infoItemLabel {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 200;
+}
+
 .infoValue {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.infoValue .outof {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 200;
+}
+
+.infoValue .remaining {
     color: #ffffff;
     font-size: 16px;
     font-weight: 500;
@@ -91,15 +122,15 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 16px;
-    border: 1px dashed #a855f7;
+    margin-bottom: 0px;
+    border: 0px dashed #a855f7;
     border-radius: 8px;
     background-color: transparent;
 }
 
 .exchangeWishText {
     color: #ffffff;
-    font-size: 16px;
+    font-size: 24px;
     font-weight: 500;
 }
 

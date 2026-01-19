@@ -3,18 +3,19 @@
 import styles from './CardSeller.module.css';
 import Image from 'next/image';
 import Label from '../../atoms/Label/Label';
-import Button from '../../atoms/Button/Button';
+import RefreshIcon from '../../../../public/assets/icons/ic_refresh.svg';
 
 export default function CardSeller({
-    rarity = 'COMMON',
-    category = '풍경',
-    owner = '미쓰손',
-    description = '우리집 앞마당 포토카드입니다. 우리집 앞마당 포토카드입니다. 우리집 앞마당 포토카드입니다.',
-    price = '4 P',
-    remaining = '2 / 5',
-    secondRarity = 'RARE',
-    secondCategory = '풍경',
-    secondDescription = '푸릇푸릇한 여름 풍경, 눈 많이 내린 겨울 풍경 사진에 관심이 많습니다.',
+    rarity,
+    category,
+    owner,
+    description,
+    price,
+    remaining,
+    outof,
+    secondRarity,
+    secondCategory,
+    secondDescription,
     onEdit,
     onTakeDown,
 }) {
@@ -35,21 +36,25 @@ export default function CardSeller({
                 {/* Description */}
                 <div className={styles.description}>{description}</div>
 
+                <div className={styles.divider}></div>
+
                 {/* Price and Remaining */}
                 <div className={styles.infoRow}>
                     <div className={styles.infoItem}>
-                        <Label>가격</Label>
+                        <label className={styles.infoItemLabel}>가격</label>
                         <div className={styles.infoValue}>{price}</div>
                     </div>
                     <div className={styles.infoItem}>
-                        <Label>잔여</Label>
-                        <div className={styles.infoValue}>{remaining}</div>
+                        <label className={styles.infoItemLabel}>잔여</label>
+                        <div className={styles.infoValue}>
+                            <span className={styles.remaining}>{remaining}</span>
+                            <span className={styles.outof}>{outof}</span></div>
                     </div>
                 </div>
 
                 {/* Exchange Wish Info */}
                 <div className={styles.exchangeWishBox}>
-                    <Image src="/assets/icons/ic_refresh.svg" alt="exchange" width={28} height={28} />
+                    <Image src={RefreshIcon} alt="exchange" width={28} height={28} />
                     <span className={styles.exchangeWishText}>교환 희망 정보</span>
                 </div>
 
@@ -63,19 +68,19 @@ export default function CardSeller({
                         <span className={styles.category}>{secondCategory}</span>
                     </div>
                 </div>
-
-                {/* Second Description */}
-                <div className={styles.description}>{secondDescription}</div>
-
                 <div className={styles.divider}></div>
 
+                {/* Second Description */}
+                <div className={styles.wishDescription}>{secondDescription}</div>
+
+
                 {/* Action Buttons */}
-                <Button className={styles.editButton} onClick={onEdit}>
+                <button className={styles.editButton} onClick={onEdit}>
                     수정하기
-                </Button>
-                <Button className={styles.takeDownButton} onClick={onTakeDown}>
+                </button>
+                <button className={styles.takeDownButton} onClick={onTakeDown}>
                     판매 내리기
-                </Button>
+                </button>
             </div>
         </div>    
     );
