@@ -4,7 +4,29 @@
 import { useRouter } from "next/navigation";
 import { Styles } from "./Button.module.css";
 
-export default function Button({ children, href }) {
+export default function Button({ children, href, onClick, className, disabled }) {
     const router = useRouter();
-    return <button className={Styles.button} onClick={() => router.push(href)}>{children}</button>;
+    
+    const handleClick = () => {
+        if (disabled) return;
+        if (onClick) {
+            onClick();
+        } else if (href) {
+            router.push(href);
+        }
+    };
+    
+    const buttonClassName = className 
+        ? `${Styles.button} ${className}`.trim()
+        : Styles.button;
+    
+    return (
+        <button 
+            className={buttonClassName} 
+            onClick={handleClick}
+            disabled={disabled}
+        >
+            {children}
+        </button>
+    );
 }
