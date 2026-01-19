@@ -1,0 +1,125 @@
+'use client';
+
+import styles from './MyCardDetail.module.css';
+import Label from '../../atoms/Label/Label';
+import InputLabel from '../../molecules/InputLabel/InputLabel';
+import Button from '../../atoms/Button/Button';
+import Image from 'next/image';
+import MinusIcon from '../../../../public/assets/icons/ic_minus.svg';
+import PlusIcon from '../../../../public/assets/icons/ic_plus.svg';
+import { useState } from 'react';
+
+export default function MyCardDetail({ 
+  rarity = 'COMMON', 
+  category = '풍경', 
+  owner = '미쓰손',
+  maxQuantity = 3,
+  initialQuantity = 1,
+  price = '',
+  onQuantityChange,
+  onPriceChange
+}) {
+  const [quantity, setQuantity] = useState(initialQuantity);
+  const [priceValue, setPriceValue] = useState(price);
+
+  const handleMinus = () => {
+    if (quantity > 1) {
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      if (onQuantityChange) onQuantityChange(newQuantity);
+    }
+  };
+
+  const handlePlus = () => {
+    if (quantity < maxQuantity) {
+      const newQuantity = quantity + 1;
+      setQuantity(newQuantity);
+      if (onQuantityChange) onQuantityChange(newQuantity);
+    }
+  };
+
+  const handlePriceChange = (e) => {
+    const newPrice = e.target.value;
+    setPriceValue(newPrice);
+    if (onPriceChange) onPriceChange(newPrice);
+  };
+
+  return (
+    <div className={styles.myCardDetailContainer}>
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
+          <Label 
+            className={styles.rarity}
+            style={{
+              fontSize: '24px',
+              fontWeight: 'bold',
+              lineHeight: '100%',
+              color: '#EFFF04'
+            }}
+          >
+            {rarity}
+          </Label>
+          <span className={styles.separator}>|</span>
+          <Label 
+            className={styles.category}
+            style={{
+              fontSize: '24px',
+              fontWeight: 'bold',
+              lineHeight: '100%',
+              color: '#A4A4A4'
+            }}
+          >
+            {category}
+          </Label>
+        </div>
+        <Label className={styles.owner}>{owner}</Label>
+      </div>
+      <div className={styles.divider}></div>
+
+      {/* Total Sales Quantity Row */}
+      <div className={styles.infoRow}>
+        <Label className={styles.infoLabel}>총 판매 수량</Label>
+        <div className={styles.quantityRightGroup}>
+          <div className={styles.quantityControl}>
+            <Button 
+              className={styles.iconButton}
+              onClick={handleMinus}
+              disabled={quantity <= 1}
+            >
+              <Image src={MinusIcon} alt="minus" width={20} height={20} />
+            </Button>
+            <Label className={styles.quantityValue}>{quantity}</Label>
+            <Button 
+              className={styles.iconButton}
+              onClick={handlePlus}
+              disabled={quantity >= maxQuantity}
+            >
+              <Image src={PlusIcon} alt="plus" width={20} height={20} />
+            </Button>
+          </div>
+          <div className={styles.quantityLimit}>
+            <Label className={styles.limitText}>/ {maxQuantity}</Label>
+            <Label className={styles.maxText}>최대 {maxQuantity}장</Label>
+          </div>
+        </div>
+      </div>
+
+      {/* Price Per Item Row */}
+      <div className={styles.infoRow}>
+        <Label className={styles.infoLabel}>장당 가격</Label>
+        <div className={styles.priceInputWrapper}>
+          <div className={styles.priceInputContainer}>
+            <InputLabel
+              label=""
+              placeholder="숫자만 입력"
+              value={priceValue}
+              onChange={handlePriceChange}
+              className={styles.priceInputLabel}
+            />
+            <Label className={styles.priceUnit}>P</Label>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
