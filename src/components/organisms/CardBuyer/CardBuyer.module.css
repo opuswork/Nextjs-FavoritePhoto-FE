@@ -1,0 +1,169 @@
+.cardBuyerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000000;
+    padding: 20px;
+}
+
+.cardBuyer {
+    width: 100%;
+    max-width: 600px;
+    background-color: #141414;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rarity {
+    color: #FFD700;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.separator {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 18px;
+}
+
+.category {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 18px;
+}
+
+.owner {
+    color: #ffffff;
+    font-size: 18px;
+    text-decoration: underline;
+}
+
+/* Description */
+.description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Info Row */
+.infoRow {
+    display: flex;
+    gap: 32px;
+}
+
+.infoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.infoValue {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Divider */
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Quantity Section */
+.quantitySection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quantitySelector {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.quantityButton {
+    background-color: transparent;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.quantityButton:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.quantityButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quantityValue {
+    color: #ffffff;
+    font-size: 16px;
+    padding: 8px 16px;
+    min-width: 40px;
+    text-align: center;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Total Price Section */
+.totalPriceSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.totalPriceValue {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Purchase Button */
+.purchaseButton {
+    width: 100%;
+    background-color: #FFD700;
+    color: #000000;
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.purchaseButton:hover {
+    background-color: #FFC700;
+    transform: translateY(-1px);
+}
+
+.purchaseButton:active {
+    transform: translateY(0);
+}
