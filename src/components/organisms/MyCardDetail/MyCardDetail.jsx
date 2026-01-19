@@ -5,19 +5,17 @@ import Label from '../../atoms/Label/Label';
 import InputLabel from '../../molecules/InputLabel/InputLabel';
 import Button from '../../atoms/Button/Button';
 import Image from 'next/image';
-import MinusIcon from '../../../../public/assets/icons/ic_minus.svg';
-import PlusIcon from '../../../../public/assets/icons/ic_plus.svg';
 import { useState } from 'react';
 
-export default function MyCardDetail({ 
-  rarity = 'COMMON', 
-  category = '풍경', 
+export default function MyCardDetail({
+  rarity = 'COMMON',
+  category = '풍경',
   owner = '미쓰손',
   maxQuantity = 3,
   initialQuantity = 1,
   price = '',
   onQuantityChange,
-  onPriceChange
+  onPriceChange,
 }) {
   const [quantity, setQuantity] = useState(initialQuantity);
   const [priceValue, setPriceValue] = useState(price);
@@ -48,25 +46,25 @@ export default function MyCardDetail({
     <div className={styles.myCardDetailContainer}>
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <Label 
+          <Label
             className={styles.rarity}
             style={{
               fontSize: '24px',
               fontWeight: 'bold',
               lineHeight: '100%',
-              color: '#EFFF04'
+              color: '#EFFF04',
             }}
           >
             {rarity}
           </Label>
           <span className={styles.separator}>|</span>
-          <Label 
+          <Label
             className={styles.category}
             style={{
               fontSize: '24px',
               fontWeight: 'bold',
               lineHeight: '100%',
-              color: '#A4A4A4'
+              color: '#A4A4A4',
             }}
           >
             {category}
@@ -81,20 +79,28 @@ export default function MyCardDetail({
         <Label className={styles.infoLabel}>총 판매 수량</Label>
         <div className={styles.quantityRightGroup}>
           <div className={styles.quantityControl}>
-            <Button 
-              className={styles.iconButton}
-              onClick={handleMinus}
-              disabled={quantity <= 1}
-            >
-              <Image src={MinusIcon} alt="minus" width={20} height={20} />
+            <Button className={styles.iconButton} onClick={handleMinus} disabled={quantity <= 1}>
+              <Image 
+                src="/assets/icons/ic_minus.svg" 
+                alt="minus" 
+                width={20} 
+                height={20}
+                className={styles.icon}
+              />
             </Button>
             <Label className={styles.quantityValue}>{quantity}</Label>
-            <Button 
+            <Button
               className={styles.iconButton}
               onClick={handlePlus}
               disabled={quantity >= maxQuantity}
             >
-              <Image src={PlusIcon} alt="plus" width={20} height={20} />
+              <Image 
+                src="/assets/icons/ic_plus.svg" 
+                alt="plus" 
+                width={20} 
+                height={20}
+                className={styles.icon}
+              />
             </Button>
           </div>
           <div className={styles.quantityLimit}>
