@@ -2,7 +2,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Styles } from "./Button.module.css";
+import styles from "./Button.module.css";
 
 export default function Button({ children, href, onClick, className, disabled }) {
     const router = useRouter();
@@ -17,8 +17,8 @@ export default function Button({ children, href, onClick, className, disabled })
     };
     
     const buttonClassName = className 
-        ? `${Styles.button} ${className}`.trim()
-        : Styles.button;
+        ? `${styles.button} ${className}`.trim()
+        : styles.button;
     
     return (
         <button 
