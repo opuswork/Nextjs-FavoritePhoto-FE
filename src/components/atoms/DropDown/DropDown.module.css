@@ -1,21 +1,39 @@
 /* DropDown.module.css */
-.drop-down {
-    width: 100%;
-    background-color: #fff;
-    color: #000;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    &:hover {
-        background-color: #f0f0f0;
-    }
-    &:focus {
-        outline: none;
-    }
-    &:disabled {
-        background-color: #ccc;
-        color: #666;
-        cursor: not-allowed;
-    }
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select {
+  width: 100%;
+  background-color: #fff;
+  color: #000;
+  padding: 10px 44px 10px 10px; /* right padding for icon */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  border: 1px solid #ccc;
+}
+
+.select:hover {
+  background-color: #f0f0f0;
+}
+
+.select:focus {
+  outline: none;
+}
+
+.select:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
