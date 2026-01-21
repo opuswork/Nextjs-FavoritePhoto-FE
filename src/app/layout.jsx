@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko" className={bebasNeue.variable}>
+    <html lang="ko">
       <body>
         <Header />
         <main style={{ minHeight: 'calc(100vh - 120px)' }}>{children}</main>
