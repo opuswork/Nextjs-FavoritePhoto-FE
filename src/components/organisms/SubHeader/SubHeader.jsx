@@ -73,10 +73,10 @@ export default function SubHeader() {
           </Button>
         </div>
 
-        <div className="mt-6 w-full border-t-2 border-[#EEEEEE]" />
+        <div style={{ marginTop: '12px', marginBottom: '6px', width: '100%', borderTop: '2px solid #EEEEEE' }} />
 
         <div className="mt-5 flex items-center justify-between">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center">
             <InputSearch
               placeholder="검색"
               value={search}
@@ -84,7 +84,7 @@ export default function SubHeader() {
               onClick={() => {}}
             />
 
-            <div className="w-[120px]">
+            <div style={{ marginLeft: '30px', width: '120px' }}>
               <DropDown options={rarityOptions} value={rarity} onChange={(e) => setRarity(e.target.value)} />
             </div>
             <div className="w-[120px]">
@@ -95,8 +95,13 @@ export default function SubHeader() {
             </div>
           </div>
 
-          <div className="w-[220px]">
-            <DropDown options={sortOptions} value={sort} onChange={(e) => setSort(e.target.value)} />
+          <div style={{ width: '160px' }}>
+            <DropDown 
+              options={sortOptions} 
+              value={sort} 
+              onChange={(e) => setSort(e.target.value)} 
+              style={{ border: '2px solid #DDDDDD' }}
+            />
           </div>
         </div>
       </div>
