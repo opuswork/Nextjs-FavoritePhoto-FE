@@ -14,11 +14,13 @@
   cursor: pointer;
   transition: all 0.3s ease;
   appearance: none;
-  border: 1px solid rgba(238, 238, 238, 0.7);
+  border: none;
+  text-align: center;
+  text-align-last: center;
 }
 
 .select:hover {
-  border-color: rgba(238, 238, 238, 1);
+  background-color: #111;
 }
 
 .select:focus {
