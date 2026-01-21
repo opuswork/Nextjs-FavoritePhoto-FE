@@ -60,13 +60,14 @@ export default function SubHeader() {
           <Button
             href="/marketplace"
             style={{
-              width: '440px',
+              width: '430px',
               height: '60px',
               borderRadius: '2px',
               backgroundColor: '#EFFF04',
               color: '#000000',
               fontWeight: 600,
               fontSize: '18px',
+              cursor: 'pointer',
             }}
           >
             나의 포토카드 판매하기
