@@ -1,0 +1,7 @@
+/* src/components/atoms/Label/Label.module.css */
+.label {
+    font-size: 20px;
+    font-weight: 400;
+    color: #ffffff;
+    margin-bottom: 10px;
+}

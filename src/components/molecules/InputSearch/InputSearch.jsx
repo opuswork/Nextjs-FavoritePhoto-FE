@@ -1,4 +1,5 @@
-'use client';
+// src/components/atoms/Search/InputSearch.jsx
+"use client";
 
 export default function InputSearch({
     placeholder,
