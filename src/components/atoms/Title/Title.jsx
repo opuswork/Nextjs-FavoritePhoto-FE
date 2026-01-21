@@ -11,7 +11,7 @@ export default function Title({ text, as = 'h1', showLine = false, className, st
       <Heading
         className={`text-white ${className ?? ''}`.trim()}
         style={{
-          fontFamily: 'BR B, sans-serif',
+          fontFamily: '"BR B", sans-serif',
           fontWeight: 400,
           fontSize: '62px',
           lineHeight: '100%',
@@ -21,7 +21,7 @@ export default function Title({ text, as = 'h1', showLine = false, className, st
       >
         {text}
       </Heading>
-      {showLine ? <div className="h-0 w-[1480px] border-t-2 border-[#EEEEEE]" /> : null}
+      {showLine ? <div style={{ height: 0, width: '1480px', borderTop: '2px solid #EEEEEE' }} /> : null}
     </div>
   );
 }
