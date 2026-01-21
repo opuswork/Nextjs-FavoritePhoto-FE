@@ -11,13 +11,14 @@ export default function CardOriginal({
   price = '4 P',
   remaining = 2,
   outof = 5,
+  imageSrc = '/assets/products/photo-card.svg',
 }) {
   return (
     <div className={styles.cardOriginal}>
       {/* Image Section */}
       <div className={styles.imageContainer}>
         <Image
-          src="/assets/products/photo-card.svg"
+          src={imageSrc}
           alt="Photo Card"
           width={400}
           height={400}
