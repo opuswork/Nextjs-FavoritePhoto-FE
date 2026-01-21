@@ -1,5 +1,12 @@
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+
 export default function MainLayout({ children }) {
-  // RootLayout(`src/app/layout.jsx`)에서 이미 Header/Footer를 렌더링하므로
-  // (main) 그룹 레이아웃에서는 children만 렌더링합니다.
-  return children;
+  return (
+    <>
+      <Header />
+      <main style={{ minHeight: 'calc(100vh - 120px)' }}>{children}</main>
+      <Footer />
+    </>
+  );
 }
