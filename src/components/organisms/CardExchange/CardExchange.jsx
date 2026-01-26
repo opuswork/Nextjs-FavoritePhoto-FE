@@ -1,5 +1,6 @@
 'use client';
 import styles from './CardExchange.module.css';
+import originalStyles from '../CardOriginal/CardOriginal.module.css';
 import Image from 'next/image';
 import Label from '../../atoms/Label/Label';
 import Button from '../../atoms/Button/Button';
@@ -13,17 +14,18 @@ export default function CardExchange({
   exchangeMessage,
   onDecline,
   onApprove,
+  imageSrc = '/assets/products/photo-card-exchange.svg',
 }) {
   return (
     <div className={styles.cardExchange}>
-      {/* Image Section */}
-      <div className={styles.imageContainer}>
+      {/* Image Section - Using CardOriginal styles for padding */}
+      <div className={originalStyles.imageContainer}>
         <Image
-          src="/assets/products/photo-card-exchange.svg"
+          src={imageSrc}
           alt="Photo Card"
           width={400}
           height={400}
-          className={styles.cardImage}
+          className={originalStyles.cardImage}
         />
       </div>
 

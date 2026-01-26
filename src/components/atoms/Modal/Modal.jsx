@@ -26,6 +26,7 @@ export default function Modal({
   closeOnEsc = true, // ESC 키로 닫기 여부
   showCloseButton = true, // 닫기 버튼(X) 표시 여부
   size = 'md', // 모달 크기 (sm | md | lg | xl)
+  noBorder = false, // 테두리 제거 여부
 }) {
   /*
     모달이 열려 있을 때만 부가 효과(side-effect) 처리
@@ -75,7 +76,7 @@ export default function Modal({
       <div className={styles.backdrop} onClick={closeOnOverlay ? onClose : undefined} />
 
       {/* 실제 모달 컨테이너 */}
-      <div className={`${styles.container} ${styles[size]}`}>
+      <div className={`${styles.container} ${styles[size]} ${noBorder ? styles.customNoBorder : ''}`}>
         {/* 닫기 버튼 */}
         {showCloseButton && (
           <button className={styles.close} onClick={onClose} aria-label="닫기">

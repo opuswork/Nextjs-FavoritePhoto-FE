@@ -3,13 +3,25 @@
 
 import Input from "../../atoms/Input/Input";
 import Label from "../../atoms/Label/Label";
-import { Styles } from "./InputLabel.module.css";
+import styles from "./InputLabel.module.css";
 
-export default function InputLabel({ label, placeholder, value, onChange, className }) {
+export default function InputLabel({ 
+    label, 
+    placeholder, 
+    value, 
+    onChange, 
+    className 
+}) {
     return (
-        <div className={`${Styles.inputLabel} ${className}`}>
+        <div className={`${styles.inputLabel} ${className}`}>
             <Label>{label}</Label>
-            <Input className={Styles.input} type="text" placeholder={placeholder} value={value} onChange={onChange} />
+            <Input 
+                className={styles.input} 
+                type="text" 
+                placeholder={placeholder} 
+                value={value} 
+                onChange={onChange} 
+            />
         </div>
     );
 }

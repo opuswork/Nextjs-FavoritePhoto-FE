@@ -4,11 +4,11 @@
 import { useState } from 'react';
 import styles from './DropDown.module.css';
 
-export default function DropDown({ options, value, onChange, style }) {
+export default function DropDown({ options, value, onChange, style, className, wrapperStyle }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${className || ''}`} style={wrapperStyle}>
       <select
         className={styles.select}
         style={style}

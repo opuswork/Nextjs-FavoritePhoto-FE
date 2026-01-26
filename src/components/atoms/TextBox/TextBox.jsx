@@ -10,10 +10,13 @@ export default function TextBox({
   error,
   maxLength,
   disabled,
+  className,
+  wrapperStyle,
+  textareaStyle,
 }) {
   return (
-    <div className={styles.wrapper}>
-      <label className={styles.label}>{label}</label>
+    <div className={`${styles.wrapper} ${className || ''}`} style={wrapperStyle}>
+      {label && <label className={styles.label}>{label}</label>}
 
       <textarea
         className={`${styles.textarea} ${error ? styles.error : ''}`}
@@ -22,6 +25,7 @@ export default function TextBox({
         maxLength={maxLength}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
+        style={textareaStyle}
       />
 
       {error && <p className={styles.errorMessage}>{error}</p>}

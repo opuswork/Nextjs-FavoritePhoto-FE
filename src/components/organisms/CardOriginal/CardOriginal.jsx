@@ -12,9 +12,10 @@ export default function CardOriginal({
   remaining = 2,
   outof = 5,
   imageSrc = '/assets/products/photo-card.svg',
+  onClick,
 }) {
   return (
-    <div className={styles.cardOriginal}>
+    <div className={styles.cardOriginal} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
       {/* Image Section */}
       <div className={styles.imageContainer}>
         <Image

@@ -1,5 +1,5 @@
 const WIDTH = {
-  main: 'max-w-[1200px] xl:max-w-[1480px]',
+  main: 'max-w-[1200px] xl:max-w-[1280px]',
   auth: 'max-w-[420px] sm:max-w-[480px]',
 };
 

@@ -6,7 +6,7 @@ import Button from '@/components/atoms/Button/Button';
 import DropDown from '@/components/atoms/DropDown/DropDown';
 import InputSearch from '@/components/molecules/InputSearch/InputSearch';
 
-export default function SubHeader() {
+export default function SubHeader({ onSellClick }) {
   const [search, setSearch] = useState('');
   const [rarity, setRarity] = useState('all');
   const [genre, setGenre] = useState('all');
@@ -53,12 +53,12 @@ export default function SubHeader() {
 
   return (
     <section className="w-full bg-black text-white">
-      <div className="mx-auto w-full max-w-[1480px] px-5 pt-10">
+      <div className="mx-auto w-full max-w-[1280px] px-5 pt-10">
         <div className="flex items-center justify-between">
           <Title text="마켓플레이스" as="h1" showLine={false} />
 
           <Button
-            href="/marketplace"
+            onClick={onSellClick}
             style={{
               width: '430px',
               height: '60px',

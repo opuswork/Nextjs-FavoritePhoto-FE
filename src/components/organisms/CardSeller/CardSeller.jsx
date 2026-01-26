@@ -26,7 +26,17 @@ export default function CardSeller({
                 {/* Header */}
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>
-                        <span className={styles.rarity}>{rarity}</span>
+                        <span 
+                            className={styles.rarity}
+                            style={{
+                                color: rarity === 'LEGENDARY' ? '#FF0000' : 
+                                       rarity === 'SUPER RARE' ? '#9D4EDD' :
+                                       rarity === 'RARE' ? '#60a5fa' :
+                                       '#FFD700'
+                            }}
+                        >
+                            {rarity}
+                        </span>
                         <span className={styles.separator}>|</span>
                         <span className={styles.category}>{category}</span>
                     </div>
@@ -48,7 +58,7 @@ export default function CardSeller({
                         <label className={styles.infoItemLabel}>잔여</label>
                         <div className={styles.infoValue}>
                             <span className={styles.remaining}>{remaining}</span>
-                            <span className={styles.outof}>{outof}</span></div>
+                            <span className={styles.outof}> / {outof}</span></div>
                     </div>
                 </div>
 

@@ -12,13 +12,15 @@ export default function MyCard({
   description = 'How Far I\'ll Go',
   price = '4 P',
   quantity = 1,
+  imageSrc = '/assets/products/photo-card-mycard.svg',
+  onClick,
 }) {
   return (
-    <div className={styles.myCard}>
+    <div className={styles.myCard} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
       {/* Image Section */}
       <div className={styles.imageContainer}>
         <Image
-          src="/assets/products/photo-card-mycard.svg"
+          src={imageSrc}
           alt="Photo Card"
           width={400}
           height={400}
@@ -61,9 +63,9 @@ export default function MyCard({
 
       {/* Footer Logo */}
       <div className={styles.footer}>
-        <div className={styles.logo}>
+        <span className={styles.logo}>
           <Image src="/assets/logos/logo.svg" alt="Logo" width={100} height={100} className={styles.logo} />
-        </div>
+        </span>
       </div>
     </div>
   );

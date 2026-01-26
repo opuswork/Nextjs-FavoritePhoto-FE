@@ -33,9 +33,36 @@
   overflow: hidden;
 }
 
+.custom {
+  width: 1160px;
+  height: 1000px;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100dvh - 48px);
+}
+
+.customNoBorder {
+  width: 1160px;
+  height: 1000px;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100dvh - 48px);
+  border: none !important;
+  border-radius: 0 !important;
+  background-color: #141414 !important;
+}
+
+.purchaseConfirm {
+  width: 560px;
+  height: 352px;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100dvh - 48px);
+}
+
 .content {
-  padding: 32px;
-  overflow: auto;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .close {
