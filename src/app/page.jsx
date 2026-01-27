@@ -10,16 +10,24 @@ export default function Home() {
     <>
       <Header />
 
-      {/* ================= HERO ================= */}
+      {/* ================= SECTION 1 : HERO ================= */}
       <section className="relative mt-[13px] min-h-[1100px] bg-neutral-950">
-        {/* 회색 배경 (Container 기준 반응형) */}
+        {/* bg1 프레임 */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Container className="h-full">
-            <div className="h-full rounded-[28px] bg-neutral-700" />
+            <div className="relative h-full rounded-[28px] overflow-hidden">
+              <Image
+                src="/images/landing/background/bg1.png"
+                alt="hero background"
+                fill
+                priority
+                className="object-cover"
+              />
+            </div>
           </Container>
         </div>
 
-        {/* 텍스트 + 버튼 */}
+        {/* 텍스트 영역 */}
         <div className="relative z-10 h-[40%] pt-[70px] flex justify-center text-center">
           <Container>
             <div className="mx-auto w-full max-w-[720px]">
@@ -45,8 +53,8 @@ export default function Home() {
           </Container>
         </div>
 
-        {/* 하단 이미지 */}
-        <div className="absolute left-1/2 bottom-0 w-screen -translate-x-1/2 h-[80%] pointer-events-none z-[1]">
+        {/* 하단 프리뷰 이미지 */}
+        <div className="absolute left-1/2 bottom-0 w-screen -translate-x-1/2 h-[80%] pointer-events-none z-[2]">
           <Image
             src="/images/landing/lg/img1.svg"
             alt="hero preview"
@@ -59,32 +67,174 @@ export default function Home() {
 
       {/* ================= BELOW SECTIONS ================= */}
       <main className="bg-neutral-950 text-white">
-        {/* Section A */}
-        <section className="py-24">
-          <Container>
-            <div className="min-h-[420px] rounded-[28px] bg-neutral-900/40" />
-          </Container>
+        <section className="relative bg-neutral-950 overflow-hidden">
+          <div className="relative z-10 h-[800px]">
+            <Container className="h-full">
+              <div className="relative h-full rounded-[28px] overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/landing/background/bg2.svg"
+                  alt=""
+                  aria-hidden
+                  className="pointer-events-none absolute z-0 opacity-20"
+                  style={{
+                    left: 80,
+                    top: 500,
+                    width: 1480,
+                    height: 1480,
+                  }}
+                />
+
+                <div className="relative z-10 h-full flex flex-col justify-start pt-[120px]">
+                  <div className="text-left max-w-[560px] ml-[200px]">
+                    <h2 className="text-[44px] font-bold leading-[1.2]">
+                      포인트로 <span className="text-lime-400">안전하게</span> 거래하세요
+                    </h2>
+                    <p className="mt-3 text-neutral-300">
+                      내 포토카드를 포인트로 팔고, 원하는 포토카드를
+                      <br />
+                      포인트로 안전하게 교환하세요
+                    </p>
+                  </div>
+
+                  <div className="mt-[35px] w-[1068px] h-[518px] relative mx-auto">
+                    <Image
+                      src="/images/landing/lg/img2.svg"
+                      alt="포인트로 안전하게 거래하세요"
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                </div>
+              </div>
+            </Container>
+          </div>
         </section>
 
-        {/* Section B */}
-        <section className="py-24">
-          <Container>
-            <div className="min-h-[420px] rounded-[28px] bg-neutral-900/40" />
-          </Container>
+        {/* ================= SECTION 3 ================= */}
+        <section className="relative bg-neutral-950 overflow-hidden">
+          <div className="relative z-10 h-[800px]">
+            <Container className="h-full">
+              {/* 프레임 기준점 */}
+              <div className="relative h-full rounded-[28px] overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/landing/background/bg3.svg" // ← 섹션3 전용 원
+                  alt=""
+                  aria-hidden
+                  className="pointer-events-none absolute z-0 opacity-20"
+                  style={{
+                    left: -80, // ← 좌우 이동
+                    top: 500, // ← 상하 이동
+                    width: 1480,
+                    height: 1480,
+                  }}
+                />
+
+                {/* 기존 콘텐츠 */}
+                <div className="relative z-10 h-full flex flex-col justify-start pt-[120px]">
+                  <div className="text-left max-w-[560px] ml-[200px]">
+                    <h2 className="text-[44px] font-bold leading-[1.2]">
+                      알림으로 보다 <span className="text-sky-400">빨라진</span> 거래
+                    </h2>
+                    <p className="mt-3 text-neutral-300">
+                      교환 제안부터 판매 완료까지,
+                      <br />
+                      실시간 알림으로 놓치지 마세요
+                    </p>
+                  </div>
+
+                  <div className="mt-[35px] mx-auto w-[1068px] h-[518px] relative">
+                    <Image
+                      src="/images/landing/lg/img3.svg"
+                      alt="알림으로 보다 빨라진 거래"
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                </div>
+              </div>
+            </Container>
+          </div>
         </section>
 
-        {/* Section C */}
-        <section className="py-24">
-          <Container>
-            <div className="min-h-[420px] rounded-[28px] bg-neutral-900/40" />
-          </Container>
+        {/* ================= SECTION 4 : RANDOM BOX ================= */}
+        <section className="relative bg-neutral-950 overflow-hidden pb-[80px]">
+          <div
+            className="absolute inset-0 z-0"
+            style={{
+              background:
+                'radial-gradient(150% 100% at 50% 100%, rgba(239,255,4,0.25) 0%, rgba(0,0,0,0) 70%)',
+            }}
+          />
+
+          <div className="relative z-10 h-[800px]">
+            <Container className="h-full">
+              <div className="h-full flex flex-col justify-start pt-[120px]">
+                <div className="text-left max-w-[560px] ml-[200px]">
+                  <h2 className="text-[44px] font-bold leading-[1.2]">
+                    랜덤 상자로 <span className="text-lime-400">포인트 받자!</span> 🎉
+                  </h2>
+                  <p className="mt-3 text-neutral-300">
+                    한 시간마다 주어지는 랜덤 상자를 열고,
+                    <br />
+                    포인트를 획득하세요
+                  </p>
+                </div>
+
+                <div className="mt-[35px] mx-auto w-[1068px] h-[518px] relative">
+                  <Image
+                    src="/images/landing/lg/img4.svg"
+                    alt="랜덤 상자 포인트 획득 화면"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              </div>
+            </Container>
+          </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="pt-24 pb-32">
-          <Container>
-            <div className="min-h-[320px] rounded-[28px] bg-neutral-900/40" />
-          </Container>
+        {/* ================= FINAL CTA ================= */}
+        <section className="relative bg-neutral-950 overflow-hidden">
+          <div className="relative z-10 h-[600px]">
+            <Container className="h-full">
+              {/* 가운데 정렬: 텍스트 박스를 기준으로 위 이미지/아래 버튼 배치 */}
+              <div className="h-full flex flex-col items-center justify-center text-center">
+                {/* 사진 (경로: /images/landing/Rectangle.jpg) */}
+                <div className="relative mb-[18px]">
+                  <Image
+                    src="/images/landing/Rectangle.jpg"
+                    alt="CTA 포토카드"
+                    width={120}
+                    height={150}
+                    className="object-contain -rotate-12"
+                    priority={false}
+                  />
+                </div>
+
+                {/* 텍스트 */}
+                <h2 className="text-[44px] font-bold leading-[1.2]">
+                  나의 최애를 지금 찾아보세요!
+                </h2>
+
+                {/* 버튼 */}
+                <div className="mt-[24px]">
+                  <ButtonPrimary
+                    href="/market"
+                    thickness="thin"
+                    size="M"
+                    className="!w-[266px] !h-[55px] !px-0"
+                  >
+                    최애 찾으러 가기
+                  </ButtonPrimary>
+                </div>
+              </div>
+            </Container>
+          </div>
         </section>
       </main>
     </>
