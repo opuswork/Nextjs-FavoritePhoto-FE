@@ -6,10 +6,11 @@ import InputSearch from '@/components/molecules/InputSearch/InputSearch';
 import DropDown from '@/components/atoms/DropDown/DropDown';
 import MyCard from '@/components/organisms/MyCard/MyCard';
 import OpenModal from '@/components/organisms/OpenModal/OpenModal';
+import CardExchangeModal from '@/components/organisms/CardExchangeModal/CardExchangeModal';
 import MarketplaceSellSuccessPage from '@/app/(main)/marketplace/sell/success/page';
 import styles from './CardSellingListModal.module.css';
 
-export default function CardSellingListModal({ open, onClose }) {
+export default function CardSellingListModal({ open, onClose, modalTitle = '나의 포토카드 판매하기', onCardSelect, mode = 'sell' }) {
   const [search, setSearch] = useState('');
   const [grade, setGrade] = useState('all');
   const [genre, setGenre] = useState('all');
@@ -17,6 +18,8 @@ export default function CardSellingListModal({ open, onClose }) {
   const [selectedCard, setSelectedCard] = useState(null);
   const [isSellSuccessModalOpen, setIsSellSuccessModalOpen] = useState(false);
   const [soldCardData, setSoldCardData] = useState(null);
+  const [isExchangeModalOpen, setIsExchangeModalOpen] = useState(false);
+  const [exchangeCardData, setExchangeCardData] = useState(null);
 
   const gradeOptions = [
     { value: 'all', label: '등급' },
@@ -55,8 +58,16 @@ export default function CardSellingListModal({ open, onClose }) {
   ];
 
   const handleCardClick = (card) => {
-    setSelectedCard(card);
-    setIsOpenModalOpen(true);
+    if (mode === 'exchange' && onCardSelect) {
+      // Exchange mode: close this modal and notify parent to open CardExchangeModal
+      setExchangeCardData(card);
+      onCardSelect(card);
+      onClose();
+    } else {
+      // Sell mode: open OpenModal
+      setSelectedCard(card);
+      setIsOpenModalOpen(true);
+    }
   };
 
   return (
@@ -69,7 +80,7 @@ export default function CardSellingListModal({ open, onClose }) {
             <h2 className={styles.subtitle}>마이갤러리</h2>
           </div>
 
-          {/* "나의 포토카드 판매하기" Main Title */}
+          {/* Main Title */}
           <div className={styles.titleBox}>
             <h1
               className={styles.mainTitle}
@@ -84,7 +95,7 @@ export default function CardSellingListModal({ open, onClose }) {
                 paddingBottom: '20px',
               }}
             >
-              나의 포토카드 판매하기
+              {modalTitle}
             </h1>
           </div>
 

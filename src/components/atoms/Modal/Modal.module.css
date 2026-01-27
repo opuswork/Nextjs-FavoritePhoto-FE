@@ -57,6 +57,14 @@
   max-height: calc(100dvh - 48px);
 }
 
+.exchangeCancelConfirm {
+  width: 560px;
+  height: 355px;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100dvh - 48px);
+  background: #161616 !important;
+}
+
 .content {
   padding: 0;
   overflow: hidden;

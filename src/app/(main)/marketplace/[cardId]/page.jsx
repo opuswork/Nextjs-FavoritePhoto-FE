@@ -6,13 +6,23 @@ import Image from 'next/image';
 import CardBuyer from '@/components/organisms/CardBuyer/CardBuyer';
 import Button from '@/components/atoms/Button/Button';
 import Modal from '@/components/atoms/Modal/Modal';
+import CardSellingListModal from '@/components/organisms/CardSellingListModal/CardSellingListModal';
+import CardExchangeModal from '@/components/organisms/CardExchangeModal/CardExchangeModal';
+import MyCardExchangeCancel from '@/components/organisms/MyCard/MyCardExchangeCancel';
 import { sampleCards } from '../sampleCards';
 import styles from './page.module.css';
 import purchaseModalStyles from './PurchaseConfirmModal.module.css';
+import cancelModalStyles from './CancelExchangeConfirmModal.module.css';
 
 export default function MarketplaceCardPurchasePage() {
   const params = useParams();
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const [isExchangeListModalOpen, setIsExchangeListModalOpen] = useState(false);
+  const [isExchangeModalOpen, setIsExchangeModalOpen] = useState(false);
+  const [selectedExchangeCard, setSelectedExchangeCard] = useState(null);
+  const [proposedExchanges, setProposedExchanges] = useState([]);
+  const [isCancelConfirmModalOpen, setIsCancelConfirmModalOpen] = useState(false);
+  const [exchangeToCancel, setExchangeToCancel] = useState(null);
   const [quantity, setQuantity] = useState(1);
   
   // Find card data from sampleCards based on cardId
@@ -53,7 +63,32 @@ export default function MarketplaceCardPurchasePage() {
   };
 
   const handleExchange = () => {
-    console.log('Exchange clicked');
+    setIsExchangeListModalOpen(true);
+  };
+
+  const handleExchangeCardSelect = (selectedCard) => {
+    setSelectedExchangeCard(selectedCard);
+    setIsExchangeModalOpen(true);
+  };
+
+  const handleExchangeSuccess = (exchangeData) => {
+    // 교환 제시 목록에 추가
+    setProposedExchanges((prev) => [...prev, { ...exchangeData, id: Date.now() }]);
+  };
+
+  const handleCancelExchange = (exchange) => {
+    // 취소 확인 모달 열기
+    setExchangeToCancel(exchange);
+    setIsCancelConfirmModalOpen(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // 교환 제시 취소 확인
+    if (exchangeToCancel) {
+      setProposedExchanges((prev) => prev.filter((item) => item.id !== exchangeToCancel.id));
+    }
+    setIsCancelConfirmModalOpen(false);
+    setExchangeToCancel(null);
   };
 
   return (
@@ -175,6 +210,47 @@ export default function MarketplaceCardPurchasePage() {
           <span className={styles.exchangeCategory}>{mainCardData.secondCategory}</span>
         </div>
 
+        {/* My Proposed Exchange List */}
+        {proposedExchanges.length > 0 && (
+          <>
+            <div className={styles.spacing50}></div>
+            <div className={styles.proposedExchangeTitleBox}>
+              <h1
+                className={styles.proposedExchangeTitle}
+                style={{
+                  fontFamily: "'Noto Sans KR', sans-serif",
+                  fontWeight: 700,
+                  fontStyle: 'normal',
+                  fontSize: '40px',
+                  lineHeight: '100%',
+                  color: '#ffffff',
+                  margin: 0,
+                  paddingBottom: '20px',
+                }}
+              >
+                내가 제시한 교환 목록
+              </h1>
+            </div>
+            <div className={styles.proposedExchangeList}>
+              {proposedExchanges.map((exchange) => (
+                <div key={exchange.id} className={styles.proposedExchangeItem}>
+                  <MyCardExchangeCancel
+                    rarity={exchange.rarity}
+                    category={exchange.category}
+                    owner={exchange.owner}
+                    description={exchange.description}
+                    price={exchange.price}
+                    purchaseInfo={exchange.purchaseInfo}
+                    proposalMessage={exchange.proposalMessage}
+                    imageSrc={exchange.imageSrc}
+                    onCancel={() => handleCancelExchange(exchange)}
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
       </div>
 
       {/* Purchase Confirmation Modal */}
@@ -211,6 +287,70 @@ export default function MarketplaceCardPurchasePage() {
             }}
           >
             구매하기
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Exchange List Modal */}
+      <CardSellingListModal
+        open={isExchangeListModalOpen}
+        onClose={() => setIsExchangeListModalOpen(false)}
+        modalTitle="포토카드 교환하기"
+        mode="exchange"
+        onCardSelect={handleExchangeCardSelect}
+      />
+
+      {/* Exchange Modal */}
+      <CardExchangeModal
+        open={isExchangeModalOpen}
+        onClose={() => {
+          setIsExchangeModalOpen(false);
+          setSelectedExchangeCard(null);
+        }}
+        targetCardData={cardData}
+        exchangeCardData={selectedExchangeCard}
+        onExchangeSuccess={handleExchangeSuccess}
+      />
+
+      {/* Cancel Exchange Confirm Modal */}
+      <Modal
+        open={isCancelConfirmModalOpen}
+        onClose={() => {
+          setIsCancelConfirmModalOpen(false);
+          setExchangeToCancel(null);
+        }}
+        size="exchangeCancelConfirm"
+      >
+        <div className={cancelModalStyles.cancelModalContainer}>
+          <h2 className={cancelModalStyles.title}>
+            교환 제시 취소
+          </h2>
+          <p className={cancelModalStyles.message}>
+            [{exchangeToCancel?.rarity || 'COMMON'} | {exchangeToCancel?.description || '스페인 여행'}] 교환 제시를 취소하시겠습니까?
+          </p>
+          <Button
+            onClick={handleConfirmCancel}
+            className={cancelModalStyles.cancelButton}
+            style={{
+              backgroundColor: '#EFFF04',
+              color: '#0F0F0F',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '0',
+              fontSize: '18px',
+              fontWeight: 700,
+              lineHeight: '100%',
+              fontFamily: "'Noto Sans KR', sans-serif",
+              cursor: 'pointer',
+              width: '170px',
+              height: '60px',
+              textAlign: 'center',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            취소하기
           </Button>
         </div>
       </Modal>

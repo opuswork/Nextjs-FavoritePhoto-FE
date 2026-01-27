@@ -152,3 +152,40 @@
   min-width: calc(1280px - 820px - 40px);
   max-width: calc(1280px - 820px - 40px);
 }
+
+/* My Proposed Exchange List */
+.proposedExchangeTitleBox {
+  width: 1280px;
+  height: 68px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-bottom: 1px solid #D3D3D3;
+  padding-bottom: 0;
+}
+
+.proposedExchangeTitle {
+  margin: 0;
+  padding: 0;
+}
+
+.proposedExchangeList {
+  width: 1280px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 24px;
+  justify-items: start;
+}
+
+.proposedExchangeItem {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.proposedExchangeItem :global(.myCardExchangeCancel) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
