@@ -5,6 +5,13 @@ import Image from 'next/image';
 import Label from '../../atoms/Label/Label';
 import Button from '../../atoms/Button/Button';
 
+const RARITY_COLORS = {
+    COMMON: '#FFD700',
+    RARE: '#60a5fa',
+    'SUPER RARE': '#9D4EDD',
+    LEGENDARY: '#FF1744',
+};
+
 export default function CardBuyer({
     rarity = 'COMMON',
     category = '풍경',
@@ -29,13 +36,20 @@ export default function CardBuyer({
         }
     };
 
+    const rarityColor = RARITY_COLORS[rarity] || '#FFD700';
+
     return (
         <div className={styles.cardBuyerContainer}>
             <div className={styles.cardBuyer}>
                 {/* Header */}
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>
-                        <span className={styles.rarity}>{rarity}</span>
+                        <span 
+                            className={styles.rarity}
+                            style={{ color: rarityColor }}
+                        >
+                            {rarity}
+                        </span>
                         <span className={styles.separator}>|</span>
                         <span className={styles.category}>{category}</span>
                     </div>

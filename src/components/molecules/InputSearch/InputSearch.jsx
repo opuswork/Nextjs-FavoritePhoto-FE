@@ -10,13 +10,14 @@ export default function InputSearch({
     required,
     id,
     disabled,
+    fullWidth = false,
 }) {
     return (
-        <div className={className ?? ''}>
+        <div className={className ?? ''} style={fullWidth ? { width: '100%' } : undefined}>
             <div 
                 style={{
                     position: 'relative',
-                    width: '320px',
+                    width: fullWidth ? '100%' : '320px',
                     height: '50px',
                     display: 'flex',
                     alignItems: 'center',

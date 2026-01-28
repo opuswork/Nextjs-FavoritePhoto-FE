@@ -3,7 +3,9 @@
   background-color: #000000;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   padding: 0;
 }
 
@@ -14,27 +16,66 @@
   padding: 20px 0;
 }
 
-/* 1. Page Title "마켓플레이스" */
-.pageTitle {
-  margin-bottom: 50px;
-  font-size: 24px;
-  color: #A4A4A4;
-  font-weight: 400;
-  font-style: normal;
-  line-height: 100%;
-  font-family: 'BR B', sans-serif;
+/* Desktop Layout: Left Sidebar + Right Main Content */
+.desktopLayout {
   width: 1280px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+/* Left Sidebar - Navigation */
+.leftSidebar {
+  flex: 0 0 auto;
+  width: auto;
+  padding-top: 0;
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+  height: fit-content;
+}
+
+.marketplaceLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.marketplaceLink:hover {
+  opacity: 0.7;
+}
+
+/* Right Main Content */
+.rightMainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 1. Page Title "마켓플레이스" - Hidden on desktop */
+.pageTitle {
+  display: none;
 }
 
 /* 2. Card Title Box */
 .cardTitleBox {
-  width: 1280px;
+  width: 100%;
   height: 68px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   border-bottom: 1px solid #D3D3D3;
   padding-bottom: 0;
+  margin-top: 0;
 }
 
 .cardTitle {
@@ -44,13 +85,13 @@
 
 /* 3. Spacing (50px) */
 .spacing50 {
-  width: 1280px;
+  width: 100%;
   height: 50px;
 }
 
 /* 4. Main Content Area */
 .mainContentArea {
-  width: 1280px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   gap: 40px;
@@ -95,7 +136,7 @@
 
 /* Exchange Wish Info Section */
 .exchangeTitleBox {
-  width: 1280px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -110,14 +151,14 @@
 }
 
 .exchangeDivider {
-  width: 1280px;
+  width: 100%;
   height: 1px;
   background-color: rgba(255, 255, 255, 0.12);
   margin: 16px 0;
 }
 
 .exchangeDescription {
-  width: 1280px;
+  width: 100%;
   color: rgba(255, 255, 255, 0.8);
   font-size: 16px;
   line-height: 1.6;
@@ -126,7 +167,7 @@
 }
 
 .exchangeRarityCategory {
-  width: 1280px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -148,14 +189,12 @@
 }
 
 .exchangeButton {
-  width: calc(1280px - 820px - 40px);
-  min-width: calc(1280px - 820px - 40px);
-  max-width: calc(1280px - 820px - 40px);
+  display: none; /* Hide on desktop - button removed from title box */
 }
 
 /* My Proposed Exchange List */
 .proposedExchangeTitleBox {
-  width: 1280px;
+  width: 100%;
   height: 68px;
   display: flex;
   flex-direction: column;
@@ -170,9 +209,9 @@
 }
 
 .proposedExchangeList {
-  width: 1280px;
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 40px;
   margin-top: 24px;
   justify-items: start;
@@ -188,4 +227,201 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
+}
+
+/* Mobile Header (499px 이하) */
+.mobileHeader {
+  display: none;
+}
+
+.backButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileHeaderTitle {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin: 0;
+}
+
+.mobileExchangeButton {
+  display: none;
+}
+
+/* Mobile Responsive Styles (499px 이하) */
+@media (max-width: 499px) {
+  .pageContainer {
+    padding: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Mobile Header */
+  .mobileHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #000000;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  /* Hide Desktop Page Title */
+  .pageTitle {
+    display: none;
+  }
+
+  /* Content Wrapper Mobile */
+  .contentWrapper {
+    width: 100%;
+    padding: 0;
+  }
+
+  /* Desktop Layout Mobile - Stack vertically */
+  .desktopLayout {
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Hide Left Sidebar on Mobile */
+  .leftSidebar {
+    display: none;
+  }
+
+  /* Right Main Content Mobile */
+  .rightMainContent {
+    width: 100%;
+  }
+
+  /* Card Title Box Mobile */
+  .cardTitleBox {
+    width: 100%;
+    height: auto;
+    padding: 20px 20px 20px;
+    border-bottom: 1px solid #5A5A5A;
+  }
+
+  .cardTitle {
+    font-size: 24px !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Spacing Mobile */
+  .spacing50 {
+    width: 100%;
+    height: 0;
+    display: none;
+  }
+
+  /* Main Content Area Mobile - Vertical Stack */
+  .mainContentArea {
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 20px;
+  }
+
+  /* Left Column Mobile - Image */
+  .leftColumn {
+    flex: none;
+    width: 100%;
+    margin: 20px 0;
+  }
+
+  .cardImage {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+  }
+
+  /* Right Column Mobile */
+  .rightColumn {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  /* Exchange Title Box Mobile */
+  .exchangeTitleBox {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 20px 20px;
+    border-bottom: 1px solid #5A5A5A;
+  }
+
+  .exchangeTitle {
+    font-size: 24px !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0;
+  }
+
+  /* Hide Desktop Exchange Button */
+  .exchangeButton {
+    display: none;
+  }
+
+  /* Exchange Divider Mobile */
+  .exchangeDivider {
+    width: 100%;
+    margin: 16px 0;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  /* Exchange Description Mobile */
+  .exchangeDescription {
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+  }
+
+  /* Exchange Rarity Category Mobile */
+  .exchangeRarityCategory {
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+  }
+
+  /* Mobile Exchange Button */
+  .mobileExchangeButton {
+    display: block;
+    width: 100%;
+    padding: 0 20px 24px;
+    box-sizing: border-box;
+  }
+
+  /* Proposed Exchange List Mobile */
+  .proposedExchangeTitleBox {
+    width: 100%;
+    padding: 20px 20px 20px;
+  }
+
+  .proposedExchangeTitle {
+    font-size: 24px !important;
+    padding-bottom: 0 !important;
+  }
+
+  .proposedExchangeList {
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
 }

@@ -138,4 +138,60 @@
   .logoAccent {
     color: #efff04;
   }
-  
+
+/* 모바일(499px 이하): CardSellingListModal 내부 등 – 이미지 170x150, 폰트·패딩 축소 (CardOriginal 기준) */
+@media (max-width: 499px) {
+  .myCard {
+    max-width: 100%;
+  }
+
+  .imageContainer {
+    width: 170px;
+    height: 150px;
+    min-width: 170px;
+    min-height: 150px;
+    aspect-ratio: auto;
+    padding: 16px 0 0 0;
+    margin: 0 auto;
+  }
+
+  .myCardImage {
+    width: 170px;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .content {
+    padding: 8px 6px 6px;
+    gap: 6px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .metadata,
+  .metadataLeft {
+    gap: 4px;
+  }
+
+  .rarity,
+  .separator,
+  .category,
+  .owner {
+    font-size: 10px;
+  }
+
+  .infoLabel,
+  .infoValue {
+    font-size: 10px;
+  }
+
+  .infoValue .quantity {
+    font-size: 10px;
+  }
+
+  .footer {
+    display: none;
+  }
+}

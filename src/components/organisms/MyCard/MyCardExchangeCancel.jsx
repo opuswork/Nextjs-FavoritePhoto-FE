@@ -13,6 +13,8 @@ export default function MyCardExchangeCancel({
   purchaseInfo = '4 P에 구매',
   proposalMessage = '',
   imageSrc = '/assets/products/photo-card-spain.svg',
+  imageWidth = 400,
+  imageHeight = 400,
   onCancel,
 }) {
   return (
@@ -22,8 +24,8 @@ export default function MyCardExchangeCancel({
         <Image
           src={imageSrc}
           alt="Photo Card"
-          width={400}
-          height={400}
+          width={imageWidth}
+          height={imageHeight}
           className={styles.myCardImage}
         />
       </div>

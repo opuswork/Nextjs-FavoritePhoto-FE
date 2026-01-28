@@ -26,7 +26,6 @@
 }
 
 .rarity {
-    color: #FF1744;
     font-weight: 700;
     font-size: 18px;
 }
@@ -190,4 +189,98 @@
 
 .purchaseButton:active {
     transform: translateY(0);
+}
+
+/* Mobile Responsive Styles (499px 이하) */
+@media (max-width: 499px) {
+    .cardBuyer {
+        padding: 0;
+    }
+
+    /* Header Mobile */
+    .header {
+        margin-bottom: 16px;
+    }
+
+    .rarity {
+        font-size: 16px;
+    }
+
+    .separator {
+        font-size: 16px;
+    }
+
+    .category {
+        font-size: 16px;
+    }
+
+    .owner {
+        font-size: 16px;
+        text-decoration: none;
+    }
+
+    /* Description Mobile */
+    .description {
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+
+    /* Divider Mobile */
+    .divider {
+        background-color: #5A5A5A;
+        margin: 16px 0;
+    }
+
+    /* Info Row Mobile */
+    .infoRow {
+        gap: 16px;
+    }
+
+    .infoItem :global(label) {
+        font-size: 14px;
+    }
+
+    .infoValue {
+        font-size: 14px;
+    }
+
+    /* Quantity Section Mobile */
+    .quantitySection {
+        margin-bottom: 16px;
+    }
+
+    .quantitySection :global(label) {
+        font-size: 14px;
+    }
+
+    .quantitySelector {
+        border-color: #ffffff;
+    }
+
+    .quantityValue {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    /* Total Price Section Mobile */
+    .totalPriceSection {
+        margin-bottom: 16px;
+    }
+
+    .totalPriceSection :global(label) {
+        font-size: 14px;
+    }
+
+    .totalPriceValue {
+        font-size: 14px;
+    }
+
+    /* Purchase Button Mobile */
+    .purchaseButton {
+        background-color: #EFFF04;
+        color: #000000;
+        border-radius: 2px;
+        font-weight: 600;
+        margin-top: 0;
+    }
 }

@@ -103,9 +103,8 @@ export default function OpenModal({ open, onClose, cardData, mode = 'edit', onSe
             </h1>
           </div>
 
-          {/* Photo and Card Details Section */}
+          {/* 1. Photo first, then Details below (stacked) */}
           <div className={styles.photoAndDetailsSection}>
-            {/* Left: Photo */}
             <div className={styles.photoSection}>
               <Image
                 src={cardData?.imageSrc || "/assets/products/photo-card.svg"}
@@ -115,8 +114,6 @@ export default function OpenModal({ open, onClose, cardData, mode = 'edit', onSe
                 className={styles.photoImage}
               />
             </div>
-
-            {/* Right: MyCardDetail Component */}
             <div className={styles.detailsSection}>
               <MyCardDetail
                 rarity={cardData?.rarity || 'LEGENDARY'}
@@ -150,9 +147,8 @@ export default function OpenModal({ open, onClose, cardData, mode = 'edit', onSe
             </h1>
           </div>
 
-          {/* Grade and Genre Selection */}
+          {/* 2. Grade first, then Genre below (stacked) */}
           <div className={styles.gradeGenreSection}>
-            {/* Left: Grade */}
             <div className={styles.gradeSection}>
               <h3 className={styles.sectionTitle}>등급</h3>
               <DropDown
@@ -164,8 +160,6 @@ export default function OpenModal({ open, onClose, cardData, mode = 'edit', onSe
                 style={{ border: '1px solid #ffffff' }}
               />
             </div>
-
-            {/* Right: Genre */}
             <div className={styles.genreSection}>
               <h3 className={styles.sectionTitle}>장르</h3>
               <DropDown

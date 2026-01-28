@@ -66,17 +66,26 @@ export default function Modal({
     - z-index 충돌 방지
     - 레이아웃 영향 차단
   */
+  const isBottomSheet = size === 'bottomSheet';
+  const isBottomSheetFull = size === 'bottomSheetFull';
+  const overlayExtra = isBottomSheetFull ? styles.overlayBottomSheetFull : isBottomSheet ? styles.overlayBottomSheet : '';
+  const containerExtra = isBottomSheetFull ? styles.bottomSheetFull : isBottomSheet ? styles.bottomSheet : styles[size];
+
+  const overlayClassName = isBottomSheetFull
+    ? styles.overlayBottomSheetFull
+    : `${styles.overlay} ${overlayExtra}`;
+
   return createPortal(
     <div
-      className={styles.overlay}
-      role="dialog" // 접근성: 다이얼로그 역할
-      aria-modal="true" // 접근성: 모달임을 명시
+      className={overlayClassName}
+      role="dialog"
+      aria-modal="true"
     >
       {/* 배경 dim 영역 */}
       <div className={styles.backdrop} onClick={closeOnOverlay ? onClose : undefined} />
 
       {/* 실제 모달 컨테이너 */}
-      <div className={`${styles.container} ${styles[size]} ${noBorder ? styles.customNoBorder : ''}`}>
+      <div className={`${styles.container} ${containerExtra} ${noBorder ? styles.customNoBorder : ''}`}>
         {/* 닫기 버튼 */}
         {showCloseButton && (
           <button className={styles.close} onClick={onClose} aria-label="닫기">

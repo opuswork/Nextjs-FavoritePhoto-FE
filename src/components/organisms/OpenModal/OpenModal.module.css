@@ -55,11 +55,11 @@
   padding: 0;
 }
 
-/* Photo and Details Section */
+/* Photo and Details Section - detailsSection below photoSection */
 .photoAndDetailsSection {
   width: 920px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 40px;
   align-items: flex-start;
 }
@@ -80,11 +80,11 @@
   justify-content: flex-start;
 }
 
-/* Grade and Genre Section */
+/* Grade and Genre Section - genreSection below gradeSection */
 .gradeGenreSection {
   width: 920px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 40px;
   align-items: flex-start;
 }

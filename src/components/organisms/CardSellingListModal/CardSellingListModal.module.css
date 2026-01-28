@@ -118,3 +118,100 @@
 .scrollableContent::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Mobile Header (499px 이하) */
+.mobileHeader {
+  display: none;
+}
+
+.mobileHeaderTitle {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin: 0;
+}
+
+.mobileCloseBtn {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* Mobile Responsive Styles (499px 이하) */
+@media (max-width: 499px) {
+  .modalContainer {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%; /* fill the sheet; avoid huge bottom gap from 80vh */
+    min-height: 0; /* allow flex child to shrink if needed */
+    background-color: #161616;
+  }
+
+  /* Mobile Header - Removed, using SubHeaderExchange instead */
+  .mobileHeader {
+    display: none;
+  }
+
+  /* Scrollable Content Mobile */
+  .scrollableContent {
+    padding: 0;
+    gap: 0;
+    min-height: 0; /* allow flex child to shrink and fill; avoids extra bottom space */
+  }
+
+  /* Hide Desktop Subtitle */
+  .subtitleBox {
+    display: none;
+  }
+
+  /* Hide Desktop Title Box */
+  .titleBox {
+    display: none;
+  }
+
+  /* Filter Section Mobile */
+  .filterSection {
+    width: 100%;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 0;
+    flex-wrap: wrap;
+  }
+
+  .searchInput {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dropdownWrapper {
+    flex: 0 0 auto;
+    width: calc(50% - 4px);
+    margin-left: 0;
+  }
+
+  .dropdownWrapper:first-of-type {
+    margin-left: 0;
+  }
+
+  /* Cards Grid Mobile - Two Columns */
+  .cardsGrid {
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 0;
+    padding: 0 20px 24px;
+    box-sizing: border-box;
+  }
+}

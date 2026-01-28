@@ -138,3 +138,60 @@
 .logoAccent {
   color: #efff04;
 }
+
+/* 모바일(499px 이하): 이미지 150x112, 폰트 축소, 패딩 최소화해 2개 한 줄에 */
+@media (max-width: 499px) {
+  .cardOriginal {
+    max-width: 100%;
+  }
+
+  .imageContainer {
+    width: 170px;
+    height: 150px;
+    min-width: 170px;
+    min-height: 150px;
+    aspect-ratio: auto;
+    padding: 16px 0 0 0;
+    margin: 0 auto;
+  }
+
+  .cardImage {
+    width: 170px;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .content {
+    padding: 8px 6px 6px;
+    gap: 6px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .metadata,
+  .metadataLeft {
+    gap: 4px;
+  }
+
+  .rarity,
+  .separator,
+  .category,
+  .owner {
+    font-size: 10px;
+  }
+
+  .infoLabel,
+  .infoValue {
+    font-size: 10px;
+  }
+
+  .infoValue .outof {
+    font-size: 10px;
+  }
+
+  .footer {
+    display: none;
+  }
+}
