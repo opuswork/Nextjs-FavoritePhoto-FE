@@ -1,59 +1,77 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+
 import MyCardDetail from '@/components/organisms/MyCardDetail/MyCardDetail';
 import DropDown from '@/components/atoms/DropDown/DropDown';
 import TextBox from '@/components/atoms/TextBox/TextBox';
 import { ResponsiveButton } from '@/components/atoms/Button';
+
 import styles from './CardSellingForm.module.css';
 
 const STORAGE_SELL_SUCCESS = 'marketplace_sell_success_data';
 
-export default function CardSellingForm({ cardData, onBack, onSuccess, isInModal = false }) {
+export default function CardSellingForm({
+  cardData,
+  onBack,
+  onSuccess,
+  isInModal = false,
+}) {
+  /* =========================
+     STATE
+     ========================= */
+
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState('');
   const [grade, setGrade] = useState('COMMON');
   const [genre, setGenre] = useState('풍경');
   const [description, setDescription] = useState('');
 
-  const extractPrice = (priceStr) => {
-    if (!priceStr) return '';
-    const match = String(priceStr).match(/(\d+)/);
-    return match ? match[1] : '';
-  };
+  /* =========================
+     EFFECTS
+     ========================= */
 
   useEffect(() => {
-    if (cardData) {
-      setQuantity(cardData.initialQuantity ?? 1);
-      setPrice(extractPrice(cardData.price) ?? '');
-      setGrade(cardData.grade ?? 'COMMON');
-      setGenre(cardData.genre ?? '풍경');
-      setDescription(cardData.exchangeDescription ?? '');
-    }
+    if (!cardData) return;
+
+    setQuantity(cardData.initialQuantity ?? 1);
+    setPrice(extractPrice(cardData.price));
+    setGrade(cardData.grade ?? 'COMMON');
+    setGenre(cardData.genre ?? '풍경');
+    setDescription(cardData.exchangeDescription ?? '');
   }, [cardData]);
 
+  /* =========================
+     HANDLERS
+     ========================= */
+
   const handleCancel = () => {
-    if (onBack) {
-      onBack();
-    }
+    onBack?.();
   };
 
   const handleSave = () => {
     if (!cardData) return;
+
     const payload = {
       ...cardData,
       quantity,
       rarity: grade,
       title: cardData.title || cardData.description || '우리집 앞마당',
     };
+
     try {
       sessionStorage.setItem(STORAGE_SELL_SUCCESS, JSON.stringify(payload));
-    } catch {}
-    if (onSuccess) {
-      onSuccess(payload);
+    } catch {
+      // storage is optional, life goes on
     }
+
+    onSuccess?.(payload);
   };
+
+  /* =========================
+     OPTIONS
+     ========================= */
 
   const gradeOptions = [
     { value: 'COMMON', label: 'COMMON' },
@@ -69,30 +87,45 @@ export default function CardSellingForm({ cardData, onBack, onSuccess, isInModal
     { value: '동물', label: '동물' },
   ];
 
-  if (!cardData) {
-    return null;
-  }
+  if (!cardData) return null;
+
+  /* =========================
+     RENDER
+     ========================= */
 
   return (
     <div className={`${styles.formContainer} ${isInModal ? styles.inModal : ''}`}>
       {isInModal && (
-        <div className={styles.header}>
-          <button type="button" className={styles.backButton} onClick={handleCancel} aria-label="뒤로가기">
-            <Image src="/assets/icons/ic_back.svg" alt="뒤로가기" width={22} height={22} />
+        <header className={styles.header}>
+          <button
+            type="button"
+            className={styles.backButton}
+            onClick={handleCancel}
+            aria-label="뒤로가기"
+          >
+            <Image
+              src="/assets/icons/ic_back.svg"
+              alt="뒤로가기"
+              width={22}
+              height={22}
+            />
           </button>
+
           <h1 className={styles.headerTitle}>나의 포토카드 판매하기</h1>
-          <div className={styles.headerSpacer} aria-hidden />
-        </div>
+          <div className={styles.headerSpacer} />
+        </header>
       )}
 
       <div className={styles.content}>
+        {/* ===== Card Title ===== */}
         <div className={styles.cardTitleBox}>
-          <h2 className={styles.cardTitle}>{cardData.title || cardData.description || '우리집 앞마당'}</h2>
+          <h2 className={styles.cardTitle}>
+            {cardData.title || cardData.description || '우리집 앞마당'}
+          </h2>
         </div>
 
-        {/* Main Content Area - Two Column Layout */}
+        {/* ===== Main Content ===== */}
         <div className={styles.mainContentArea}>
-          {/* Left Column - Photo Section */}
           <div className={styles.leftColumn}>
             <div className={styles.photoSection}>
               <Image
@@ -105,7 +138,6 @@ export default function CardSellingForm({ cardData, onBack, onSuccess, isInModal
             </div>
           </div>
 
-          {/* Right Column - Details Section */}
           <div className={styles.rightColumn}>
             <div className={styles.detailsSection}>
               <MyCardDetail
@@ -122,11 +154,11 @@ export default function CardSellingForm({ cardData, onBack, onSuccess, isInModal
           </div>
         </div>
 
+        {/* ===== Exchange Info ===== */}
         <div className={styles.cardTitleBox}>
           <h2 className={styles.sectionTitle}>교환 희망 정보</h2>
         </div>
 
-        {/* Grade & Genre - same row on desktop */}
         <div className={styles.filterRow}>
           <div className={styles.gradeSection}>
             <h3 className={styles.label}>등급</h3>
@@ -134,8 +166,6 @@ export default function CardSellingForm({ cardData, onBack, onSuccess, isInModal
               options={gradeOptions}
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
-              wrapperStyle={{ border: '1px solid #ffffff' }}
-              style={{ border: '1px solid #ffffff' }}
             />
           </div>
 
@@ -145,8 +175,6 @@ export default function CardSellingForm({ cardData, onBack, onSuccess, isInModal
               options={genreOptions}
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
-              wrapperStyle={{ border: '1px solid #ffffff' }}
-              style={{ border: '1px solid #ffffff' }}
             />
           </div>
         </div>
@@ -154,34 +182,40 @@ export default function CardSellingForm({ cardData, onBack, onSuccess, isInModal
         <div className={styles.descriptionSection}>
           <h3 className={styles.label}>교환 희망 설명</h3>
           <TextBox
-            label=""
             value={description}
             placeholder="--- ---"
             onChange={setDescription}
-            wrapperStyle={{ width: '100%', gap: 0 }}
+            wrapperStyle={{ width: '100%' }}
             textareaStyle={{ width: '100%', minHeight: '120px' }}
           />
         </div>
 
+        {/* ===== Actions ===== */}
         <div className={styles.actionButtons}>
-          <ResponsiveButton
-            fullWidth={true}
-            onClick={handleCancel} 
-            className={styles.cancelButton}
-            style={{ display: 'flex', width: '100%' }}
-          >
-            취소하기
-          </ResponsiveButton>
-          <ResponsiveButton 
-            fullWidth={true}
-            onClick={handleSave} 
-            className={styles.saveButton}
-            style={{ display: 'flex', width: '100%' }}
-          >
-            판매하기
-          </ResponsiveButton>
+          <div className={styles.buttonCol}>
+            <ResponsiveButton onClick={handleCancel}>
+              취소하기
+            </ResponsiveButton>
+          </div>
+
+          <div className={styles.buttonCol}>
+            <ResponsiveButton onClick={handleSave}>
+              판매하기
+            </ResponsiveButton>
+          </div>
         </div>
+
       </div>
     </div>
   );
+}
+
+/* =========================
+   HELPERS
+   ========================= */
+
+function extractPrice(value) {
+  if (!value) return '';
+  const match = String(value).match(/\d+/);
+  return match ? match[0] : '';
 }

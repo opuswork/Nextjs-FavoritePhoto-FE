@@ -13,7 +13,6 @@ export default function ResponsiveButton({
   onClick,
   children,
   className = '',
-  fullWidth = false,
   ...rest
 }) {
   const router = useRouter();
@@ -22,20 +21,15 @@ export default function ResponsiveButton({
     if (href) router.push(href);
   };
 
-  const commonProps = { 
-    ...rest, 
-    onClick: href || onClick ? handleClick : undefined, 
-    children, 
-    className: [className, fullWidth && 'fullWidth'].filter(Boolean).join(' '), 
-  };
+  const commonProps = { ...rest, onClick: href || onClick ? handleClick : undefined, className, children };
 
   return (
     <span className={['inline-flex', className].filter(Boolean).join(' ')}>
       <span className="rb-desktop-only">
-        <ButtonPrimary {...commonProps} fullWidth={fullWidth}>{children}</ButtonPrimary>
+        <ButtonPrimary {...commonProps}>{children}</ButtonPrimary>
       </span>
       <span className="rb-mobile-only">
-        <ButtonSecondary {...commonProps} fullWidth={fullWidth}>{children}</ButtonSecondary>
+        <ButtonSecondary {...commonProps}>{children}</ButtonSecondary>
       </span>
     </span>
   );

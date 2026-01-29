@@ -1,397 +1,285 @@
-.formContainer {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #000000;
-}
+/* =========================
+   ROOT CONTAINER
+   ========================= */
 
-.formContainer.inModal {
-  min-height: 0;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #141414;
-  overflow: hidden;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 12px 20px;
-  background-color: #000000;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  flex-shrink: 0;
-}
-
-.formContainer.inModal .header {
-  background-color: #141414;
-}
-
-.backButton {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.headerTitle {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
-  text-align: center;
-  margin: 0;
-}
-
-.headerSpacer {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-}
-
-.content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  align-items: stretch;
-  max-width: 1280px;
-  margin: 0 auto;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.formContainer.inModal .content {
-  max-width: 100%;
-  padding: 0 120px 32px 120px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  gap: 40px;
-  align-items: flex-start;
-}
-
-.cardTitleBox {
-  width: 100%;
-  border-bottom: 1px solid #5A5A5A;
-  padding-bottom: 12px;
-}
-
-.formContainer.inModal .cardTitleBox {
-  width: 920px;
-  border-bottom: 1px solid #D3D3D3;
-}
-
-.formContainer.inModal .mainContentArea {
-  width: 920px;
-}
-
-.formContainer.inModal .filterRow {
-  width: 920px;
-}
-
-.formContainer.inModal .actionButtons {
-  width: 920px;
-}
-
-.cardTitle {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 100%;
-  color: #ffffff;
-  margin: 0;
-  padding: 0;
-}
-
-.sectionTitle {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 100%;
-  color: #ffffff;
-  margin: 0;
-  padding: 0;
-}
-
-/* Main Content Area - Two Column Layout */
-.mainContentArea {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  gap: 40px;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-
-.leftColumn {
-  flex: 1;
-  display: flex;
-  min-width: 0;
-}
-
-.rightColumn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: flex-start;
-  min-width: 0;
-}
-
-.photoSection {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.photoImage {
-  width: 100%;
-  max-width: 480px;
-  height: auto;
-  aspect-ratio: 4/3;
-  object-fit: contain;
-}
-
-.detailsSection {
-  width: 100%;
-}
-
-.filterRow {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-}
-
-.gradeSection,
-.genreSection {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0; /* Prevent flex items from overflowing */
-}
-
-/* Ensure dropdown wrapper and select match container width */
-.gradeSection :global(.wrapper),
-.genreSection :global(.wrapper) {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.gradeSection :global(.select),
-.genreSection :global(.select) {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.label {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-weight: 700;
-  font-size: 16px;
-  color: #ffffff;
-  margin: 0;
-}
-
-.descriptionSection {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.actionButtons {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  gap: 0;
-  margin-top: 8px;
-}
-
-.cancelButton {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Style the actual inner button rendered by ResponsiveButton */
-.cancelButton :global(button) {
-  width: 100%;
-  padding: 12px 32px;
-  font-size: 16px;
-  font-weight: 700;
-  border-radius: 4px;
-  cursor: pointer;
-  border: 1px solid #ffffff;
-  background-color: transparent;
-  color: #ffffff;
-  font-family: 'Noto Sans KR', sans-serif;
-}
-
-.cancelButton :global(button:hover) {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.saveButton {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.saveButton :global(button) {
-  width: 100%;
-  padding: 12px 32px;
-  font-size: 16px;
-  font-weight: 700;
-  border-radius: 4px;
-  cursor: pointer;
-  border: none;
-  background-color: #FFFF00;
-  color: #000000;
-  font-family: 'Noto Sans KR', sans-serif;
-}
-
-.saveButton :global(button:hover) {
-  opacity: 0.9;
-}
-
-/* Desktop: Button fills column width, height 60px */
-@media (min-width: 1200px) {
-  .cancelButton :global(button),
-  .saveButton :global(button) {
-    width: 100% !important;
-    max-width: 440px !important;
-    height: 60px !important;
+   .formContainer {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #000;
+    box-sizing: border-box;
+  }
+  
+  .formContainer.inModal {
+    background-color: #141414;
+  }
+  
+  /* =========================
+     HEADER (MODAL ONLY)
+     ========================= */
+  
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    width: 100%;
+    padding: 12px 20px;
+    background-color: inherit;
+  }
+  
+  .backButton {
+    background: none;
+    border: none;
     padding: 0;
+    cursor: pointer;
+  
     display: flex;
     align-items: center;
     justify-content: center;
   }
-}
-
-@media (min-width: 500px) {
+  
+  .headerTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+  }
+  
+  .headerSpacer {
+    width: 22px;
+    height: 22px;
+  }
+  
+  /* =========================
+     CONTENT WRAPPER
+     ========================= */
+  
+  .content {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+  
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  
+    box-sizing: border-box;
+  }
+  
+  .formContainer.inModal .content {
+    max-width: 100%;
+  }
+  
+  /* =========================
+     TITLES
+     ========================= */
+  
+  .cardTitleBox {
+    width: 100%;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #5a5a5a;
+  }
+  
   .cardTitle,
   .sectionTitle {
-    font-size: 40px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
   }
-}
-
-/* Desktop modal styles */
-@media (min-width: 1200px) {
-  .formContainer.inModal .content {
-    padding: 0 120px 32px 120px;
-  }
-}
-
-/* Tablet/Mobile modal styles */
-@media (max-width: 1199px) {
-  .formContainer.inModal .content {
-    padding: 20px;
-  }
-}
-
-/* Tablet: keep two-column layout and filterRow side by side */
-@media (min-width: 500px) and (max-width: 1199px) {
+  
+  /* =========================
+     MAIN CONTENT AREA
+     ========================= */
+  
   .mainContentArea {
-    flex-direction: row;
+    width: 100%;
+    display: flex;
     gap: 40px;
+    align-items: flex-start;
   }
-
+  
   .leftColumn,
   .rightColumn {
     flex: 1;
-    width: auto;
+    min-width: 0;
   }
-
+  
+  .photoSection {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .photoImage {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+  }
+  
+  .detailsSection {
+    width: 100%;
+  }
+  
+  /* =========================
+     FILTERS (GRADE / GENRE)
+     ========================= */
+  
   .filterRow {
-    flex-direction: row;
+    width: 100%;
+    display: flex;
     gap: 16px;
   }
-
+  
   .gradeSection,
   .genreSection {
     flex: 1;
     min-width: 0;
+  
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
-
-  /* Ensure dropdowns match container width on tablet */
+  
+  .label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+  }
+  
+  /* Force dropdowns to truly fill */
   .gradeSection :global(.wrapper),
   .genreSection :global(.wrapper),
   .gradeSection :global(.select),
   .genreSection :global(.select) {
     width: 100%;
-    max-width: 100%;
     box-sizing: border-box;
   }
-
-  /* Ensure buttons fill 100% of their column width on tablet */
-  .cancelButton :global(button),
-  .saveButton :global(button) {
+  
+  /* =========================
+     DESCRIPTION
+     ========================= */
+  
+  .descriptionSection {
     width: 100%;
-    height: 55px;
-  }
-}
-
-/* Mobile-only: stack vertically */
-@media (max-width: 499px) {
-  .mainContentArea {
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .leftColumn,
-  .rightColumn {
-    width: 100%;
-  }
-
-  .filterRow {
+    display: flex;
     flex-direction: column;
     gap: 12px;
   }
+  
+  /* =========================
+     ACTION BUTTONS (KEY PART)
+     ========================= */
+  
+/* Make action area a proper flex row */
+.actionButtons {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+  
+/* Each column must grow */
+.buttonCol {
+  flex: 1;
+  display: flex;
+}
 
-  .gradeSection,
-  .genreSection {
-    width: 100%;
-    min-width: 0;
-  }
+/* The button itself */
+.buttonCol > * {
+  width: 100%;
+}
+  
+/* Actual button element */
+.buttonCol :global(button) {
+  width: 100%;
+  height: 56px;
 
-  /* Ensure dropdowns match container width on mobile - strict constraints */
-  .gradeSection :global(.wrapper),
-  .genreSection :global(.wrapper) {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box;
-    overflow: hidden;
-    position: relative;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  .gradeSection :global(.select),
-  .genreSection :global(.select) {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box;
-    min-width: 0;
-    overflow: hidden;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+}
+  
+/* Cancel */
+.buttonCol:first-child :global(button) {
+  background: transparent;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+  
+/* Sell */
+.buttonCol:last-child :global(button) {
+  background: #ffff00;
+  border: none;
+  color: #000000;
+}
+  
+  .buttonCol :global(button:hover) {
+    opacity: 0.9;
   }
+  
+  /* =========================
+     RESPONSIVE
+     ========================= */
+  
+  /* Tablet */
+  @media (max-width: 1199px) {
+    .mainContentArea {
+      gap: 24px;
+    }
+  }
+  
+  /* Mobile */
+  @media (max-width: 499px) {
+    .content {
+      padding: 16px;
+    }
+  
+    .mainContentArea {
+      flex-direction: column;
+      gap: 24px;
+    }
+  
+    .filterRow {
+      flex-direction: column;
+    }
+  
+    .actionButtons {
+      gap: 12px;
+    }
+  }
+  
+  /* Desktop typography */
+  @media (min-width: 500px) {
+    .cardTitle,
+    .sectionTitle {
+      font-size: 40px;
+    }
+  }
+  
 
-  /* Ensure buttons fill 100% of their column width on mobile */
-  .cancelButton :global(button),
-  .saveButton :global(button) {
-    width: 100%;
-    height: 55px;
-  }
+/* 🔥 OVERRIDE ResponsiveButton internal centering */
+.buttonCol :global(button),
+.buttonCol :global(.responsive-button),
+.buttonCol :global(.rb-root),
+.buttonCol :global(.rb-wrapper) {
+  margin: 0 !important;
+  align-self: stretch !important;
+}
+.actionButtons {
+  background: rgba(255, 0, 0, 0.1) !important;
 }
