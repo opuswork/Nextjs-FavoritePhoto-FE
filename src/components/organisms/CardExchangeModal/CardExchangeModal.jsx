@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Modal from '@/components/atoms/Modal/Modal';
 import MyCard from '@/components/organisms/MyCard/MyCard';
 import TextBox from '@/components/atoms/TextBox/TextBox';
-import Button from '@/components/atoms/Button/Button';
+import { ButtonPrimary } from '@/components/atoms/Button';
 import styles from './CardExchangeModal.module.css';
 
 export default function CardExchangeModal({ open, onClose, targetCardData, exchangeCardData, onExchangeSuccess }) {
@@ -31,10 +31,22 @@ export default function CardExchangeModal({ open, onClose, targetCardData, excha
   return (
     <Modal open={open} onClose={onClose} size="custom">
       <div className={styles.exchangeModalContainer}>
-        {/* Header with title */}
+        {/* Desktop: Header with title */}
         <div className={styles.header}>
           <h2 className={styles.modalTitle}>포토카드 교환하기</h2>
         </div>
+
+        {/* Tablet/Mobile: Top handle – click to close modal */}
+        {onClose && (
+          <button
+            type="button"
+            className={styles.topHandle}
+            onClick={onClose}
+            aria-label="닫기"
+          >
+            <span className={styles.handleBar} aria-hidden />
+          </button>
+        )}
 
         {/* Scrollable content area */}
         <div className={styles.scrollableContent}>
@@ -69,6 +81,8 @@ export default function CardExchangeModal({ open, onClose, targetCardData, excha
                 price={exchangeCardData?.price || '4 P'}
                 quantity={exchangeCardData?.quantity || 2}
                 imageSrc={exchangeCardData?.imageSrc || '/assets/products/photo-card-tree-with-lake.svg'}
+                imageWidth={302}
+                imageHeight={226}
               />
             </div>
 
@@ -78,27 +92,21 @@ export default function CardExchangeModal({ open, onClose, targetCardData, excha
               <TextBox
                 label=""
                 value={exchangeMessage}
-                placeholder="내용을 입력하세요"
+                placeholder="내용을 입력해 주세요"
                 onChange={setExchangeMessage}
                 className={styles.proposalTextBox}
                 wrapperStyle={{ width: '100%', gap: 0 }}
-                textareaStyle={{ width: '100%', minHeight: '200px' }}
+                textareaStyle={{ width: '342px', minHeight: '153px', height: '153px' }}
               />
               
               {/* Action Buttons */}
               <div className={styles.actionButtons}>
-                <Button
-                  onClick={handleCancel}
-                  className={styles.cancelButton}
-                >
+                <button type="button" onClick={handleCancel} className={styles.cancelButton}>
                   취소하기
-                </Button>
-                <Button
-                  onClick={handleExchange}
-                  className={styles.exchangeButton}
-                >
+                </button>
+                <button type="button" onClick={handleExchange} className={styles.exchangeButton}>
                   교환하기
-                </Button>
+                </button>
               </div>
             </div>
           </div>

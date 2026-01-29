@@ -6,7 +6,7 @@
   box-sizing: border-box;
 }
 
-/* Mobile: Top handle (replaces header) */
+/* Desktop: Top handle hidden (only for bottom sheet on mobile/tablet) */
 .mobileTopHandle {
   display: none;
 }
@@ -104,13 +104,8 @@
   width: 100%;
 }
 
-/* Mobile Responsive Styles (499px 이하) */
-@media (max-width: 499px) {
-  .subHeaderExchange {
-    padding: 0;
-  }
-
-  /* Mobile: Top handle – clickable to close modal */
+/* Tablet & Mobile Bottom Sheet (1199px 이하): show top handle */
+@media (max-width: 1199px) {
   .mobileTopHandle {
     display: flex;
     align-items: center;
@@ -123,6 +118,13 @@
     background: transparent;
     cursor: pointer;
     font: inherit;
+  }
+}
+
+/* Mobile-only overrides (499px 이하) */
+@media (max-width: 499px) {
+  .subHeaderExchange {
+    padding: 0;
   }
 
   .subtitleBox {

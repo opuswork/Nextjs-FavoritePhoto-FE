@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Title from '@/components/atoms/Title/Title';
-import Button from '@/components/atoms/Button/Button';
+import { ButtonPrimary, ButtonSecondary, ResponsiveButton } from '@/components/atoms/Button';
 import DropDown from '@/components/atoms/DropDown/DropDown';
 import InputSearch from '@/components/molecules/InputSearch/InputSearch';
 import FilterBottomSheet from './FilterBottomSheet';
@@ -89,21 +89,9 @@ export default function SubHeader({
               <Title text="마켓플레이스" as="h1" showLine={false} />
             </div>
             <div className={styles.sellBtnWrap}>
-              <Button
-                onClick={onSellClick}
-                className={styles.sellBtn}
-                style={{
-                  height: '60px',
-                  borderRadius: '2px',
-                  backgroundColor: '#EFFF04',
-                  color: '#000000',
-                  fontWeight: 600,
-                  fontSize: '18px',
-                  cursor: 'pointer',
-                }}
-              >
+              <ResponsiveButton onClick={onSellClick} className={styles.sellBtn}>
                 나의 포토카드 판매하기
-              </Button>
+              </ResponsiveButton>
             </div>
           </div>
           <div style={{ marginTop: '12px', marginBottom: '6px', width: '100%', borderTop: '2px solid #EEEEEE' }} />
@@ -190,22 +178,9 @@ export default function SubHeader({
           </div>
         </div>
         <div className={styles.fixedBottom}>
-          <Button
-            onClick={onSellClick}
-            className={styles.sellBtnFixed}
-            style={{
-              width: '100%',
-              height: '60px',
-              borderRadius: '2px',
-              backgroundColor: '#EFFF04',
-              color: '#000000',
-              fontWeight: 600,
-              fontSize: '18px',
-              cursor: 'pointer',
-            }}
-          >
+          <ResponsiveButton onClick={onSellClick} className={styles.sellBtnFixed}>
             나의 포토카드 판매하기
-          </Button>
+          </ResponsiveButton>
         </div>
       </div>
 

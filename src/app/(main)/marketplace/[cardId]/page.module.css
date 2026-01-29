@@ -7,22 +7,26 @@
   justify-content: flex-start;
   align-items: center;
   padding: 0;
+  overflow-x: hidden;
 }
 
 .contentWrapper {
-  width: 1280px;
+  width: 100%;
+  max-width: 1280px;
   display: flex;
   flex-direction: column;
   padding: 20px 0;
+  overflow-x: hidden;
 }
 
-/* Desktop Layout: Left Sidebar + Right Main Content */
+/* Desktop Layout */
 .desktopLayout {
-  width: 1280px;
+  width: 100%;
+  max-width: 1280px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
-  gap: 40px;
+  overflow-x: hidden;
 }
 
 /* Left Sidebar - Navigation */
@@ -59,6 +63,8 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Marketplace link above Card Title (desktop) */
@@ -111,10 +117,12 @@
 /* 4. Main Content Area */
 .mainContentArea {
   width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: row;
   gap: 40px;
   align-items: flex-start;
+  overflow-x: hidden;
 }
 
 .leftColumn {
@@ -133,6 +141,8 @@
   display: flex;
   justify-content: flex-start;
   min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* 7. Exchange Cards Container */
@@ -156,12 +166,14 @@
 /* Exchange Wish Info Section */
 .exchangeTitleBox {
   width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
   padding-bottom: 20px;
   border-bottom: 1px solid #D3D3D3;
+  overflow-x: hidden;
 }
 
 .desktopExchangeButton {
@@ -169,6 +181,15 @@
   /* Match width of .rightColumn (mainContentArea - 820px - 40px gap) so button matches CardBuyer purchase button */
   width: calc(100% - 860px);
   min-width: 200px;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Exchange button: full width of container, height 75px (matches purchase button) */
+.exchangeButton {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 75px;
 }
 
 .exchangeTitle {
@@ -214,9 +235,6 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-.exchangeButton {
-  display: none; /* Hide on desktop - button removed from title box */
-}
 
 /* My Proposed Exchange List */
 .proposedExchangeTitleBox {
@@ -249,7 +267,9 @@
   width: 100%;
 }
 
-.proposedExchangeItem :global(.myCardExchangeCancel) {
+/* Target MyCardExchangeCancel component - using > * instead of :global() 
+   because Tailwind v4 PostCSS doesn't support :global() syntax */
+.proposedExchangeItem > * {
   width: 342px;
   max-width: 342px;
   min-width: 342px;
@@ -289,6 +309,11 @@
 
 /* Tablet Responsive Styles (500px–1199px) */
 @media (min-width: 500px) and (max-width: 1199px) {
+  .contentWrapper {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
   .leftColumn {
     flex: 0 0 342px;
     width: 342px;
@@ -300,10 +325,29 @@
     object-fit: contain;
   }
 
-  /* Match exchange button width to rightColumn (342 + 40 gap) so it aligns with "포토카드 구매하기" */
+  /* Exchange button: same 342x75 on tablet */
   .desktopExchangeButton {
-    width: calc(100% - 382px);
-    min-width: 200px;
+    width: auto;
+  }
+
+  /* Proposed exchange list: 2 columns, centered on tablet */
+  .proposedExchangeList {
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    justify-content: center;
+    gap: 40px;
+  }
+
+  .proposedExchangeItem {
+    justify-content: center;
+  }
+
+  .proposedExchangeItem > * {
+    width: 342px;
+    max-width: 342px;
+    min-width: 342px;
+    height: 517px;
+    min-height: 517px;
   }
 }
 
@@ -429,11 +473,6 @@
     margin-bottom: 0;
   }
 
-  /* Hide Desktop Exchange Button */
-  .exchangeButton {
-    display: none;
-  }
-
   /* Exchange Divider Mobile */
   .exchangeDivider {
     width: 100%;
@@ -485,7 +524,7 @@
     box-sizing: border-box;
   }
 
-  .proposedExchangeItem :global(.myCardExchangeCancel) {
+  .proposedExchangeItem > * {
     width: 100%;
     max-width: 100%;
     min-width: 0;

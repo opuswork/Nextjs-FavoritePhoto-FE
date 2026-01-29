@@ -2,7 +2,7 @@
 import styles from './MyCardExchangeCancel.module.css';
 import Image from 'next/image';
 import Label from '../../atoms/Label/Label';
-import Button from '../../atoms/Button/Button';
+import { ButtonPrimary } from '@/components/atoms/Button';
 
 export default function MyCardExchangeCancel({
   rarity = 'COMMON',
@@ -56,12 +56,9 @@ export default function MyCardExchangeCancel({
         )}
 
         {/* Cancel Button */}
-        <Button
-          onClick={onCancel}
-          className={styles.cancelButton}
-        >
+        <ButtonPrimary onClick={onCancel} className={styles.cancelButton}>
           취소하기
-        </Button>
+        </ButtonPrimary>
       </div>
     </div>
   );

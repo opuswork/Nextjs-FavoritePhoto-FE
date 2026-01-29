@@ -16,6 +16,7 @@
   align-items: flex-end;
   justify-content: center;
   padding: 0;
+  width: 100%;
 }
 
 /* Full-height bottom sheet: 20px from top, edge-to-edge left/right/bottom (포토카드 교환하기) */
@@ -31,10 +32,12 @@
 
 .bottomSheet {
   width: 100%;
+  min-width: 100%;
   max-width: 100%;
   max-height: 80vh;
   border-radius: 12px 12px 0 0;
   border-bottom: none;
+  box-sizing: border-box;
   animation: slideUp 0.3s ease-out;
 }
 

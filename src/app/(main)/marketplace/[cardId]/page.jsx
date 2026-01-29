@@ -5,14 +5,17 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import CardBuyer from '@/components/organisms/CardBuyer/CardBuyer';
-import Button from '@/components/atoms/Button/Button';
+import { ButtonPrimary } from '@/components/atoms/Button';
 import Modal from '@/components/atoms/Modal/Modal';
 import CardSellingListModal from '@/components/organisms/CardSellingListModal/CardSellingListModal';
+import CardExchangeModal from '@/components/organisms/CardExchangeModal';
 import MyCardExchangeCancel from '@/components/organisms/MyCard/MyCardExchangeCancel';
+import ExchangeFormContent from './exchange/ExchangeFormContent';
 import { sampleCards } from '../sampleCards';
 import styles from './page.module.css';
 import purchaseModalStyles from './PurchaseConfirmModal.module.css';
 import cancelModalStyles from './CancelExchangeConfirmModal.module.css';
+import exchangePageStyles from './exchange/page.module.css';
 
 const STORAGE_PENDING_EXCHANGE = 'marketplace_pending_exchange';
 
@@ -29,6 +32,11 @@ export default function MarketplaceCardPurchasePage() {
   const [isCancelConfirmModalOpen, setIsCancelConfirmModalOpen] = useState(false);
   const [exchangeToCancel, setExchangeToCancel] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
+  const [exchangeFormOpen, setExchangeFormOpen] = useState(false);
+  const [exchangeFormCard, setExchangeFormCard] = useState(null);
+  const [isExchangeModalOpen, setIsExchangeModalOpen] = useState(false);
+  const [exchangeModalCard, setExchangeModalCard] = useState(null);
 
   // Find card data from sampleCards based on cardId
   const cardId = params?.cardId ?? '1';
@@ -39,13 +47,29 @@ export default function MarketplaceCardPurchasePage() {
     try {
       const key = storageKey(cardId);
       const existingRaw = sessionStorage.getItem(key);
-      const existing = existingRaw ? JSON.parse(existingRaw) : [];
+      let existing = existingRaw ? JSON.parse(existingRaw) : [];
+
+      // Deduplicate existing items: ensure all IDs are unique
+      const seenIds = new Set();
+      existing = existing.map((item, index) => {
+        let id = item.id;
+        if (!id || seenIds.has(id)) {
+          id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${index}`;
+        }
+        seenIds.add(id);
+        return { ...item, id };
+      });
 
       const pendingRaw = sessionStorage.getItem(STORAGE_PENDING_EXCHANGE);
       if (pendingRaw) {
         sessionStorage.removeItem(STORAGE_PENDING_EXCHANGE);
         const pending = JSON.parse(pendingRaw);
-        const next = [...existing, { ...pending, id: pending.id || Date.now() }];
+        // Generate unique ID: use pending.id if unique, otherwise create new unique ID
+        let newId = pending.id;
+        if (!newId || seenIds.has(newId)) {
+          newId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${existing.length}`;
+        }
+        const next = [...existing, { ...pending, id: newId }];
         sessionStorage.setItem(key, JSON.stringify(next));
         setProposedExchanges(next);
       } else {
@@ -55,6 +79,14 @@ export default function MarketplaceCardPurchasePage() {
       setProposedExchanges([]);
     }
   }, [cardId]);
+
+  useEffect(() => {
+    const checkViewport = () => setIsMobileOrTablet(window.innerWidth <= 1199);
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
+    return () => window.removeEventListener('resize', checkViewport);
+  }, []);
+
   const cardData = useMemo(() => {
     return sampleCards.find(card => card.id === cardIdNum) || sampleCards[0];
   }, [cardIdNum]);
@@ -95,11 +127,64 @@ export default function MarketplaceCardPurchasePage() {
   };
 
   const handleExchangeCardSelect = (selectedCard) => {
-    try {
-      sessionStorage.setItem('marketplace_exchange_offer_card', JSON.stringify(selectedCard));
-    } catch {}
     setIsExchangeListModalOpen(false);
-    router.push(`/marketplace/${params?.cardId}/exchange`);
+    if (isMobileOrTablet) {
+      setExchangeFormCard(selectedCard);
+      setExchangeFormOpen(true);
+    } else {
+      setExchangeModalCard(selectedCard);
+      setIsExchangeModalOpen(true);
+    }
+  };
+
+  const handleExchangeFormCancel = () => {
+    setExchangeFormOpen(false);
+    setExchangeFormCard(null);
+  };
+
+  const handleExchangeFormSuccess = (payload) => {
+    const key = storageKey(cardId);
+    setProposedExchanges((prev) => {
+      // Generate unique ID: use payload.id if unique, otherwise create new unique ID
+      let newId = payload.id;
+      const existingIds = new Set(prev.map(item => item.id));
+      if (!newId || existingIds.has(newId)) {
+        // Generate unique ID using timestamp + random + index
+        newId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${prev.length}`;
+      }
+      const next = [...prev, { ...payload, id: newId }];
+      try {
+        sessionStorage.setItem(key, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+    setExchangeFormOpen(false);
+    setExchangeFormCard(null);
+  };
+
+  const handleExchangeModalClose = () => {
+    setIsExchangeModalOpen(false);
+    setExchangeModalCard(null);
+  };
+
+  const handleExchangeModalSuccess = (payload) => {
+    const key = storageKey(cardId);
+    setProposedExchanges((prev) => {
+      // Generate unique ID: use payload.id if unique, otherwise create new unique ID
+      let newId = payload.id;
+      const existingIds = new Set(prev.map(item => item.id));
+      if (!newId || existingIds.has(newId)) {
+        // Generate unique ID using timestamp + random + index
+        newId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${prev.length}`;
+      }
+      const next = [...prev, { ...payload, id: newId }];
+      try {
+        sessionStorage.setItem(key, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+    setIsExchangeModalOpen(false);
+    setExchangeModalCard(null);
   };
 
   const handleCancelExchange = (exchange) => {
@@ -125,7 +210,17 @@ export default function MarketplaceCardPurchasePage() {
   };
 
   return (
-    <div className={styles.pageContainer}>
+    <div
+      className={styles.pageContainer}
+      style={{
+        width: '100%',
+        minHeight: '100vh',
+        backgroundColor: '#000000',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
       {/* Mobile Header (499px 이하) */}
       <div className={styles.mobileHeader}>
         <button 
@@ -141,8 +236,17 @@ export default function MarketplaceCardPurchasePage() {
       </div>
 
       <div className={styles.contentWrapper}>
-        {/* Desktop Layout: Left Navigation + Right Content */}
-        <div className={styles.desktopLayout}>
+        {/* Desktop Layout */}
+        <div
+          className={styles.desktopLayout}
+          style={{
+            width: '100%',
+            maxWidth: '1280px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+          }}
+        >
           {/* Right Main Content */}
           <div className={styles.rightMainContent}>
             {/* 1. Marketplace link above Card Title (desktop) */}
@@ -218,24 +322,9 @@ export default function MarketplaceCardPurchasePage() {
             교환 희망 정보
           </h1>
           <div className={styles.desktopExchangeButton}>
-            <Button
-              onClick={handleExchange}
-              style={{
-                width: '100%',
-                backgroundColor: '#EFFF04',
-                color: '#000000',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '16px',
-                fontSize: '18px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                fontFamily: "'Noto Sans KR', sans-serif",
-                whiteSpace: 'nowrap',
-              }}
-            >
+            <ButtonPrimary onClick={handleExchange} className={styles.exchangeButton}>
               포토카드 교환하기
-            </Button>
+            </ButtonPrimary>
           </div>
         </div>
 
@@ -267,23 +356,9 @@ export default function MarketplaceCardPurchasePage() {
 
         {/* Mobile Exchange Button (499px 이하) */}
         <div className={styles.mobileExchangeButton}>
-          <Button
-            onClick={handleExchange}
-            style={{
-              width: '100%',
-              backgroundColor: '#EFFF04',
-              color: '#000000',
-              border: 'none',
-              borderRadius: '2px',
-              padding: '16px',
-              fontSize: '18px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              fontFamily: "'Noto Sans KR', sans-serif",
-            }}
-          >
+          <ButtonPrimary onClick={handleExchange} className={styles.exchangeButton}>
             포토카드 교환하기
-          </Button>
+          </ButtonPrimary>
         </div>
 
         {/* My Proposed Exchange List */}
@@ -308,8 +383,8 @@ export default function MarketplaceCardPurchasePage() {
               </h1>
             </div>
             <div className={styles.proposedExchangeList}>
-              {proposedExchanges.map((exchange) => (
-                <div key={exchange.id} className={styles.proposedExchangeItem}>
+              {proposedExchanges.map((exchange, index) => (
+                <div key={exchange.id || `exchange-${cardId}-${index}`} className={styles.proposedExchangeItem}>
                   <MyCardExchangeCancel
                     rarity={exchange.rarity}
                     category={exchange.category}
@@ -342,34 +417,16 @@ export default function MarketplaceCardPurchasePage() {
           <p className={purchaseModalStyles.message}>
             [{cardData.rarity} | {cardData.description}] {quantity}장을 구매하시겠습니까?
           </p>
-          <Button
+          <ButtonPrimary
             onClick={handlePurchaseConfirm}
             className={purchaseModalStyles.purchaseButton}
-            style={{
-              backgroundColor: '#FFFF00',
-              color: '#000000',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '0',
-              fontSize: '18px',
-              fontWeight: 700,
-              lineHeight: '100%',
-              fontFamily: "'Noto Sans KR', sans-serif",
-              cursor: 'pointer',
-              width: '170px',
-              height: '60px',
-              textAlign: 'center',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
           >
             구매하기
-          </Button>
+          </ButtonPrimary>
         </div>
       </Modal>
 
-      {/* Exchange List Modal – on card select → close and navigate to /marketplace/[cardId]/exchange */}
+      {/* Exchange List Modal – on card select → close and open CardExchangeModal (desktop) or exchange bottom sheet (tablet/mobile) */}
       <CardSellingListModal
         open={isExchangeListModalOpen}
         onClose={() => setIsExchangeListModalOpen(false)}
@@ -377,6 +434,43 @@ export default function MarketplaceCardPurchasePage() {
         mode="exchange"
         onCardSelect={handleExchangeCardSelect}
       />
+
+      {/* Desktop: CardExchangeModal – opens when user selects a card from CardSellingListModal */}
+      <CardExchangeModal
+        open={isExchangeModalOpen}
+        onClose={handleExchangeModalClose}
+        targetCardData={cardData}
+        exchangeCardData={exchangeModalCard}
+        onExchangeSuccess={handleExchangeModalSuccess}
+      />
+
+      {/* Exchange Form Bottom Sheet (tablet/mobile only) */}
+      <Modal
+        open={exchangeFormOpen}
+        onClose={handleExchangeFormCancel}
+        size="bottomSheetFull"
+        showCloseButton={false}
+      >
+        <div className={exchangePageStyles.pageContainer} style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+          <div className={exchangePageStyles.header}>
+            <button
+              type="button"
+              className={exchangePageStyles.backButton}
+              onClick={handleExchangeFormCancel}
+              aria-label="뒤로가기"
+            >
+              <Image src="/assets/icons/ic_back.svg" alt="뒤로가기" width={22} height={22} />
+            </button>
+            <h1 className={exchangePageStyles.headerTitle}>포토카드 교환하기</h1>
+            <div className={exchangePageStyles.headerSpacer} aria-hidden />
+          </div>
+          <ExchangeFormContent
+            cardData={exchangeFormCard}
+            onCancel={handleExchangeFormCancel}
+            onExchange={handleExchangeFormSuccess}
+          />
+        </div>
+      </Modal>
 
       {/* Cancel Exchange Confirm Modal */}
       <Modal
@@ -394,30 +488,12 @@ export default function MarketplaceCardPurchasePage() {
           <p className={cancelModalStyles.message}>
             [{exchangeToCancel?.rarity || 'COMMON'} | {exchangeToCancel?.description || '스페인 여행'}] 교환 제시를 취소하시겠습니까?
           </p>
-          <Button
+          <ButtonPrimary
             onClick={handleConfirmCancel}
             className={cancelModalStyles.cancelButton}
-            style={{
-              backgroundColor: '#EFFF04',
-              color: '#0F0F0F',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '0',
-              fontSize: '18px',
-              fontWeight: 700,
-              lineHeight: '100%',
-              fontFamily: "'Noto Sans KR', sans-serif",
-              cursor: 'pointer',
-              width: '170px',
-              height: '60px',
-              textAlign: 'center',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
           >
             취소하기
-          </Button>
+          </ButtonPrimary>
         </div>
       </Modal>
     </div>

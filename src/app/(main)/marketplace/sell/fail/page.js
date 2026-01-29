@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import Button from '@/components/atoms/Button/Button';
+import { ButtonPrimary, ButtonSecondary, ResponsiveButton } from '@/components/atoms/Button';
 
 export default function MarketplaceSellFailPage() {
     const router = useRouter();
@@ -13,11 +13,12 @@ export default function MarketplaceSellFailPage() {
         </div>
         <div className="w-full bg-black text-white">
             <div className="mx-auto w-full max-w-[1480px] px-5 py-10">
-                <Button 
+                <ResponsiveButton 
                     onClick={() => router.push('/marketplace')} 
-                    className="w-full" 
-                    style={{ backgroundColor: '#000000', color: '#ffffff', border: '1px solid #ffffff' }}>다시 시도하기
-                </Button>
+                    className="w-full"
+                >
+                    다시 시도하기
+                </ResponsiveButton>
             </div>
         </div>
       </div>

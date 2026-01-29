@@ -1,42 +1,70 @@
-/* DropDown.module.css */
 .wrapper {
   position: relative;
   width: 100%;
 }
 
-.select {
+/* Trigger button */
+.trigger {
   width: 100%;
   height: 46px;
+  padding: 10px 44px 10px 10px;
   background-color: #000;
   color: #fff;
-  padding: 10px 44px 10px 10px; /* right padding for icon */
+  border: none;
   border-radius: 2px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  appearance: none;
-  border: none;
-  text-align: center;
-  text-align-last: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
-.select:hover {
+.trigger:hover {
   background-color: #111;
 }
 
-.select:focus {
-  outline: none;
-}
-
-.select:disabled {
-  background-color: #ccc;
-  color: #666;
-  cursor: not-allowed;
+.value {
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .icon {
   position: absolute;
   right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
   pointer-events: none;
+}
+
+/* Dropdown menu */
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #000;
+  border: 1px solid #333;
+  border-radius: 2px;
+  z-index: 1000;
+  max-height: 240px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Options */
+.option {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  color: #fff;
+}
+
+.option:hover {
+  background-color: #111;
+}
+
+.selected {
+  background-color: #222;
 }

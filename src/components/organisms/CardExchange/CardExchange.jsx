@@ -3,7 +3,7 @@ import styles from './CardExchange.module.css';
 import originalStyles from '../CardOriginal/CardOriginal.module.css';
 import Image from 'next/image';
 import Label from '../../atoms/Label/Label';
-import Button from '../../atoms/Button/Button';
+import { ButtonPrimary, ButtonSecondary, ResponsiveButton } from '@/components/atoms/Button';
 
 export default function CardExchange({
   title,
@@ -54,12 +54,12 @@ export default function CardExchange({
 
       {/* Action Buttons */}
       <div className={styles.buttonContainer}>
-        <Button className={styles.declineButton} onClick={onDecline}>
+        <ResponsiveButton className={styles.declineButton} onClick={onDecline}>
           거절하기
-        </Button>
-        <Button className={styles.approveButton} onClick={onApprove}>
+        </ResponsiveButton>
+        <ResponsiveButton className={styles.approveButton} onClick={onApprove}>
           승인하기
-        </Button>
+        </ResponsiveButton>
       </div>
     </div>
   );

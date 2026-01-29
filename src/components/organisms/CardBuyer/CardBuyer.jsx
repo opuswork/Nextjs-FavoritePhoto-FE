@@ -3,7 +3,7 @@
 import styles from './CardBuyer.module.css';
 import Image from 'next/image';
 import Label from '../../atoms/Label/Label';
-import Button from '../../atoms/Button/Button';
+import { ButtonBase } from '@/components/atoms/Button';
 
 const RARITY_COLORS = {
     COMMON: '#FFD700',
@@ -77,20 +77,22 @@ export default function CardBuyer({
                 <div className={styles.quantitySection}>
                     <Label>구매수량</Label>
                     <div className={styles.quantitySelector}>
-                        <Button 
+                        <ButtonBase 
+                            size="xs"
                             className={styles.quantityButton} 
                             onClick={handleDecrease}
                             disabled={quantity <= 1}
                         >
                             <Image src="/assets/icons/ic_minus.svg" alt="decrease" width={20} height={20} />
-                        </Button>
+                        </ButtonBase>
                         <div className={styles.quantityValue}>{quantity}</div>
-                        <Button 
+                        <ButtonBase 
+                            size="xs"
                             className={styles.quantityButton} 
                             onClick={handleIncrease}
                         >
                             <Image src="/assets/icons/ic_plus.svg" alt="increase" width={20} height={20} />
-                        </Button>
+                        </ButtonBase>
                     </div>
                 </div>
 
@@ -101,9 +103,9 @@ export default function CardBuyer({
                 </div>
 
                 {/* Purchase Button */}
-                <Button className={styles.purchaseButton} onClick={onPurchase}>
+                <button type="button" className={styles.purchaseButton} onClick={onPurchase}>
                     포토카드 구매하기
-                </Button>
+                </button>
             </div>
         </div>    
     );

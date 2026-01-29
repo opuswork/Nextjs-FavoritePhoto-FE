@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Button from '@/components/atoms/Button/Button';
+import { ButtonPrimary, ButtonSecondary, ResponsiveButton } from '@/components/atoms/Button';
 import Label from '@/components/atoms/Label/Label';
 
 export default function Footer() {
@@ -54,22 +54,9 @@ export default function Footer() {
       </Label>
 
       {/* Call-to-Action Button */}
-      <Button 
-        href="/marketplace"
-        style={{
-          backgroundColor: '#EFFF04',
-          color: '#000000',
-          padding: '14px 32px',
-          borderRadius: '8px',
-          fontSize: '18px',
-          fontWeight: '600',
-          border: 'none',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease'
-        }}
-      >
+      <ResponsiveButton href="/marketplace">
         최애 찾으러 가기
-      </Button>
+      </ResponsiveButton>
     </div>
   );
 }

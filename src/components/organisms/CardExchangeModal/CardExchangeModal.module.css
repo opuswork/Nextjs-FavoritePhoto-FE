@@ -9,6 +9,7 @@
   box-sizing: border-box;
 }
 
+/* Desktop: Header with title */
 .header {
   width: 100%;
   max-width: 1160px;
@@ -26,6 +27,92 @@
   line-height: 100%;
   color: #A4A4A4;
   margin: 0;
+}
+
+/* Tablet/Mobile: Top handle (same as SubHeaderExchange) – click to close */
+.topHandle {
+  display: none;
+}
+
+.handleBar {
+  width: 48px;
+  height: 6px;
+  border-radius: 50px;
+  background-color: #5A5A5A;
+  flex-shrink: 0;
+}
+
+/* Tablet & Mobile (1199px 이하): show handle, hide desktop header */
+@media (max-width: 1199px) {
+  .header {
+    display: none;
+  }
+
+  .topHandle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0 20px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+    width: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+  }
+}
+
+/* Tablet Responsive Styles (500px–1199px): adjust paddings/margins, keep two-column layout */
+@media (min-width: 500px) and (max-width: 1199px) {
+  .exchangeModalContainer {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .scrollableContent {
+    padding: 0 20px 24px;
+    gap: 24px;
+  }
+
+  .cardTitleBox {
+    width: 100%;
+    height: auto;
+    padding-bottom: 12px;
+  }
+
+  .cardTitle {
+    font-size: 32px !important;
+    padding-bottom: 0 !important;
+  }
+
+  .mainContentArea {
+    width: 100%;
+    gap: 24px;
+  }
+
+  .rightColumn {
+    flex: 1;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .proposalTitle {
+    font-size: 18px;
+  }
+
+  .actionButtons {
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .cancelButton,
+  .exchangeButton {
+    padding: 12px 24px;
+    font-size: 15px;
+  }
 }
 
 .scrollableContent {
@@ -77,12 +164,12 @@
 }
 
 .rightColumn {
-  flex: 0 0 auto;
-  width: 450px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
   align-items: flex-start;
+  min-width: 0;
 }
 
 .proposalTitle {
@@ -99,12 +186,15 @@
 }
 
 .proposalTextBox {
-  width: 100%;
+  width: 342px;
+  max-width: 342px;
+  flex-shrink: 0;
 }
 
 .proposalTextBox :global(.wrapper) {
   gap: 0 !important;
-  width: 100% !important;
+  width: 342px !important;
+  max-width: 342px !important;
 }
 
 .proposalTextBox :global(.label) {
@@ -112,8 +202,11 @@
 }
 
 .proposalTextBox :global(.textarea) {
-  width: 100% !important;
-  max-width: 100% !important;
+  width: 342px !important;
+  min-width: 342px;
+  max-width: 342px;
+  height: 153px !important;
+  min-height: 153px !important;
   box-sizing: border-box !important;
 }
 
@@ -192,13 +285,11 @@
   }
 
   .header {
-    width: 100%;
-    max-width: 100%;
-    padding: 16px 20px;
+    display: none;
   }
 
-  .modalTitle {
-    font-size: 18px;
+  .topHandle {
+    padding: 12px 0 16px;
   }
 
   .scrollableContent {

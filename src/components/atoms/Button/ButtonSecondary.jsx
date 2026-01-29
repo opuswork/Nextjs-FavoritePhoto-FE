@@ -12,6 +12,7 @@ export default function ButtonSecondary({
   thickness = 'thick',
   disabled = false,
   className = '',
+  fullWidth = false,
   ...props
 }) {
   const safeSize = SIZE.includes(size) ? size : 'm';

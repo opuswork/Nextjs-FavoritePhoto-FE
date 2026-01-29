@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Modal from '@/components/atoms/Modal/Modal';
-import Button from '@/components/atoms/Button/Button';
+import { ButtonPrimary, ButtonSecondary, ResponsiveButton } from '@/components/atoms/Button';
 import styles from './FilterBottomSheet.module.css';
 
 
@@ -203,22 +203,9 @@ export default function FilterBottomSheet({
           <button type="button" className={styles.refreshBtn} onClick={handleReset} aria-label="초기화">
             <Image src="/assets/icons/ic_refresh.svg" alt="초기화" width={24} height={24} />
           </button>
-          <Button
-            onClick={handleApply}
-            className={styles.applyBtn}
-            style={{
-              flex: 1,
-              height: '56px',
-              borderRadius: '2px',
-              backgroundColor: '#EFFF04',
-              color: '#000000',
-              fontWeight: 600,
-              fontSize: '18px',
-              cursor: 'pointer',
-            }}
-          >
+          <ResponsiveButton onClick={handleApply} className={styles.applyBtn}>
             {filteredCount}개 포토보기
-          </Button>
+          </ResponsiveButton>
         </div>
       </div>
     </Modal>

@@ -20,3 +20,19 @@ body {
 body {
   margin: 0;
 }
+
+/* ResponsiveButton: Primary on desktop (≥1200px), Secondary on tablet/mobile */
+.rb-desktop-only {
+  display: none !important;
+}
+.rb-mobile-only {
+  display: inline-flex !important;
+}
+@media (min-width: 1200px) {
+  .rb-desktop-only {
+    display: inline-flex !important;
+  }
+  .rb-mobile-only {
+    display: none !important;
+  }
+}

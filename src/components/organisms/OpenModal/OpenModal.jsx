@@ -6,7 +6,7 @@ import Modal from '@/components/atoms/Modal/Modal';
 import MyCardDetail from '@/components/organisms/MyCardDetail/MyCardDetail';
 import DropDown from '@/components/atoms/DropDown/DropDown';
 import TextBox from '@/components/atoms/TextBox/TextBox';
-import Button from '@/components/atoms/Button/Button';
+import { ButtonPrimary, ButtonSecondary, ResponsiveButton } from '@/components/atoms/Button';
 import styles from './OpenModal.module.css';
 
 export default function OpenModal({ open, onClose, cardData, mode = 'edit', onSellSuccess }) {
@@ -192,18 +192,12 @@ export default function OpenModal({ open, onClose, cardData, mode = 'edit', onSe
 
           {/* Action Buttons */}
           <div className={styles.actionButtons}>
-            <Button
-              onClick={handleCancel}
-              className={styles.cancelButton}
-            >
+            <ResponsiveButton onClick={handleCancel} className={styles.cancelButton}>
               취소
-            </Button>
-            <Button
-              onClick={handleSave}
-              className={styles.saveButton}
-            >
+            </ResponsiveButton>
+            <ResponsiveButton onClick={handleSave} className={styles.saveButton}>
               {saveButtonText}
-            </Button>
+            </ResponsiveButton>
           </div>
         </div>
       </div>

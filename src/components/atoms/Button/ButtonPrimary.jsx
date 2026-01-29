@@ -12,6 +12,7 @@ export default function ButtonPrimary({
   thickness = 'thick',
   disabled = false,
   className = '',
+  fullWidth = false,
   ...props
 }) {
   const safeSize = SIZE.includes(size) ? size : 'm';
@@ -26,6 +27,7 @@ export default function ButtonPrimary({
         styles.primary,
         styles[`size_${safeSize}`],
         styles[`th_${safeThickness}`],
+        fullWidth && styles.fullWidth,
         disabled ? styles.disabled : styles.default,
         className,
       ].join(' ')}

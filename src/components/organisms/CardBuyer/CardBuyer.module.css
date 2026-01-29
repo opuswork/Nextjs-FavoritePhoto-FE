@@ -1,14 +1,18 @@
 .cardBuyerContainer {
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .cardBuyer {
     width: 100%;
+    max-width: 100%;
     background-color: transparent;
     padding: 0;
     display: flex;
     flex-direction: column;
     gap: 0;
+    overflow-x: hidden;
 }
 
 /* Header */
@@ -168,15 +172,18 @@
     text-align: right;
 }
 
-/* Purchase Button */
+/* Purchase Button: yellow, full width, height 75px */
 .purchaseButton {
     width: 100%;
-    background-color: #FFD700;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #EFFF04;
     color: #000000;
     border: none;
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 18px;
+    border-radius: 2px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s;

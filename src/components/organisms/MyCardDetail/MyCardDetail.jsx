@@ -3,7 +3,7 @@
 import styles from './MyCardDetail.module.css';
 import Label from '../../atoms/Label/Label';
 import InputLabel from '../../molecules/InputLabel/InputLabel';
-import Button from '../../atoms/Button/Button';
+import { ButtonPrimary, ButtonSecondary, ResponsiveButton } from '@/components/atoms/Button';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -79,7 +79,7 @@ export default function MyCardDetail({
         <Label className={styles.infoLabel}>총 판매 수량</Label>
         <div className={styles.quantityRightGroup}>
           <div className={styles.quantityControl}>
-            <Button className={styles.iconButton} onClick={handleMinus} disabled={quantity <= 1}>
+            <ResponsiveButton className={styles.iconButton} onClick={handleMinus} disabled={quantity <= 1}>
               <Image 
                 src="/assets/icons/ic_minus.svg" 
                 alt="minus" 
@@ -87,9 +87,9 @@ export default function MyCardDetail({
                 height={20}
                 className={styles.icon}
               />
-            </Button>
+            </ResponsiveButton>
             <Label className={styles.quantityValue}>{quantity}</Label>
-            <Button
+            <ResponsiveButton
               className={styles.iconButton}
               onClick={handlePlus}
               disabled={quantity >= maxQuantity}
@@ -101,7 +101,7 @@ export default function MyCardDetail({
                 height={20}
                 className={styles.icon}
               />
-            </Button>
+            </ResponsiveButton>
           </div>
           <div className={styles.quantityLimit}>
             <Label className={styles.limitText}>/ {maxQuantity}</Label>
