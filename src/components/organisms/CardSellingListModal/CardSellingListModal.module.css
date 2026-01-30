@@ -111,6 +111,12 @@
   width: 100%;
 }
 
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  place-self: center;
+}
+
 /* Scrollbar styling */
 .scrollableContent::-webkit-scrollbar {
   width: 8px;

@@ -4,9 +4,14 @@ import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import Container from '@/components/layout/Container';
+import { http } from '@/lib/http/client';
 
-export default function Header({ userName = '유디', points = 1540, onLogout, onOpenAlarm }) {
+export default function Header({ onOpenAlarm }) {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownStyle, setDropdownStyle] = useState({ top: 0, left: 0 });
   const [mounted, setMounted] = useState(false);
@@ -16,6 +21,32 @@ export default function Header({ userName = '유디', points = 1540, onLogout, o
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const { data } = await http.get('/users/me');
+        setUser(data.user ?? null);
+      } catch {
+        setUser(null);
+      } finally {
+        setAuthLoading(false);
+      }
+    }
+    fetchUser();
+  }, []);
+
+  async function handleLogout() {
+    try {
+      await http.post('/users/logout');
+      setUser(null);
+      router.refresh();
+    } catch {
+      setUser(null);
+      router.refresh();
+    }
+    setIsMenuOpen(false);
+  }
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -38,6 +69,9 @@ export default function Header({ userName = '유디', points = 1540, onLogout, o
     });
   }, [mounted, isMenuOpen]);
 
+  const displayName = user?.nickname ?? user?.email ?? '';
+  const points = user?.points ?? 0;
+
   return (
     <header className="w-full bg-black">
       <Container className="flex h-[72px] items-center justify-between">
@@ -47,23 +81,33 @@ export default function Header({ userName = '유디', points = 1540, onLogout, o
             최애<span className="text-yellow-300">의</span>포토
           </Link>
           <div className="flex items-center gap-4 text-sm text-white/80">
-            <div className="flex items-center gap-1">
-              <span>{points.toLocaleString()}</span>
-              <span>P</span>
-            </div>
-            <button
-              type="button"
-              onClick={onOpenAlarm}
-              className="rounded p-2 text-white/70 hover:bg-white/10 hover:text-white"
-              aria-label="알림"
-            >
-              🔔
-            </button>
-            <span>{userName}</span>
-            <span className="mx-1 h-4 w-px bg-white/20" />
-            <button type="button" onClick={onLogout} className="text-white/50 hover:text-white">
-              로그아웃
-            </button>
+            {authLoading ? (
+              <span className="text-white/50">...</span>
+            ) : user ? (
+              <>
+                <div className="flex items-center gap-1">
+                  <span>{Number(points).toLocaleString()}</span>
+                  <span>P</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={onOpenAlarm}
+                  className="rounded p-2 text-white/70 hover:bg-white/10 hover:text-white"
+                  aria-label="알림"
+                >
+                  🔔
+                </button>
+                <span>{displayName}</span>
+                <span className="mx-1 h-4 w-px bg-white/20" />
+                <button type="button" onClick={handleLogout} className="text-white/50 hover:text-white">
+                  로그아웃
+                </button>
+              </>
+            ) : (
+              <Link href="/auth/login" className="text-yellow-300 hover:underline">
+                로그인
+              </Link>
+            )}
           </div>
         </div>
 
@@ -88,22 +132,31 @@ export default function Header({ userName = '유디', points = 1540, onLogout, o
                   style={{ top: dropdownStyle.top, left: dropdownStyle.left }}
                   role="menu"
                 >
-                  <div className="flex items-center gap-1 px-4 py-2 text-sm text-white/80">
-                    <span>{points.toLocaleString()}</span>
-                    <span>P</span>
-                  </div>
-                  <div className="my-1 h-px w-full bg-white/20" />
-                  <div className="px-4 py-2 text-sm text-white">{userName}</div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onLogout?.();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full px-4 py-2 text-left text-sm text-white/50 hover:bg-white/10 hover:text-white"
-                  >
-                    로그아웃
-                  </button>
+                  {user ? (
+                    <>
+                      <div className="flex items-center gap-1 px-4 py-2 text-sm text-white/80">
+                        <span>{Number(points).toLocaleString()}</span>
+                        <span>P</span>
+                      </div>
+                      <div className="my-1 h-px w-full bg-white/20" />
+                      <div className="px-4 py-2 text-sm text-white">{displayName}</div>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="w-full px-4 py-2 text-left text-sm text-white/50 hover:bg-white/10 hover:text-white"
+                      >
+                        로그아웃
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      href="/auth/login"
+                      className="block px-4 py-2 text-sm text-yellow-300 hover:bg-white/10 hover:underline"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      로그인
+                    </Link>
+                  )}
                 </div>,
                 document.body,
               )}

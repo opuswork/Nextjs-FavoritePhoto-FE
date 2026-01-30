@@ -12,7 +12,12 @@ const RARITY_COLORS = {
     LEGENDARY: '#FF1744',
 };
 
+function hasValue(v) {
+    return v != null && v !== '';
+}
+
 export default function CardBuyer({
+<<<<<<< HEAD
   rarity = 'COMMON',
   category = '풍경',
   owner = '미쓰손',
@@ -35,6 +40,45 @@ export default function CardBuyer({
       onQuantityChange(quantity + 1);
     }
   };
+=======
+    rarity,
+    category,
+    owner,
+    description,
+    price,
+    remaining,
+    quantity = 1,
+    maxQuantity,
+    onQuantityChange,
+    totalPrice,
+    onPurchase,
+}) {
+    const hasData = [description, price, rarity].some(hasValue);
+    const maxQty = maxQuantity != null ? Number(maxQuantity) : undefined;
+    const atMax = maxQty != null && quantity >= maxQty;
+
+    const handleDecrease = () => {
+        if (quantity > 1 && onQuantityChange) {
+            onQuantityChange(quantity - 1);
+        }
+    };
+
+    const handleIncrease = () => {
+        if (onQuantityChange && !atMax) {
+            onQuantityChange(quantity + 1);
+        }
+    };
+>>>>>>> 41c1518 (feat(loginpage) add login page, implemented google login)
+
+    if (!hasData) {
+        return (
+            <div className={styles.cardBuyerContainer}>
+                <div className={styles.cardBuyer}>
+                    <div className={styles.noData}>no data</div>
+                </div>
+            </div>
+        );
+    }
 
     const rarityColor = RARITY_COLORS[rarity] || '#FFD700';
 
@@ -90,6 +134,7 @@ export default function CardBuyer({
                             size="xs"
                             className={styles.quantityButton} 
                             onClick={handleIncrease}
+                            disabled={atMax}
                         >
                             <Image src="/assets/icons/ic_plus.svg" alt="increase" width={20} height={20} />
                         </ButtonBase>

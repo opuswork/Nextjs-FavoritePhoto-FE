@@ -1,6 +1,6 @@
 export default function AuthLayout({ children }) {
   return (
-    <section style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
+    <section className="min-h-screen bg-black grid place-items-center">
       {children}
     </section>
   );

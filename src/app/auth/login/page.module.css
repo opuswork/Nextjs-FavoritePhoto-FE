@@ -1,0 +1,237 @@
+/* Login form container: width by breakpoint */
+.form {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Tablet: 440px */
+@media (min-width: 500px) and (max-width: 1199px) {
+  .form {
+    max-width: 440px;
+  }
+}
+
+/* Mobile: 345px */
+@media (max-width: 499px) {
+  .form {
+    max-width: 345px;
+  }
+}
+
+/* Shared width for inputs and button wrapper */
+.form > *:not(.logo) {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Input and button height 55px */
+.inputField,
+.inputWrapper {
+  height: 55px;
+  box-sizing: border-box;
+}
+
+.inputField {
+  width: 100%;
+  height: 55px;
+  padding: 0 16px;
+  padding-right: 48px; /* space for eye icon on password */
+  border: 1px solid #fff;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+}
+
+.inputField::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.inputField:focus {
+  border-color: #efff04;
+}
+
+.inputFieldNoIcon {
+  padding-right: 16px;
+}
+
+.inputError {
+  border-color: #ef4444 !important;
+}
+
+.inputError:focus {
+  border-color: #ef4444 !important;
+}
+
+.errorMessage {
+  margin: 6px 0 0;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #ef4444 !important;
+  display: block;
+}
+
+/* Password field wrapper: input + eye icon inside */
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.inputWrapper .inputField {
+  padding-right: 48px;
+}
+
+.eyeButton {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.eyeButton:hover {
+  opacity: 0.8;
+}
+
+.eyeButton img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* Label above input */
+.label {
+  display: block;
+  margin-bottom: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Button wrapper */
+.buttonWrap {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Login button: explicit widths, no Button component (avoids Tailwind conflict) */
+.loginButton {
+  width: 520px;
+  height: 55px;
+  border-radius: 2px;
+  border: 2px solid #efff04;
+  background: #efff04;
+  color: #000;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginButton:hover {
+  opacity: 0.95;
+}
+
+/* Tablet: 440px */
+@media (min-width: 500px) and (max-width: 1199px) {
+  .loginButton {
+    width: 440px;
+  }
+}
+
+/* Mobile: 345px */
+@media (max-width: 499px) {
+  .loginButton {
+    width: 345px;
+  }
+}
+
+/* 구글 로그인: same size as 로그인, white border, black bg, white text */
+.googleLoginButton {
+  width: 520px;
+  height: 55px;
+  border-radius: 2px;
+  border: 1px solid #ffffff;
+  background: #ffffff;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.googleButtonIcon {
+  flex-shrink: 0;
+  display: block;
+}
+
+.googleLoginButton:hover {
+  opacity: 0.9;
+}
+
+@media (min-width: 500px) and (max-width: 1199px) {
+  .googleLoginButton {
+    width: 440px;
+  }
+}
+
+@media (max-width: 499px) {
+  .googleLoginButton {
+    width: 345px;
+  }
+}
+
+/* Logo: 최애의포토 with yellow accent */
+.logo {
+  margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.logoAccent {
+  color: #efff04;
+}
+
+/* Signup link section */
+.signupRow {
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+}
+
+.signupLink {
+  color: #efff04;
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+.signupLink:hover {
+  opacity: 0.9;
+}

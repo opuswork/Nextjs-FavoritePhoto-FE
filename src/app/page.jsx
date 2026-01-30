@@ -224,7 +224,11 @@ export default function Home() {
                 {/* 버튼 */}
                 <div className="mt-[24px]">
                   <ButtonPrimary
+<<<<<<< HEAD
                     href="/market"
+=======
+                    href="/marketplace"
+>>>>>>> 41c1518 (feat(loginpage) add login page, implemented google login)
                     thickness="thin"
                     size="M"
                     className="!w-[266px] !h-[55px] !px-0"
@@ -239,4 +243,8 @@ export default function Home() {
       </main>
     </>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 41c1518 (feat(loginpage) add login page, implemented google login)

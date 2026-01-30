@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import styles from './CardOriginal.module.css';
 import Image from 'next/image';
 import Label from '../../atoms/Label/Label';
@@ -13,18 +14,29 @@ export default function CardOriginal({
   outof = 5,
   imageSrc = '/assets/products/photo-card.svg',
   onClick,
+  detailHref,
 }) {
+  const imageNode = (
+    <Image
+      src={imageSrc}
+      alt="Photo Card"
+      width={400}
+      height={400}
+      className={styles.cardImage}
+    />
+  );
+
   return (
     <div className={styles.cardOriginal} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
-      {/* Image Section */}
+      {/* Image Section - link to detail when detailHref provided */}
       <div className={styles.imageContainer}>
-        <Image
-          src={imageSrc}
-          alt="Photo Card"
-          width={400}
-          height={400}
-          className={styles.cardImage}
-        />
+        {detailHref ? (
+          <Link href={detailHref} onClick={(e) => e.stopPropagation()}>
+            {imageNode}
+          </Link>
+        ) : (
+          imageNode
+        )}
       </div>
 
       {/* Content Section */}

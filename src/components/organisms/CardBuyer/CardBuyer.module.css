@@ -15,6 +15,14 @@
     overflow-x: hidden;
 }
 
+.noData {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    font-family: 'Noto Sans KR', sans-serif;
+    padding: 24px 0;
+    text-align: center;
+}
+
 /* Header */
 .header {
     display: flex;

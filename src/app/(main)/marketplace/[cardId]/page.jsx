@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,6 +11,7 @@ import CardSellingListModal from '@/components/organisms/CardSellingListModal/Ca
 import CardExchangeModal from '@/components/organisms/CardExchangeModal';
 import MyCardExchangeCancel from '@/components/organisms/MyCard/MyCardExchangeCancel';
 import ExchangeFormContent from './exchange/ExchangeFormContent';
+import { http } from '@/lib/http/client';
 import { sampleCards } from '../sampleCards';
 import styles from './page.module.css';
 import purchaseModalStyles from './PurchaseConfirmModal.module.css';
@@ -21,6 +22,39 @@ const STORAGE_PENDING_EXCHANGE = 'marketplace_pending_exchange';
 
 function storageKey(cardId) {
   return `marketplace_proposed_exchanges_${cardId}`;
+}
+
+const NO_DATA = 'no data';
+
+function hasValue(v) {
+  return v != null && v !== '';
+}
+
+/** GET /api/listings/:id 응답을 페이지 cardData 형식으로 변환. 값이 없으면 NO_DATA. */
+function listingToCardData(listing) {
+  const pc = listing?.photoCard ?? {};
+  const qtyRaw = listing?.quantity;
+  const qty = qtyRaw != null && !Number.isNaN(Number(qtyRaw)) ? Number(qtyRaw) : null;
+  const pricePerUnit = listing?.pricePerUnit;
+  const priceStr = pricePerUnit != null && !Number.isNaN(Number(pricePerUnit))
+    ? `${Number(pricePerUnit)} P`
+    : NO_DATA;
+  const sellerUserId = listing?.sellerUserId;
+  const ownerDisplay = sellerUserId != null && !Number.isNaN(Number(sellerUserId))
+    ? `판매자 #${sellerUserId}`
+    : NO_DATA;
+
+  return {
+    id: hasValue(listing?.listingId) ? listing.listingId : NO_DATA,
+    rarity: hasValue(pc?.grade) ? pc.grade : NO_DATA,
+    category: hasValue(pc?.genre) ? pc.genre : NO_DATA,
+    owner: ownerDisplay,
+    description: hasValue(pc?.description) ? pc.description : (hasValue(pc?.name) ? pc.name : NO_DATA),
+    price: priceStr,
+    remaining: qty != null ? qty : NO_DATA,
+    outof: qty != null ? qty : NO_DATA,
+    imageSrc: hasValue(pc?.imageUrl) ? pc.imageUrl : NO_DATA,
+  };
 }
 
 export default function MarketplaceCardPurchasePage() {
@@ -38,8 +72,20 @@ export default function MarketplaceCardPurchasePage() {
   const [isExchangeModalOpen, setIsExchangeModalOpen] = useState(false);
   const [exchangeModalCard, setExchangeModalCard] = useState(null);
 
-  // Find card data from sampleCards based on cardId
+  const [listing, setListing] = useState(null);
+  const [listingLoading, setListingLoading] = useState(true);
+  const [listingError, setListingError] = useState(null);
+  const [purchaseLoading, setPurchaseLoading] = useState(false);
+  const [purchaseError, setPurchaseError] = useState(null);
+  /** 테스트용: 로그인 없이 구매 시 사용할 buyer user ID (개발 시에만 UI 노출) */
+  const [testBuyerUserId, setTestBuyerUserId] = useState(
+    () => Number(process.env.NEXT_PUBLIC_DEFAULT_BUYER_USER_ID) || 1
+  );
+
   const cardId = params?.cardId ?? '1';
+  const isDev = process.env.NODE_ENV === 'development';
+  /** 교환하기 UI 표시 여부 — 팀에서 교환 기능 준비되면 true로 변경 */
+  const SHOW_EXCHANGE = false;
   const cardIdNum = parseInt(cardId, 10);
 
   // Load persisted list on mount; merge pending exchange when returning from /exchange
@@ -87,43 +133,92 @@ export default function MarketplaceCardPurchasePage() {
     return () => window.removeEventListener('resize', checkViewport);
   }, []);
 
+  const fetchListing = useCallback(async () => {
+    if (!cardId || Number.isNaN(cardIdNum) || cardIdNum < 1) {
+      setListingLoading(false);
+      return;
+    }
+    setListingLoading(true);
+    setListingError(null);
+    try {
+      const res = await http.get(`/api/listings/${cardId}`);
+      const data = res.data?.data;
+      setListing(data ?? null);
+    } catch (err) {
+      const status = err?.response?.status;
+      const message = err?.response?.data?.message ?? err?.message ?? '리스팅을 불러오지 못했습니다.';
+      setListingError(status === 404 ? '리스팅을 찾을 수 없습니다.' : message);
+      setListing(null);
+    } finally {
+      setListingLoading(false);
+    }
+  }, [cardId, cardIdNum]);
+
+  useEffect(() => {
+    fetchListing();
+  }, [fetchListing]);
+
   const cardData = useMemo(() => {
+    if (listing) return listingToCardData(listing);
     return sampleCards.find(card => card.id === cardIdNum) || sampleCards[0];
-  }, [cardIdNum]);
-  
-  // Sample data for the main card - using cardData from sampleCards directly
-  const mainCardData = {
-    ...cardData, // Use all fields from cardData directly
-    // Additional fields for modal/exchange functionality (not in sampleCards)
+  }, [listing, cardIdNum]);
+
+  const mainCardData = useMemo(() => ({
+    ...cardData,
     secondRarity: 'RARE',
     secondCategory: '풍경',
     secondDescription: '푸릇푸릇한 여름 풍경, 눈 많이 내린 겨울 풍경 사진에 관심이 많습니다.',
-    title: cardData.description, // Use description as title
+    title: cardData.description,
     maxQuantity: cardData.remaining,
     initialQuantity: 1,
-    grade: 'COMMON',
+    grade: cardData.rarity,
     genre: cardData.category,
     exchangeDescription: '',
-  };
+  }), [cardData]);
 
-  // Calculate total price
-  const priceValue = parseInt(cardData.price.replace(' P', ''));
+  const priceValue = useMemo(() => parseInt(String(cardData.price).replace(/\s*P.*$/, ''), 10) || 0, [cardData.price]);
   const totalPrice = `${priceValue * quantity} P (${quantity}장)`;
 
 
   const handlePurchase = () => {
+    setPurchaseError(null);
     setIsPurchaseModalOpen(true);
   };
 
-  const handlePurchaseConfirm = () => {
-    // 실제 구매 로직 처리
-    console.log('Purchase confirmed', { cardId, quantity, cardData });
-    setIsPurchaseModalOpen(false);
-    // TODO: 구매 성공/실패 처리
+  const handlePurchaseConfirm = async () => {
+    const id = cardData.id;
+    const listingId = typeof id === 'number' && Number.isInteger(id) ? id : null;
+    if (listingId == null || id === NO_DATA) {
+      setPurchaseError('리스팅 정보가 없습니다.');
+      return;
+    }
+    const buyerUserId = isDev ? Number(testBuyerUserId) || 1 : (Number(process.env.NEXT_PUBLIC_DEFAULT_BUYER_USER_ID) || 1);
+    setPurchaseLoading(true);
+    setPurchaseError(null);
+    try {
+      const res = await http.post('/api/purchases', {
+        buyerUserId: Number(buyerUserId),
+        listingId: Number(listingId),
+        quantity: Number(quantity) || 1,
+      });
+      if (res.data?.ok && res.data?.data) {
+        setIsPurchaseModalOpen(false);
+        setQuantity(1);
+        await fetchListing();
+      } else {
+        setPurchaseError(res.data?.error ?? '구매 처리에 실패했습니다.');
+      }
+    } catch (err) {
+      const data = err?.response?.data;
+      const message = data?.error ?? data?.message ?? err?.message ?? '구매에 실패했습니다.';
+      setPurchaseError(message);
+    } finally {
+      setPurchaseLoading(false);
+    }
   };
 
   const handleExchange = () => {
-    setIsExchangeListModalOpen(true);
+    setIsExchangeModalOpen(true);
   };
 
   const handleExchangeCardSelect = (selectedCard) => {
@@ -236,7 +331,16 @@ export default function MarketplaceCardPurchasePage() {
       </div>
 
       <div className={styles.contentWrapper}>
-        {/* Desktop Layout */}
+        {listingLoading ? (
+          <div className={styles.desktopLayout} style={{ width: '100%', maxWidth: '1280px', padding: '40px', color: '#fff' }}>
+            로딩 중...
+          </div>
+        ) : listingError ? (
+          <div className={styles.desktopLayout} style={{ width: '100%', maxWidth: '1280px', padding: '40px', color: '#fff' }}>
+            <p>{listingError}</p>
+            <Link href="/marketplace" className={styles.marketplaceLinkAboveTitle}>마켓플레이스로 돌아가기</Link>
+          </div>
+        ) : (
         <div
           className={styles.desktopLayout}
           style={{
@@ -253,7 +357,7 @@ export default function MarketplaceCardPurchasePage() {
             <Link href="/marketplace" className={styles.marketplaceLinkAboveTitle}>
               <span>마켓플레이스</span>
             </Link>
-            {/* 2. Card Title Box "우리집 앞마당" */}
+            {/* 2. Card Title Box */}
             <div className={styles.cardTitleBox}>
           <h1
             className={styles.cardTitle}
@@ -297,6 +401,7 @@ export default function MarketplaceCardPurchasePage() {
               price={cardData.price}
               remaining={`${cardData.remaining} / ${cardData.outof}`}
               quantity={quantity}
+              maxQuantity={typeof cardData.outof === 'number' ? cardData.outof : undefined}
               onQuantityChange={setQuantity}
               totalPrice={totalPrice}
               onPurchase={handlePurchase}
@@ -304,74 +409,16 @@ export default function MarketplaceCardPurchasePage() {
           </div>
         </div>
 
-        {/* 5. "교환 희망 정보" Title + "포토카드 교환하기" button on right (desktop) */}
-        <div className={styles.spacing50}></div>
-        <div className={styles.exchangeTitleBox}>
-          <h1
-            className={styles.exchangeTitle}
-            style={{
-              fontFamily: "'Noto Sans KR', sans-serif",
-              fontWeight: 700,
-              fontSize: '40px',
-              lineHeight: '100%',
-              color: '#ffffff',
-              margin: 0,
-              paddingBottom: '20px',
-            }}
-          >
-            교환 희망 정보
-          </h1>
-          <div className={styles.desktopExchangeButton}>
-            <ButtonPrimary onClick={handleExchange} className={styles.exchangeButton}>
-              포토카드 교환하기
-            </ButtonPrimary>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className={styles.exchangeDivider}></div>
-
-        {/* Exchange Wish Description */}
-        <div className={styles.exchangeDescription}>
-          {mainCardData.secondDescription}
-        </div>
-
-        {/* Exchange Wish Rarity and Category */}
-        <div className={styles.exchangeRarityCategory}>
-          <span 
-            className={styles.exchangeRarity}
-            style={{
-              color: mainCardData.secondRarity === 'LEGENDARY' ? '#FF1744' :
-                     mainCardData.secondRarity === 'SUPER RARE' ? '#9D4EDD' :
-                     mainCardData.secondRarity === 'RARE' ? '#60a5fa' :
-                     '#FFD700',
-              fontWeight: 700,
-            }}
-          >
-            {mainCardData.secondRarity}
-          </span>
-          <span className={styles.exchangeSeparator}>|</span>
-          <span className={styles.exchangeCategory}>{mainCardData.secondCategory}</span>
-        </div>
-
-        {/* Mobile Exchange Button (499px 이하) */}
-        <div className={styles.mobileExchangeButton}>
-          <ButtonPrimary onClick={handleExchange} className={styles.exchangeButton}>
-            포토카드 교환하기
-          </ButtonPrimary>
-        </div>
-
-        {/* My Proposed Exchange List */}
-        {proposedExchanges.length > 0 && (
+        {/* HIDDEN: 교환하기 (exchange) - set SHOW_EXCHANGE to true when exchange feature is ready */}
+        {SHOW_EXCHANGE && (
           <>
             <div className={styles.spacing50}></div>
-            <div className={styles.proposedExchangeTitleBox}>
+            <div className={styles.exchangeTitleBox}>
               <h1
-                className={styles.proposedExchangeTitle}
+                className={styles.exchangeTitle}
                 style={{
                   fontFamily: "'Noto Sans KR', sans-serif",
                   fontWeight: 700,
-                  fontStyle: 'normal',
                   fontSize: '40px',
                   lineHeight: '100%',
                   color: '#ffffff',
@@ -379,37 +426,90 @@ export default function MarketplaceCardPurchasePage() {
                   paddingBottom: '20px',
                 }}
               >
-                내가 제시한 교환 목록
+                교환 희망 정보
               </h1>
+              <div className={styles.desktopExchangeButton}>
+                <ButtonPrimary onClick={handleExchange} className={styles.exchangeButton}>
+                  포토카드 교환하기
+                </ButtonPrimary>
+              </div>
             </div>
-            <div className={styles.proposedExchangeList}>
-              {proposedExchanges.map((exchange, index) => (
-                <div key={exchange.id || `exchange-${cardId}-${index}`} className={styles.proposedExchangeItem}>
-                  <MyCardExchangeCancel
-                    rarity={exchange.rarity}
-                    category={exchange.category}
-                    owner={exchange.owner}
-                    description={exchange.description}
-                    price={exchange.price}
-                    purchaseInfo={exchange.purchaseInfo}
-                    proposalMessage={exchange.proposalMessage}
-                    imageSrc={exchange.imageSrc}
-                    onCancel={() => handleCancelExchange(exchange)}
-                  />
+            <div className={styles.exchangeDivider}></div>
+            <div className={styles.exchangeDescription}>
+              {mainCardData.secondDescription}
+            </div>
+            <div className={styles.exchangeRarityCategory}>
+              <span
+                className={styles.exchangeRarity}
+                style={{
+                  color: mainCardData.secondRarity === 'LEGENDARY' ? '#FF1744' :
+                         mainCardData.secondRarity === 'SUPER RARE' ? '#9D4EDD' :
+                         mainCardData.secondRarity === 'RARE' ? '#60a5fa' :
+                         '#FFD700',
+                  fontWeight: 700,
+                }}
+              >
+                {mainCardData.secondRarity}
+              </span>
+              <span className={styles.exchangeSeparator}>|</span>
+              <span className={styles.exchangeCategory}>{mainCardData.secondCategory}</span>
+            </div>
+            <div className={styles.mobileExchangeButton}>
+              <ButtonPrimary onClick={handleExchange} className={styles.exchangeButton}>
+                포토카드 교환하기
+              </ButtonPrimary>
+            </div>
+            {proposedExchanges.length > 0 && (
+              <>
+                <div className={styles.spacing50}></div>
+                <div className={styles.proposedExchangeTitleBox}>
+                  <h1
+                    className={styles.proposedExchangeTitle}
+                    style={{
+                      fontFamily: "'Noto Sans KR', sans-serif",
+                      fontWeight: 700,
+                      fontStyle: 'normal',
+                      fontSize: '40px',
+                      lineHeight: '100%',
+                      color: '#ffffff',
+                      margin: 0,
+                      paddingBottom: '20px',
+                    }}
+                  >
+                    내가 제시한 교환 목록
+                  </h1>
                 </div>
-              ))}
-            </div>
+                <div className={styles.proposedExchangeList}>
+                  {proposedExchanges.map((exchange, index) => (
+                    <div key={exchange.id || `exchange-${cardId}-${index}`} className={styles.proposedExchangeItem}>
+                      <MyCardExchangeCancel
+                        rarity={exchange.rarity}
+                        category={exchange.category}
+                        owner={exchange.owner}
+                        description={exchange.description}
+                        price={exchange.price}
+                        purchaseInfo={exchange.purchaseInfo}
+                        proposalMessage={exchange.proposalMessage}
+                        imageSrc={exchange.imageSrc}
+                        onCancel={() => handleCancelExchange(exchange)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </>
         )}
           </div>
         </div>
+        )}
 
       </div>
 
       {/* Purchase Confirmation Modal */}
       <Modal
         open={isPurchaseModalOpen}
-        onClose={() => setIsPurchaseModalOpen(false)}
+        onClose={() => !purchaseLoading && setIsPurchaseModalOpen(false)}
         size="purchaseConfirm"
       >
         <div className={purchaseModalStyles.purchaseModalContainer}>
@@ -417,85 +517,111 @@ export default function MarketplaceCardPurchasePage() {
           <p className={purchaseModalStyles.message}>
             [{cardData.rarity} | {cardData.description}] {quantity}장을 구매하시겠습니까?
           </p>
+          {purchaseError && (
+            <p className={purchaseModalStyles.errorMessage} role="alert">
+              {purchaseError}
+            </p>
+          )}
+          {isDev && (
+            <>
+              <div className={purchaseModalStyles.testBuyerRow}>
+                <label htmlFor="test-buyer-id" className={purchaseModalStyles.testBuyerLabel}>
+                  테스트: 구매자 ID (로그인 없이)
+                </label>
+                <input
+                  id="test-buyer-id"
+                  type="number"
+                  min={1}
+                  value={testBuyerUserId}
+                  onChange={(e) => setTestBuyerUserId(Number(e.target.value) || 1)}
+                  className={purchaseModalStyles.testBuyerInput}
+                />
+              </div>
+              {listing?.sellerUserId != null && (
+                <p className={purchaseModalStyles.testHint}>
+                  이 리스팅 판매자 ID: {listing.sellerUserId} — 구매자 ID는 판매자와 달라야 합니다.
+                </p>
+              )}
+            </>
+          )}
           <ButtonPrimary
             onClick={handlePurchaseConfirm}
             className={purchaseModalStyles.purchaseButton}
+            disabled={purchaseLoading}
           >
-            구매하기
+            {purchaseLoading ? '처리 중...' : '구매하기'}
           </ButtonPrimary>
         </div>
       </Modal>
 
-      {/* Exchange List Modal – on card select → close and open CardExchangeModal (desktop) or exchange bottom sheet (tablet/mobile) */}
-      <CardSellingListModal
-        open={isExchangeListModalOpen}
-        onClose={() => setIsExchangeListModalOpen(false)}
-        modalTitle="포토카드 교환하기"
-        mode="exchange"
-        onCardSelect={handleExchangeCardSelect}
-      />
-
-      {/* Desktop: CardExchangeModal – opens when user selects a card from CardSellingListModal */}
-      <CardExchangeModal
-        open={isExchangeModalOpen}
-        onClose={handleExchangeModalClose}
-        targetCardData={cardData}
-        exchangeCardData={exchangeModalCard}
-        onExchangeSuccess={handleExchangeModalSuccess}
-      />
-
-      {/* Exchange Form Bottom Sheet (tablet/mobile only) */}
-      <Modal
-        open={exchangeFormOpen}
-        onClose={handleExchangeFormCancel}
-        size="bottomSheetFull"
-        showCloseButton={false}
-      >
-        <div className={exchangePageStyles.pageContainer} style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-          <div className={exchangePageStyles.header}>
-            <button
-              type="button"
-              className={exchangePageStyles.backButton}
-              onClick={handleExchangeFormCancel}
-              aria-label="뒤로가기"
-            >
-              <Image src="/assets/icons/ic_back.svg" alt="뒤로가기" width={22} height={22} />
-            </button>
-            <h1 className={exchangePageStyles.headerTitle}>포토카드 교환하기</h1>
-            <div className={exchangePageStyles.headerSpacer} aria-hidden />
-          </div>
-          <ExchangeFormContent
-            cardData={exchangeFormCard}
-            onCancel={handleExchangeFormCancel}
-            onExchange={handleExchangeFormSuccess}
+      {/* HIDDEN: 교환하기 modals - set SHOW_EXCHANGE to true when exchange feature is ready */}
+      {SHOW_EXCHANGE && (
+        <>
+          <CardSellingListModal
+            open={isExchangeListModalOpen}
+            onClose={() => setIsExchangeListModalOpen(false)}
+            modalTitle="포토카드 교환하기"
+            mode="exchange"
+            onCardSelect={handleExchangeCardSelect}
           />
-        </div>
-      </Modal>
-
-      {/* Cancel Exchange Confirm Modal */}
-      <Modal
-        open={isCancelConfirmModalOpen}
-        onClose={() => {
-          setIsCancelConfirmModalOpen(false);
-          setExchangeToCancel(null);
-        }}
-        size="exchangeCancelConfirm"
-      >
-        <div className={cancelModalStyles.cancelModalContainer}>
-          <h2 className={cancelModalStyles.title}>
-            교환 제시 취소
-          </h2>
-          <p className={cancelModalStyles.message}>
-            [{exchangeToCancel?.rarity || 'COMMON'} | {exchangeToCancel?.description || '스페인 여행'}] 교환 제시를 취소하시겠습니까?
-          </p>
-          <ButtonPrimary
-            onClick={handleConfirmCancel}
-            className={cancelModalStyles.cancelButton}
+          <CardExchangeModal
+            open={isExchangeModalOpen}
+            onClose={handleExchangeModalClose}
+            targetCardData={cardData}
+            exchangeCardData={exchangeModalCard}
+            onExchangeSuccess={handleExchangeModalSuccess}
+          />
+          <Modal
+            open={exchangeFormOpen}
+            onClose={handleExchangeFormCancel}
+            size="bottomSheetFull"
+            showCloseButton={false}
           >
-            취소하기
-          </ButtonPrimary>
-        </div>
-      </Modal>
+            <div className={exchangePageStyles.pageContainer} style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div className={exchangePageStyles.header}>
+                <button
+                  type="button"
+                  className={exchangePageStyles.backButton}
+                  onClick={handleExchangeFormCancel}
+                  aria-label="뒤로가기"
+                >
+                  <Image src="/assets/icons/ic_back.svg" alt="뒤로가기" width={22} height={22} />
+                </button>
+                <h1 className={exchangePageStyles.headerTitle}>포토카드 교환하기</h1>
+                <div className={exchangePageStyles.headerSpacer} aria-hidden />
+              </div>
+              <ExchangeFormContent
+                cardData={exchangeFormCard}
+                onCancel={handleExchangeFormCancel}
+                onExchange={handleExchangeFormSuccess}
+              />
+            </div>
+          </Modal>
+          <Modal
+            open={isCancelConfirmModalOpen}
+            onClose={() => {
+              setIsCancelConfirmModalOpen(false);
+              setExchangeToCancel(null);
+            }}
+            size="exchangeCancelConfirm"
+          >
+            <div className={cancelModalStyles.cancelModalContainer}>
+              <h2 className={cancelModalStyles.title}>
+                교환 제시 취소
+              </h2>
+              <p className={cancelModalStyles.message}>
+                [{exchangeToCancel?.rarity || 'COMMON'} | {exchangeToCancel?.description || '스페인 여행'}] 교환 제시를 취소하시겠습니까?
+              </p>
+              <ButtonPrimary
+                onClick={handleConfirmCancel}
+                className={cancelModalStyles.cancelButton}
+              >
+                취소하기
+              </ButtonPrimary>
+            </div>
+          </Modal>
+        </>
+      )}
     </div>
   );
 }
