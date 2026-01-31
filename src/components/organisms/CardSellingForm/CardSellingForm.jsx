@@ -84,6 +84,9 @@ export default function CardSellingForm({
         userCardId: Number(userCardId),
         quantity: qty,
         pricePerUnit,
+        desired_grade: grade ?? null,
+        desired_genre: genre ?? null,
+        desired_desc: description?.trim() || null,
       });
       const serverData = res.data?.data ?? null;
       const payload = {
