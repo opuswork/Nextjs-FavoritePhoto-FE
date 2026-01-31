@@ -40,9 +40,11 @@ export default function Header({ onOpenAlarm }) {
     try {
       await http.post('/users/logout');
       setUser(null);
+      router.replace('/');
       router.refresh();
     } catch {
       setUser(null);
+      router.replace('/');
       router.refresh();
     }
     setIsMenuOpen(false);
