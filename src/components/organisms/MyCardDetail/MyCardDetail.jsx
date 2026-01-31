@@ -5,7 +5,7 @@ import Label from '../../atoms/Label/Label';
 import InputLabel from '../../molecules/InputLabel/InputLabel';
 import { ButtonPrimary, ButtonSecondary, ResponsiveButton } from '@/components/atoms/Button';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function MyCardDetail({
   rarity = 'COMMON',
@@ -19,9 +19,20 @@ export default function MyCardDetail({
 }) {
   const [quantity, setQuantity] = useState(initialQuantity);
   const [priceValue, setPriceValue] = useState(price);
+  const [priceTouched, setPriceTouched] = useState(false);
+
+  useEffect(() => {
+    setQuantity(initialQuantity);
+  }, [initialQuantity]);
+
+  useEffect(() => {
+    setPriceValue(price);
+  }, [price]);
+
+  const isSingleCard = maxQuantity <= 1;
 
   const handleMinus = () => {
-    if (quantity > 1) {
+    if (quantity > 1 && !isSingleCard) {
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
       if (onQuantityChange) onQuantityChange(newQuantity);
@@ -29,7 +40,7 @@ export default function MyCardDetail({
   };
 
   const handlePlus = () => {
-    if (quantity < maxQuantity) {
+    if (quantity < maxQuantity && !isSingleCard) {
       const newQuantity = quantity + 1;
       setQuantity(newQuantity);
       if (onQuantityChange) onQuantityChange(newQuantity);
@@ -41,6 +52,13 @@ export default function MyCardDetail({
     setPriceValue(newPrice);
     if (onPriceChange) onPriceChange(newPrice);
   };
+
+  const handlePriceBlur = () => {
+    setPriceTouched(true);
+  };
+
+  const parsedPrice = Number(String(priceValue || '').replace(/\D/g, '')) || 0;
+  const priceInvalid = priceTouched && (String(priceValue || '').trim() === '' || parsedPrice <= 0);
 
   return (
     <div className={styles.myCardDetailContainer}>
@@ -79,7 +97,7 @@ export default function MyCardDetail({
         <Label className={styles.infoLabel}>총 판매 수량</Label>
         <div className={styles.quantityRightGroup}>
           <div className={styles.quantityControl}>
-            <ResponsiveButton className={styles.iconButton} onClick={handleMinus} disabled={quantity <= 1}>
+            <ResponsiveButton className={styles.iconButton} onClick={handleMinus} disabled={quantity <= 1 || isSingleCard}>
               <Image 
                 src="/assets/icons/ic_minus.svg" 
                 alt="minus" 
@@ -92,7 +110,7 @@ export default function MyCardDetail({
             <ResponsiveButton
               className={styles.iconButton}
               onClick={handlePlus}
-              disabled={quantity >= maxQuantity}
+              disabled={quantity >= maxQuantity || isSingleCard}
             >
               <Image
                 src="/assets/icons/ic_plus.svg"
@@ -120,9 +138,15 @@ export default function MyCardDetail({
               placeholder="숫자만 입력"
               value={priceValue}
               onChange={handlePriceChange}
+              onBlur={handlePriceBlur}
               className={styles.priceInputLabel}
             />
           </div>
+          {priceInvalid && (
+            <span className={styles.priceError} role="alert">
+              가격을 입력해 주세요.
+            </span>
+          )}
         </div>
       </div>
     </div>

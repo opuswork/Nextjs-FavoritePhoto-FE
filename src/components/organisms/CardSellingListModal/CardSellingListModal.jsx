@@ -16,22 +16,21 @@ import styles from './CardSellingListModal.module.css';
 const STORAGE_SELL_CARD = 'marketplace_sell_card';
 
 /**
- * GET /api/purchases/seller 응답 항목을 MyCard용 카드 객체로 변환
+ * GET /users/me/cards 응답 항목 (user_card + photo_card)을 MyCard용 카드 객체로 변환
+ * id = user_card_id so each row is distinct and we have user_card_id for creating listing
  */
-function purchaseRowToCard(row) {
+function userCardRowToCard(row) {
   const quantity = Number(row?.quantity ?? 0);
-  const unitPrice = row?.unit_price ?? 0;
-  const totalPrice = row?.total_price ?? 0;
   return {
-    id: row?.purchase_id,
-    purchaseId: row?.purchase_id,
+    id: row?.user_card_id,
+    user_card_id: row?.user_card_id,
+    photo_card_id: row?.photo_card_id,
+    quantity,
     rarity: row?.grade ?? 'COMMON',
     category: row?.genre ?? '풍경',
-    owner: '구매자',
-    description: row?.name ?? '-',
-    price: `${unitPrice} P`,
-    totalPrice,
-    quantity,
+    owner: '나',
+    description: row?.name ?? row?.description ?? '-',
+    price: `${row?.min_price ?? 0} P`,
     imageSrc: row?.image_url || '/assets/products/photo-card.svg',
     title: row?.name,
     grade: row?.grade,
@@ -79,26 +78,30 @@ export default function CardSellingListModal({ open, onClose, modalTitle = '나�
     }
   }, [open]);
 
-  const fetchSellingList = useCallback(async () => {
-    if (!sellerUserId) return;
+  /** Fetch logged-in user's owned cards (user_card) for "나의 포토카드 판매하기" list */
+  const fetchMyCards = useCallback(async () => {
     setSellingListLoading(true);
     setSellingListError(null);
     try {
-      const res = await http.get('/api/purchases/seller', { params: { sellerUserId } });
+      const res = await http.get('/users/me/cards');
       const data = res.data?.data ?? [];
-      setSellingList(Array.isArray(data) ? data.map(purchaseRowToCard) : []);
+      setSellingList(Array.isArray(data) ? data.map(userCardRowToCard) : []);
     } catch (err) {
-      setSellingListError(err?.response?.data?.error ?? err?.message ?? '판매 내역을 불러오지 못했습니다.');
+      const status = err?.response?.status;
+      const message = status === 401
+        ? '로그인이 필요합니다.'
+        : (err?.response?.data?.message ?? err?.message ?? '보유 카드를 불러오지 못했습니다.');
+      setSellingListError(message);
       setSellingList([]);
     } finally {
       setSellingListLoading(false);
     }
-  }, [sellerUserId]);
+  }, []);
 
   useEffect(() => {
-    if (open && sellerUserId) fetchSellingList();
+    if (open) fetchMyCards();
     if (!open) setSellingList([]);
-  }, [open, sellerUserId, fetchSellingList]);
+  }, [open, fetchMyCards]);
 
   const gradeOptions = [
     { value: 'all', label: '등급' },
@@ -140,7 +143,7 @@ export default function CardSellingListModal({ open, onClose, modalTitle = '나�
     []
   );
 
-  const cardsFromApi = sellingList.length > 0 || sellerUserId != null ? sellingList : sampleCards;
+  const cardsFromApi = sellingList.length > 0 ? sellingList : (sellingListError ? [] : sampleCards);
   const filteredCards = useMemo(() => {
     let list = cardsFromApi;
     if (grade && grade !== 'all') list = list.filter((c) => c.grade === grade || c.rarity === grade);
@@ -287,16 +290,16 @@ export default function CardSellingListModal({ open, onClose, modalTitle = '나�
               />
             )}
 
-            {/* 판매 내역 API 로딩/에러 */}
-            {sellerUserId != null && sellingListLoading && (
-              <div className={styles.cardsGrid}>판매 내역을 불러오는 중...</div>
+            {/* 보유 카드(user_card) 로딩/에러 */}
+            {sellingListLoading && (
+              <div className={styles.cardsGrid}>보유 카드를 불러오는 중...</div>
             )}
-            {sellerUserId != null && sellingListError && !sellingListLoading && (
+            {sellingListError && !sellingListLoading && (
               <div className={styles.cardsGrid}>{sellingListError}</div>
             )}
 
             {/* MyCard Grid */}
-            {!(sellerUserId != null && (sellingListLoading || sellingListError)) && (
+            {!sellingListLoading && !sellingListError && (
             <div className={styles.cardsGrid}>
               {filteredCards.length === 0 ? (
                 <div className={styles.emptyState}>등록된 카드가 없습니다.</div>

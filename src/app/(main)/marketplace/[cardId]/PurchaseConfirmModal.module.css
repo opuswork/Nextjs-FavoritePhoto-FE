@@ -79,6 +79,14 @@
   margin: 0 0 12px 0;
 }
 
+.loginHint {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  margin: 0 0 16px 0;
+}
+
 .purchaseButton {
   width: 170px;
   height: 60px;

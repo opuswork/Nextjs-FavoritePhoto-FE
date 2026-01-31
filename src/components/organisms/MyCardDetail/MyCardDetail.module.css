@@ -157,6 +157,15 @@
   flex: 1;
   max-width: 200px;
   margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.priceError {
+  font-size: 12px;
+  color: #ff6b6b;
+  margin: 0;
 }
 
 .priceInputContainer {

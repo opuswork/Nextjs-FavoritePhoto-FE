@@ -49,6 +49,7 @@ function filterCards(cards, filters) {
 
 export default function MarketplacePage() {
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useState(null);
   const [isSellingModalOpen, setIsSellingModalOpen] = useState(false);
   const [filters, setFilters] = useState({ rarity: 'all', genre: 'all', soldout: 'all' });
   const [displayCount, setDisplayCount] = useState(INITIAL_COUNT);
@@ -59,6 +60,21 @@ export default function MarketplacePage() {
   const [loading, setLoading] = useState(true);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const { data } = await http.get('/users/me');
+        setCurrentUser(data?.user ?? null);
+      } catch (err) {
+        setCurrentUser(null);
+        if (err?.response?.status === 401) {
+          router.replace('/auth/login');
+        }
+      }
+    }
+    fetchUser();
+  }, [router]);
 
   const fetchListings = useCallback(async (cursor = null, append = false) => {
     const isLoadMore = append && cursor != null;
@@ -179,7 +195,7 @@ export default function MarketplacePage() {
           setIsSellingModalOpen(false);
           router.push('/marketplace/sell');
         }}
-        sellerUserId={1}
+        sellerUserId={currentUser?.id}
       />
     </div>
   );

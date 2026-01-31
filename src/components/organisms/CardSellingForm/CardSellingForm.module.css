@@ -178,6 +178,17 @@
   }
   
   /* =========================
+     SUBMIT ERROR
+     ========================= */
+
+  .submitError {
+    font-size: 14px;
+    color: #ff6b6b;
+    margin: 0 0 8px 0;
+    text-align: center;
+  }
+
+  /* =========================
      ACTION BUTTONS (KEY PART)
      ========================= */
   

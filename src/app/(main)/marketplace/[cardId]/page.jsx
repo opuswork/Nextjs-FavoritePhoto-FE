@@ -77,13 +77,9 @@ export default function MarketplaceCardPurchasePage() {
   const [listingError, setListingError] = useState(null);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const [purchaseError, setPurchaseError] = useState(null);
-  /** 테스트용: 로그인 없이 구매 시 사용할 buyer user ID (개발 시에만 UI 노출) */
-  const [testBuyerUserId, setTestBuyerUserId] = useState(
-    () => Number(process.env.NEXT_PUBLIC_DEFAULT_BUYER_USER_ID) || 1
-  );
+  const [currentUser, setCurrentUser] = useState(null);
 
   const cardId = params?.cardId ?? '1';
-  const isDev = process.env.NODE_ENV === 'development';
   /** 교환하기 UI 표시 여부 — 팀에서 교환 기능 준비되면 true로 변경 */
   const SHOW_EXCHANGE = false;
   const cardIdNum = parseInt(cardId, 10);
@@ -158,6 +154,18 @@ export default function MarketplaceCardPurchasePage() {
     fetchListing();
   }, [fetchListing]);
 
+  useEffect(() => {
+    async function fetchCurrentUser() {
+      try {
+        const { data } = await http.get('/users/me');
+        setCurrentUser(data?.user ?? null);
+      } catch {
+        setCurrentUser(null);
+      }
+    }
+    fetchCurrentUser();
+  }, []);
+
   const cardData = useMemo(() => {
     if (listing) return listingToCardData(listing);
     return sampleCards.find(card => card.id === cardIdNum) || sampleCards[0];
@@ -186,18 +194,26 @@ export default function MarketplaceCardPurchasePage() {
   };
 
   const handlePurchaseConfirm = async () => {
+    if (!currentUser) {
+      setPurchaseError('로그인이 필요합니다.');
+      return;
+    }
+    const sellerUserId = listing?.sellerUserId != null ? Number(listing.sellerUserId) : null;
+    if (sellerUserId != null && currentUser.id === sellerUserId) {
+      setPurchaseError('본인의 리스팅은 구매할 수 없습니다.');
+      return;
+    }
     const id = cardData.id;
     const listingId = typeof id === 'number' && Number.isInteger(id) ? id : null;
     if (listingId == null || id === NO_DATA) {
       setPurchaseError('리스팅 정보가 없습니다.');
       return;
     }
-    const buyerUserId = isDev ? Number(testBuyerUserId) || 1 : (Number(process.env.NEXT_PUBLIC_DEFAULT_BUYER_USER_ID) || 1);
     setPurchaseLoading(true);
     setPurchaseError(null);
     try {
       const res = await http.post('/api/purchases', {
-        buyerUserId: Number(buyerUserId),
+        buyerUserId: Number(currentUser.id),
         listingId: Number(listingId),
         quantity: Number(quantity) || 1,
       });
@@ -511,6 +527,7 @@ export default function MarketplaceCardPurchasePage() {
         open={isPurchaseModalOpen}
         onClose={() => !purchaseLoading && setIsPurchaseModalOpen(false)}
         size="purchaseConfirm"
+        showCloseButton
       >
         <div className={purchaseModalStyles.purchaseModalContainer}>
           <h2 className={purchaseModalStyles.title}>포토카드 구매</h2>
@@ -522,34 +539,17 @@ export default function MarketplaceCardPurchasePage() {
               {purchaseError}
             </p>
           )}
-          {isDev && (
-            <>
-              <div className={purchaseModalStyles.testBuyerRow}>
-                <label htmlFor="test-buyer-id" className={purchaseModalStyles.testBuyerLabel}>
-                  테스트: 구매자 ID (로그인 없이)
-                </label>
-                <input
-                  id="test-buyer-id"
-                  type="number"
-                  min={1}
-                  value={testBuyerUserId}
-                  onChange={(e) => setTestBuyerUserId(Number(e.target.value) || 1)}
-                  className={purchaseModalStyles.testBuyerInput}
-                />
-              </div>
-              {listing?.sellerUserId != null && (
-                <p className={purchaseModalStyles.testHint}>
-                  이 리스팅 판매자 ID: {listing.sellerUserId} — 구매자 ID는 판매자와 달라야 합니다.
-                </p>
-              )}
-            </>
+          {!currentUser && (
+            <p className={purchaseModalStyles.loginHint}>
+              로그인한 사용자만 구매할 수 있습니다.
+            </p>
           )}
           <ButtonPrimary
             onClick={handlePurchaseConfirm}
             className={purchaseModalStyles.purchaseButton}
-            disabled={purchaseLoading}
+            disabled={purchaseLoading || !currentUser}
           >
-            {purchaseLoading ? '처리 중...' : '구매하기'}
+            {purchaseLoading ? '처리 중...' : currentUser ? '구매하기' : '로그인 필요'}
           </ButtonPrimary>
         </div>
       </Modal>

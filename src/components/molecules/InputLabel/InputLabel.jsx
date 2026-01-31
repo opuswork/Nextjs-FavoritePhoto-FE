@@ -10,6 +10,7 @@ export default function InputLabel({
     placeholder, 
     value, 
     onChange, 
+    onBlur,
     className 
 }) {
     return (
@@ -20,7 +21,8 @@ export default function InputLabel({
                 type="text" 
                 placeholder={placeholder} 
                 value={value} 
-                onChange={onChange} 
+                onChange={onChange}
+                onBlur={onBlur}
             />
         </div>
     );
