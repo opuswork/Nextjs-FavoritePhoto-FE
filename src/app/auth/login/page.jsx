@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Input from '@/components/atoms/Input/Input';
@@ -34,7 +34,7 @@ function validatePassword(value) {
   return null;
 }
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
@@ -152,5 +152,22 @@ export default function LoginPage() {
         </div>
       </form>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
+        <div className={styles.form}>
+          <h1 className={styles.logo}>
+            최애<span className={styles.logoAccent}>의</span>포토
+          </h1>
+          <p className="text-white/70">로딩 중...</p>
+        </div>
+      </div>
+    }>
+      <LoginPageContent />
+    </Suspense>
   );
 }
