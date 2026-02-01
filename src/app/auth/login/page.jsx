@@ -1,3 +1,8 @@
+// src/app/auth/login/page.jsx
+// 로그인 페이지
+// 일반로그인+ 구글 로그인(현재, 회원가입페이지 없음)
+// lib/http/client.js 사용 .env.local 파일에 NEXT_PUBLIC_API_BASE_URL 설정 localhost:3001 -> [https://be-1-yqrf.onrender.com]
+
 'use client';
 
 import { useState, useEffect } from 'react';
