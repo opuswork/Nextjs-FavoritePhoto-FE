@@ -24,7 +24,7 @@ function listingToCard(item) {
     id: item?.listingId,
     rarity: pc?.grade ?? 'COMMON',
     category: pc?.genre ?? '풍경',
-    owner: '판매자',
+    owner: item?.sellerNickname ?? '판매자',
     description: pc?.description || pc?.name || '-',
     price: `${pricePerUnit} P`,
     remaining: quantity,
@@ -69,7 +69,8 @@ export default function MarketplacePage() {
       } catch (err) {
         setCurrentUser(null);
         if (err?.response?.status === 401) {
-          router.replace('/auth/login');
+          const redirectTo = err?.response?.data?.redirectTo;
+          router.replace(redirectTo || '/auth/login');
         }
       }
     }

@@ -17,30 +17,6 @@ function hasValue(v) {
 }
 
 export default function CardBuyer({
-<<<<<<< HEAD
-  rarity = 'COMMON',
-  category = '풍경',
-  owner = '미쓰손',
-  description = '우리집 앞마당 포토카드입니다. 우리집 앞마당 포토카드입니다. 우리집 앞마당 포토카드입니다.',
-  price = '4 P',
-  remaining = '2 / 5',
-  quantity = 2,
-  onQuantityChange,
-  totalPrice = '8 P (2장)',
-  onPurchase,
-}) {
-  const handleDecrease = () => {
-    if (quantity > 1 && onQuantityChange) {
-      onQuantityChange(quantity - 1);
-    }
-  };
-
-  const handleIncrease = () => {
-    if (onQuantityChange) {
-      onQuantityChange(quantity + 1);
-    }
-  };
-=======
     rarity,
     category,
     owner,
@@ -68,7 +44,6 @@ export default function CardBuyer({
             onQuantityChange(quantity + 1);
         }
     };
->>>>>>> 41c1518 (feat(loginpage) add login page, implemented google login)
 
     if (!hasData) {
         return (

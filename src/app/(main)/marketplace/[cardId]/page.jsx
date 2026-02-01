@@ -40,9 +40,8 @@ function listingToCardData(listing) {
     ? `${Number(pricePerUnit)} P`
     : NO_DATA;
   const sellerUserId = listing?.sellerUserId;
-  const ownerDisplay = sellerUserId != null && !Number.isNaN(Number(sellerUserId))
-    ? `판매자 #${sellerUserId}`
-    : NO_DATA;
+  const ownerDisplay = listing?.sellerNickname
+    ?? (sellerUserId != null && !Number.isNaN(Number(sellerUserId)) ? `판매자 #${sellerUserId}` : NO_DATA);
 
   return {
     id: hasValue(listing?.listingId) ? listing.listingId : NO_DATA,
@@ -159,8 +158,11 @@ export default function MarketplaceCardPurchasePage() {
       try {
         const { data } = await http.get('/users/me');
         setCurrentUser(data?.user ?? null);
-      } catch {
+      } catch (err) {
         setCurrentUser(null);
+        if (err?.response?.status === 401 && err?.response?.data?.redirectTo) {
+          router.replace(err.response.data.redirectTo);
+        }
       }
     }
     fetchCurrentUser();

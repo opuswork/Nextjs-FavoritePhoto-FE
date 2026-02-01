@@ -61,7 +61,7 @@ export default function LoginPage() {
     setPasswordError('');
     try {
       await http.post('/users/login', { email, password });
-      router.push('/');
+      router.push('/mygallery');
     } catch (err) {
       const message = err.response?.data?.message ?? '로그인에 실패했습니다.';
       setPasswordError(message);
