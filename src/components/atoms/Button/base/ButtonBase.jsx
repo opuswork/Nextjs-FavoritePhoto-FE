@@ -1,8 +1,17 @@
 'use client';
 
-export default function ButtonBase({ children, className = '', disabled = false, ...props }) {
+import Link from 'next/link';
+
+export default function ButtonBase({ children, className = '', disabled = false, href, ...props }) {
+  if (href != null && href !== '') {
+    return (
+      <Link href={href} className={className} {...props}>
+        {children}
+      </Link>
+    );
+  }
   return (
-    <button {...props} disabled={disabled} className={className}>
+    <button type="button" {...props} disabled={disabled} className={className}>
       {children}
     </button>
   );
