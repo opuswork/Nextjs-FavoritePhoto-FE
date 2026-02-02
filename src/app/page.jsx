@@ -41,7 +41,7 @@ export default function Home() {
 
               <div className="mt-[28px] flex justify-center">
                 <ButtonPrimary
-                  href="/market"
+                  href="/marketplace"
                   thickness="thin"
                   size="M"
                   className="!w-[226px] !h-[55px] !px-0"
