@@ -1,9 +1,11 @@
 /* src/app/(main)/mygallery/page.module.css */
 
-/* wrapper */
+/* wrapper - prevent horizontal overflow on mobile */
 .listWrapper {
   box-sizing: border-box;
   padding-bottom: 80px;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 /* 기본: 태블릿(<=1198px) = 2열 */
@@ -11,9 +13,16 @@
   margin-top: 80px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  column-gap: 48px;
+  column-gap: 24px;
   row-gap: 56px;
   justify-items: center;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .cardGrid {
+    column-gap: 48px;
+  }
 }
 
 /* 데스크탑(>=1199px) = 3열 */

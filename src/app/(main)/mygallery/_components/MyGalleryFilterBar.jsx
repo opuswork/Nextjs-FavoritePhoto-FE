@@ -87,40 +87,37 @@ export default function MyGalleryFilterBar({
   // Desktop / Tablet
   // =====================
   return (
-    <div className="mt-[30px] flex items-center">
+    <div className="mt-[30px] flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 min-w-0">
       {/* 검색 */}
-      <div className="w-[320px] h-[50px] shrink-0 flex items-center px-[20px] border border-white/40 rounded-[6px]">
+      <div className="w-full sm:w-[320px] h-[50px] shrink-0 flex items-center px-[20px] border border-white/40 rounded-[6px]">
         <input
           value={search}
           onChange={(e) => onChangeSearch(e.target.value)}
           placeholder="검색"
-          className="w-full bg-transparent outline-none text-white placeholder:text-white/40"
+          className="w-full bg-transparent outline-none text-white placeholder:text-white/40 min-w-0"
         />
         <Image src="/assets/icons/ic_search.svg" alt="검색" width={24} height={24} />
       </div>
 
-      {/* 간격 60px */}
-      <div className="w-[60px] shrink-0" />
+      {/* 간격 60px - hidden on narrow */}
+      <div className="hidden sm:block w-[60px] shrink-0" />
 
       {/* 드롭다운 2개 */}
-      <div className="flex items-center gap-[10px]">
-        {/* ✅ 등급 */}
+      <div className="flex items-center gap-[10px] shrink-0">
         <div className="w-[120px] h-[50px] shrink-0">
           <Dropdown
             label="등급"
             value={grade}
             options={GRADE_OPTIONS}
-            onChange={handleGradeChange} // ✅ 여기만 변경
+            onChange={handleGradeChange}
           />
         </div>
-
-        {/* ✅ 장르 */}
         <div className="w-[128px] h-[50px] shrink-0">
           <Dropdown
             label="장르"
             value={genre}
             options={GENRE_OPTIONS}
-            onChange={handleGenreChange} // ✅ 여기만 변경
+            onChange={handleGenreChange}
           />
         </div>
       </div>

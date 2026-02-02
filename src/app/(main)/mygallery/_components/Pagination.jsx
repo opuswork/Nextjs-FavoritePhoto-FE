@@ -21,8 +21,8 @@ export default function Pagination({ currentPage, totalPages, onChange, classNam
   const arrowBtnDisabled = 'opacity-30 cursor-not-allowed pointer-events-none';
 
   return (
-    <nav className={`mt-[60px] flex justify-center ${className}`} aria-label="pagination">
-      <ul className="flex items-center gap-[20px]">
+    <nav className={`mt-[60px] flex justify-center min-w-0 overflow-x-hidden ${className}`} aria-label="pagination">
+      <ul className="flex flex-wrap items-center justify-center gap-2 sm:gap-[20px]">
         {/* Prev */}
         <li>
           <button
