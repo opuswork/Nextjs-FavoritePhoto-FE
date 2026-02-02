@@ -135,33 +135,31 @@ export default function MyGalleryShell({ children }) {
 
   return (
     <MyGalleryContext.Provider value={{ user, cards, loading, error, refetchCards }}>
-      <main className="min-h-screen bg-black text-white">
-        <Container className="pt-[60px] pb-[20px]">
-          <div className="flex items-center justify-between gap-6">
-            <Title
-              text="마이갤러리"
-              as="h1"
-              showLine={false}
-              style={{ fontSize: '62px', lineHeight: '100%' }}
-            />
+      <main className="min-h-screen bg-black text-white overflow-x-hidden">
+        <Container className="pt-6 pb-4 md:pt-10 md:pb-6 lg:pt-[60px] lg:pb-[20px] min-w-0">
+          {/* Title + button: stack on mobile/tablet, row on desktop (lg+) */}
+          <div className="flex flex-col gap-3 md:gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
+            <div className="text-[28px] md:text-[36px] lg:text-[48px] xl:text-[62px] leading-[100%] shrink-0 [&_h1]:!text-inherit">
+              <Title text="마이갤러리" as="h1" showLine={false} />
+            </div>
             <ButtonPrimary
               size="l"
               thickness="thick"
-              className="w-[440px] h-[60px]"
+              className="w-full lg:w-auto lg:min-w-[200px] xl:w-[440px] h-[48px] md:h-[52px] lg:h-[60px] shrink-0"
               onClick={() => router.push('/mygallery/create')}
             >
               포토카드 생성하기
             </ButtonPrimary>
           </div>
 
-          <div className="mt-[20px] mb-[50px] h-[2px] w-full bg-[#EEEEEE]" />
+          <div className="mt-4 md:mt-[20px] mb-6 md:mb-[50px] h-[2px] w-full bg-[#EEEEEE]" />
 
-          <div className="mt-[24px]">
-            <div className="flex items-end gap-2">
-              <span className="text-[24px] font-bold leading-[100%] text-white/80">
+          <div className="mt-4 md:mt-[24px] min-w-0">
+            <div className="flex flex-wrap items-end gap-2">
+              <span className="text-[16px] md:text-[20px] lg:text-[24px] font-bold leading-[100%] text-white/80 break-words">
                 {loading ? '…' : `${displayName}님이 보유한 포토카드`}
               </span>
-              <span className="text-[20px] font-normal leading-[100%] text-white/50">
+              <span className="text-[14px] md:text-[16px] lg:text-[20px] font-normal leading-[100%] text-white/50 shrink-0">
                 ({loading ? '…' : totalCount}장)
               </span>
             </div>
@@ -170,7 +168,7 @@ export default function MyGalleryShell({ children }) {
             )}
           </div>
 
-          <div className="mt-[24px]">{children}</div>
+          <div className="mt-4 md:mt-[24px] min-w-0">{children}</div>
         </Container>
       </main>
     </MyGalleryContext.Provider>
