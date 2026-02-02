@@ -33,14 +33,16 @@ export default function MyGalleryPage() {
     [rawCards],
   );
 
-  /* 등급별 개수: raw API rows에서 grade 읽어 수량 합계 (displayCards와 독립적으로 계산) */
+  /* 등급별 개수: raw API rows에서 grade·quantity 읽어 수량 합계 (실제 보유 장수) */
   const gradeCounts = useMemo(() => {
     const initial = { total: 0, common: 0, rare: 0, superRare: 0, legendary: 0 };
     const rows = Array.isArray(rawCards) ? rawCards : [];
     rows.forEach((row) => {
       const rawGrade = row?.grade ?? row?.photo_card?.grade ?? row?.photoCard?.grade;
       const displayGrade = apiGradeToDisplay(rawGrade);
-      const qty = Number(row?.quantity ?? 0) || 1;
+      const qty = Number(
+        row?.quantity ?? row?.user_card?.quantity ?? row?.userCard?.quantity ?? 0
+      );
       initial.total += qty;
       if (displayGrade === 'COMMON') initial.common += qty;
       else if (displayGrade === 'RARE') initial.rare += qty;
