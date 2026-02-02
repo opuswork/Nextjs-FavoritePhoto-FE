@@ -119,31 +119,8 @@ export default function CardSellingListModal({ open, onClose, modalTitle = '나�
     { value: '동물', label: '동물' },
   ];
 
-  // Sample card data (10 cards for 2 columns x 5 rows) - using 3 images
-  const imageSources = [
-    '/assets/products/photo-card-yard-with-woman.svg',
-    '/assets/products/photo-card-spain.svg',
-    '/assets/products/photo-card-tree-with-lake.svg',
-  ];
-
-  // API 미사용 시 폴백용 샘플 (sellerUserId 없을 때)
-  const sampleCards = useMemo(
-    () => [
-      { id: 1, rarity: 'RARE', category: '풍경', owner: '프로여행러', description: '스페인 여행', price: '4 P', quantity: 1, imageSrc: imageSources[1], title: '스페인 여행', maxQuantity: 3, initialQuantity: 1, grade: 'RARE', genre: '풍경', exchangeDescription: '' },
-      { id: 2, rarity: 'COMMON', category: '풍경', owner: '미쓰손', description: '우리집 앞마당', price: '4 P', quantity: 1, imageSrc: imageSources[0], title: '우리집 앞마당', maxQuantity: 3, initialQuantity: 1, grade: 'COMMON', genre: '풍경', exchangeDescription: '' },
-      { id: 3, rarity: 'SUPER RARE', category: '풍경', owner: '랍스타', description: 'How Far I\'ll Go', price: '4 P', quantity: 1, imageSrc: imageSources[2], title: 'How Far I\'ll Go', maxQuantity: 3, initialQuantity: 1, grade: 'SUPER RARE', genre: '풍경', exchangeDescription: '' },
-      { id: 4, rarity: 'COMMON', category: '풍경', owner: '미쓰손', description: '우리집 앞마당', price: '4 P', quantity: 1, imageSrc: imageSources[0], title: '우리집 앞마당', maxQuantity: 3, initialQuantity: 1, grade: 'COMMON', genre: '풍경', exchangeDescription: '' },
-      { id: 5, rarity: 'RARE', category: '풍경', owner: '프로여행러', description: '스페인 여행', price: '4 P', quantity: 1, imageSrc: imageSources[1], title: '스페인 여행', maxQuantity: 3, initialQuantity: 1, grade: 'RARE', genre: '풍경', exchangeDescription: '' },
-      { id: 6, rarity: 'LEGENDARY', category: '풍경', owner: '미쓰손', description: '우리집 앞마당', price: '4 P', quantity: 1, imageSrc: imageSources[0], title: '우리집 앞마당', maxQuantity: 3, initialQuantity: 1, grade: 'LEGENDARY', genre: '풍경', exchangeDescription: '' },
-      { id: 7, rarity: 'COMMON', category: '풍경', owner: '랍스타', description: 'How Far I\'ll Go', price: '4 P', quantity: 1, imageSrc: imageSources[2], title: 'How Far I\'ll Go', maxQuantity: 3, initialQuantity: 1, grade: 'COMMON', genre: '풍경', exchangeDescription: '' },
-      { id: 8, rarity: 'SUPER RARE', category: '풍경', owner: '프로여행러', description: '스페인 여행', price: '4 P', quantity: 1, imageSrc: imageSources[1], title: '스페인 여행', maxQuantity: 3, initialQuantity: 1, grade: 'SUPER RARE', genre: '풍경', exchangeDescription: '' },
-      { id: 9, rarity: 'RARE', category: '풍경', owner: '미쓰손', description: '우리집 앞마당', price: '4 P', quantity: 1, imageSrc: imageSources[0], title: '우리집 앞마당', maxQuantity: 3, initialQuantity: 1, grade: 'RARE', genre: '풍경', exchangeDescription: '' },
-      { id: 10, rarity: 'COMMON', category: '풍경', owner: '랍스타', description: 'How Far I\'ll Go', price: '4 P', quantity: 1, imageSrc: imageSources[2], title: 'How Far I\'ll Go', maxQuantity: 3, initialQuantity: 1, grade: 'COMMON', genre: '풍경', exchangeDescription: '' },
-    ],
-    []
-  );
-
-  const cardsFromApi = sellingList.length > 0 ? sellingList : (sellingListError ? [] : sampleCards);
+  /** Use only API data. No mock fallback — mock ids cause POST /api/sell to return 404 (user_card not found). */
+  const cardsFromApi = sellingList;
   const filteredCards = useMemo(() => {
     let list = cardsFromApi;
     if (grade && grade !== 'all') list = list.filter((c) => c.grade === grade || c.rarity === grade);
