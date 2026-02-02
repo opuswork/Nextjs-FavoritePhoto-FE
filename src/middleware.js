@@ -1,16 +1,11 @@
 import { NextResponse } from 'next/server';
 
-const AUTH_COOKIE_NAME = 'token';
-
+// JWT cookie is set by the backend (different origin, e.g. Render).
+// Middleware runs on the frontend origin (Vercel) and only sees frontend cookies,
+// so we cannot check the token here for cross-origin auth.
+// /marketplace pages handle auth by calling GET /users/me (withCredentials sends
+// the backend cookie); on 401 they redirect to /auth/login.
 export function middleware(request) {
-  const pathname = request.nextUrl.pathname;
-  if (pathname.startsWith('/marketplace')) {
-    const token = request.cookies.get(AUTH_COOKIE_NAME);
-    if (!token?.value) {
-      const loginUrl = new URL('/auth/login', request.url);
-      return NextResponse.redirect(loginUrl);
-    }
-  }
   return NextResponse.next();
 }
 

@@ -144,6 +144,10 @@ export default function Header({ onOpenAlarm }) {
       router.replace('/');
       router.refresh();
     }
+    clearAuthToken();
+    setUser(null);
+    router.replace('/');
+    router.refresh();
     setIsMenuOpen(false);
     setIsProfileOpen(false);
     setIsAlarmOpen(false);

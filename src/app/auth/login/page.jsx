@@ -1,7 +1,9 @@
 // src/app/auth/login/page.jsx
 // 로그인 페이지
 // 일반로그인+ 구글 로그인(현재, 회원가입페이지 없음)
-// lib/http/client.js 사용 .env.local 파일에 NEXT_PUBLIC_API_BASE_URL 설정 localhost:3001 -> [https://be-1-yqrf.onrender.com]
+// lib/http/client.js 사용. API 요청은 NEXT_PUBLIC_API_BASE_URL로 전송됨.
+// 로컬: .env.local에 NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
+// Vercel: 프로젝트 설정 → Environment Variables에 NEXT_PUBLIC_API_BASE_URL=https://your-backend.onrender.com (끝에 슬래시 없음)
 
 'use client';
 
@@ -13,7 +15,7 @@ import Label from '@/components/atoms/Label/Label';
 import { http } from '@/lib/http/client';
 import styles from './page.module.css';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
 
 const EMAIL_MIN_LENGTH = 8;
 const PASSWORD_MIN_LENGTH = 8;
