@@ -20,22 +20,21 @@
   }
 }
 
-/* Mobile (0–499px): 1 column */
+/* Mobile (0–499px): 2 columns */
 .cardGrid {
   margin-top: 32px;
   display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 16px;
-  row-gap: 32px;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 12px;
+  row-gap: 24px;
   justify-items: center;
   min-width: 0;
 }
 
-/* Tablet (500px–1198px): 2 columns */
+/* Tablet (500px–1198px): 2 columns, larger gaps */
 @media (min-width: 500px) {
   .cardGrid {
     margin-top: 48px;
-    grid-template-columns: repeat(2, 1fr);
     column-gap: 24px;
     row-gap: 40px;
   }
