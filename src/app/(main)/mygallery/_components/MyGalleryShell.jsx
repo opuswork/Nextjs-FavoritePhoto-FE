@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 import Container from '@/components/layout/Container';
 import Title from '@/components/atoms/Title/Title';
@@ -23,6 +23,17 @@ export function useMyGallery() {
   return ctx;
 }
 
+const API_BASE = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_API_BASE_URL || '') : '';
+
+/** Resolve image URL: use as-is if absolute (http/https), else prepend API base for backend paths. */
+function resolveImageUrl(imageUrl) {
+  if (!imageUrl || typeof imageUrl !== 'string') return '/assets/products/photo-card.svg';
+  const trimmed = imageUrl.trim();
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+  if (API_BASE && trimmed.startsWith('/')) return API_BASE.replace(/\/$/, '') + trimmed;
+  return trimmed || '/assets/products/photo-card.svg';
+}
+
 /** Map API row to display shape (id, rarity, category, description, imageSrc, quantity, etc.) for grid/cards. */
 export function userCardRowToDisplay(row) {
   const quantity = Number(row?.quantity ?? 0);
@@ -37,14 +48,17 @@ export function userCardRowToDisplay(row) {
     genre: row?.genre ?? '풍경',
     description: row?.name ?? row?.description ?? '-',
     title: row?.name,
-    imageSrc: row?.image_url || '/assets/products/photo-card.svg',
+    imageSrc: resolveImageUrl(row?.image_url),
     owner: '나',
     price: `${row?.min_price ?? 0} P`,
   };
 }
 
+const MYGALLERY_REFETCH_KEY = 'mygallery-refetch';
+
 export default function MyGalleryShell({ children }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -87,6 +101,7 @@ export default function MyGalleryShell({ children }) {
     return fetchCards();
   }, [fetchCards]);
 
+  // Initial load
   useEffect(() => {
     let cancelled = false;
 
@@ -103,6 +118,17 @@ export default function MyGalleryShell({ children }) {
     load();
     return () => { cancelled = true; };
   }, [fetchUser, fetchCards]);
+
+  // Refetch when landing on /mygallery after creating a card (create-card sets sessionStorage flag)
+  useEffect(() => {
+    if (pathname !== '/mygallery') return;
+    try {
+      if (typeof window !== 'undefined' && sessionStorage.getItem(MYGALLERY_REFETCH_KEY)) {
+        sessionStorage.removeItem(MYGALLERY_REFETCH_KEY);
+        fetchCards();
+      }
+    } catch (_) {}
+  }, [pathname, fetchCards]);
 
   const displayName = user?.nickname ?? user?.email ?? '유저';
   const totalCount = cards.reduce((sum, row) => sum + Number(row?.quantity ?? 0), 0);
