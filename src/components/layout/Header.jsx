@@ -52,31 +52,17 @@ function ProfileDropdownContent({ userName, ownedPoint = 0, onClose }) {
   );
 }
 
-// Mock alarm items (replace with API when available)
-const MOCK_ALARMS = [
-  { id: 1, message: '김머누님이 [RARE] 우리집 앞마당을 1장 구매했습니다.', timeText: '1시간 전' },
-  {
-    id: 2,
-    message: '예진쓰님이 [COMMON] 스페인 여행의 포토 카드 교환을 제안했습니다.',
-    timeText: '1시간 전',
-  },
-  { id: 3, message: '[LEGENDARY] 우리집 앞마당이 품절되었습니다.', timeText: '1시간 전' },
-  {
-    id: 4,
-    message: '[RARE] How Far I\'ll Go 3장을 성공적으로 구매했습니다.',
-    timeText: '1시간 전',
-  },
-  {
-    id: 5,
-    message: '예진쓰님과의 [COMMON] 스페인 여행의 포토카드 교환이 성사되었습니다.',
-    timeText: '1시간 전',
-  },
-];
-
 // =====================
 // Alarm dropdown content
 // =====================
-function AlarmDropdownContent({ items = [] }) {
+function AlarmDropdownContent({ items = [], loading = false }) {
+  if (loading) {
+    return (
+      <div className="flex h-full min-h-[200px] w-full items-center justify-center px-5">
+        <p className="text-[14px] text-white/50">불러오는 중...</p>
+      </div>
+    );
+  }
   if (!items.length) {
     return (
       <div className="flex h-full min-h-[200px] w-full items-center justify-center px-5">
@@ -115,15 +101,40 @@ export default function Header({ onOpenAlarm }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileWrapRef = useRef(null);
 
-  // Alarm dropdown
+  // Alarm dropdown (notifications from API)
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(MOCK_ALARMS.length);
+  const [alarms, setAlarms] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [alarmsLoading, setAlarmsLoading] = useState(false);
   const alarmWrapRef = useRef(null);
   const alarmWrapRefMobile = useRef(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  async function fetchNotifications() {
+    if (!user?.id) return;
+    setAlarmsLoading(true);
+    try {
+      const { data } = await http.get('/users/me/notifications');
+      setAlarms(data.notifications ?? []);
+      setUnreadCount(data.unreadCount ?? (data.notifications?.length ?? 0));
+    } catch {
+      setAlarms([]);
+      setUnreadCount(0);
+    } finally {
+      setAlarmsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (user?.id) fetchNotifications();
+    else {
+      setAlarms([]);
+      setUnreadCount(0);
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     async function fetchUser() {
@@ -233,7 +244,7 @@ export default function Header({ onOpenAlarm }) {
                       className="absolute right-0 top-[calc(100%+10px)] z-[9999] h-[535px] w-[300px] overflow-hidden rounded bg-[#2b2b2b] shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
                       role="menu"
                     >
-                      <AlarmDropdownContent items={MOCK_ALARMS} />
+                      <AlarmDropdownContent items={alarms} loading={alarmsLoading} />
                     </div>
                   )}
                 </div>
@@ -386,7 +397,7 @@ export default function Header({ onOpenAlarm }) {
                     className="absolute right-0 top-[calc(100%+10px)] z-[9999] h-[535px] w-[300px] overflow-hidden rounded bg-[#2b2b2b] shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
                     role="menu"
                   >
-                    <AlarmDropdownContent items={MOCK_ALARMS} />
+                    <AlarmDropdownContent items={alarms} loading={alarmsLoading} />
                   </div>
                 )}
               </div>
