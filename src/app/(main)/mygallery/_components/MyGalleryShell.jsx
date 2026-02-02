@@ -35,17 +35,22 @@ function resolveImageUrl(imageUrl) {
 }
 
 /** Map API grade (common, rare, epic, legendary) to display grade (COMMON, RARE, SUPER RARE, LEGENDARY). */
-function apiGradeToDisplay(grade) {
-  if (!grade || typeof grade !== 'string') return 'COMMON';
-  const g = grade.trim().toLowerCase();
-  const map = { common: 'COMMON', rare: 'RARE', epic: 'SUPER RARE', legendary: 'LEGENDARY' };
-  return map[g] ?? (g.toUpperCase() || 'COMMON');
+export function apiGradeToDisplay(grade) {
+  if (grade == null || String(grade).trim() === '') return 'COMMON';
+  const s = String(grade).trim();
+  const g = s.toLowerCase();
+  if (s === 'COMMON' || g === 'common') return 'COMMON';
+  if (s === 'RARE' || g === 'rare') return 'RARE';
+  if (s === 'SUPER RARE' || g === 'epic') return 'SUPER RARE';
+  if (s === 'LEGENDARY' || g === 'legendary') return 'LEGENDARY';
+  return 'COMMON';
 }
 
 /** Map API row to display shape (id, rarity, category, description, imageSrc, quantity, etc.) for grid/cards. */
 export function userCardRowToDisplay(row) {
   const quantity = Number(row?.quantity ?? 0);
-  const displayGrade = apiGradeToDisplay(row?.grade);
+  const rawGrade = row?.grade ?? row?.photo_card?.grade ?? row?.photoCard?.grade;
+  const displayGrade = apiGradeToDisplay(rawGrade);
   return {
     id: row?.user_card_id,
     user_card_id: row?.user_card_id,

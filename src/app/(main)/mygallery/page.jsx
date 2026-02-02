@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useBreakpoint from '@/hooks/useBreakpoint';
 
-import { useMyGallery, userCardRowToDisplay } from './_components/MyGalleryShell';
+import { useMyGallery, userCardRowToDisplay, apiGradeToDisplay } from './_components/MyGalleryShell';
 import CardOriginal from '@/components/organisms/CardOriginal/CardOriginal';
 import GradeChips from './_components/GradeChips';
 import Pagination from './_components/Pagination';
@@ -33,20 +33,22 @@ export default function MyGalleryPage() {
     [rawCards],
   );
 
-  /* 등급별 개수 (카드 종류별 1회씩, quantity는 잔여 표시용) */
+  /* 등급별 개수: raw API rows에서 grade 읽어 수량 합계 (displayCards와 독립적으로 계산) */
   const gradeCounts = useMemo(() => {
-    return displayCards.reduce(
-      (acc, card) => {
-        acc.total += 1;
-        if (card.rarity === 'COMMON') acc.common += 1;
-        if (card.rarity === 'RARE') acc.rare += 1;
-        if (card.rarity === 'SUPER RARE') acc.superRare += 1;
-        if (card.rarity === 'LEGENDARY') acc.legendary += 1;
-        return acc;
-      },
-      { total: 0, common: 0, rare: 0, superRare: 0, legendary: 0 },
-    );
-  }, [displayCards]);
+    const initial = { total: 0, common: 0, rare: 0, superRare: 0, legendary: 0 };
+    const rows = Array.isArray(rawCards) ? rawCards : [];
+    rows.forEach((row) => {
+      const rawGrade = row?.grade ?? row?.photo_card?.grade ?? row?.photoCard?.grade;
+      const displayGrade = apiGradeToDisplay(rawGrade);
+      const qty = Number(row?.quantity ?? 0) || 1;
+      initial.total += qty;
+      if (displayGrade === 'COMMON') initial.common += qty;
+      else if (displayGrade === 'RARE') initial.rare += qty;
+      else if (displayGrade === 'SUPER RARE') initial.superRare += qty;
+      else if (displayGrade === 'LEGENDARY') initial.legendary += qty;
+    });
+    return initial;
+  }, [rawCards]);
 
   const filteredCards = useMemo(() => {
     return displayCards.filter((c) => {
