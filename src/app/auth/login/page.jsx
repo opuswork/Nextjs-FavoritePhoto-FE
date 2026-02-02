@@ -144,6 +144,18 @@ function LoginPageContent() {
           </button>
         </div>
 
+        {/* 하단 문구 */}
+        <p className="mt-2 text-center text-[14px] text-white/60">
+          아직 계정이 없으신가요?
+          <Link
+            href="/auth/signup"
+            className="ml-1.5 font-semibold text-[#efff04] hover:underline"
+          >
+            회원가입하기
+          </Link>
+        </p>
+
+
         <div className={styles.buttonWrap}>
           <button type="button" className={styles.googleLoginButton} onClick={handleGoogleLogin}>
             <img src="/assets/icons/google_button.svg" alt="" width={24} height={24} className={styles.googleButtonIcon} />
