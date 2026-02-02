@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Container from '@/components/layout/Container';
 import Image from 'next/image';
@@ -40,14 +41,12 @@ export default function Home() {
               </h1>
 
               <div className="mt-[28px] flex justify-center">
-                <ButtonPrimary
+                <Link
                   href="/marketplace"
-                  thickness="thin"
-                  size="M"
-                  className="!w-[226px] !h-[55px] !px-0"
+                  className="inline-flex items-center justify-center gap-2.5 w-[226px] h-[55px] rounded-[2px] border border-[#efff04] bg-[#efff04] text-black font-bold text-[16px] leading-none whitespace-nowrap no-underline hover:opacity-90"
                 >
                   최애 찾으러 가기
-                </ButtonPrimary>
+                </Link>
               </div>
             </div>
           </Container>
