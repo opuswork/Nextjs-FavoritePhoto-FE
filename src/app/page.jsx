@@ -84,8 +84,8 @@ export default function Home() {
                   }}
                 />
 
-                <div className="relative z-10 h-full flex flex-col justify-start pt-[120px]">
-                  <div className="text-left max-w-[560px] ml-[200px]">
+                <div className="relative z-10 h-full flex flex-col items-center pt-[120px] lg:items-start">
+                  <div className="text-center max-w-[560px] mx-auto lg:text-left lg:ml-[200px] lg:mx-0">
                     <h2 className="text-[44px] font-bold leading-[1.2]">
                       포인트로 <span className="text-lime-400">안전하게</span> 거래하세요
                     </h2>
@@ -96,7 +96,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="mt-[35px] w-[1068px] h-[518px] relative mx-auto">
+                  <div className="mt-[35px] w-full max-w-[1068px] h-[518px] relative mx-auto">
                     <Image
                       src="/images/landing/lg/img2.svg"
                       alt="포인트로 안전하게 거래하세요"
@@ -132,8 +132,8 @@ export default function Home() {
                 />
 
                 {/* 기존 콘텐츠 */}
-                <div className="relative z-10 h-full flex flex-col justify-start pt-[120px]">
-                  <div className="text-left max-w-[560px] ml-[200px]">
+                <div className="relative z-10 h-full flex flex-col items-center pt-[120px] lg:items-start">
+                  <div className="text-center max-w-[560px] mx-auto lg:text-left lg:ml-[200px] lg:mx-0">
                     <h2 className="text-[44px] font-bold leading-[1.2]">
                       알림으로 보다 <span className="text-sky-400">빨라진</span> 거래
                     </h2>
@@ -144,7 +144,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="mt-[35px] mx-auto w-[1068px] h-[518px] relative">
+                  <div className="mt-[35px] mx-auto w-full max-w-[1068px] h-[518px] relative">
                     <Image
                       src="/images/landing/lg/img3.svg"
                       alt="알림으로 보다 빨라진 거래"
@@ -171,8 +171,8 @@ export default function Home() {
 
           <div className="relative z-10 h-[800px]">
             <Container className="h-full">
-              <div className="h-full flex flex-col justify-start pt-[120px]">
-                <div className="text-left max-w-[560px] ml-[200px]">
+              <div className="h-full flex flex-col items-center pt-[120px] lg:items-start">
+                <div className="text-center max-w-[560px] mx-auto lg:text-left lg:ml-[200px] lg:mx-0">
                   <h2 className="text-[44px] font-bold leading-[1.2]">
                     랜덤 상자로 <span className="text-lime-400">포인트 받자!</span> 🎉
                   </h2>
@@ -183,7 +183,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="mt-[35px] mx-auto w-[1068px] h-[518px] relative">
+                <div className="mt-[35px] mx-auto w-full max-w-[1068px] h-[518px] relative">
                   <Image
                     src="/images/landing/lg/img4.svg"
                     alt="랜덤 상자 포인트 획득 화면"
