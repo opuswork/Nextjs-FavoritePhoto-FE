@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Container from '@/components/layout/Container';
-import { http } from '@/lib/http/client';
+import { http, clearAuthToken } from '@/lib/http/client';
 
 // =====================
 // Profile dropdown content (from header-1)
@@ -138,14 +138,13 @@ export default function Header({ onOpenAlarm }) {
   async function handleLogout() {
     try {
       await http.post('/users/logout');
-      setUser(null);
-      router.replace('/');
-      router.refresh();
     } catch {
-      setUser(null);
-      router.replace('/');
-      router.refresh();
+      // still clear local auth
     }
+    clearAuthToken();
+    setUser(null);
+    router.replace('/');
+    router.refresh();
     setIsMenuOpen(false);
     setIsProfileOpen(false);
     setIsAlarmOpen(false);
