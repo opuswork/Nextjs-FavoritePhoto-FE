@@ -52,10 +52,38 @@ function ProfileDropdownContent({ userName, ownedPoint = 0, onClose }) {
   );
 }
 
+// Mock alarm items (replace with API when available)
+const MOCK_ALARMS = [
+  { id: 1, message: '김머누님이 [RARE] 우리집 앞마당을 1장 구매했습니다.', timeText: '1시간 전' },
+  {
+    id: 2,
+    message: '예진쓰님이 [COMMON] 스페인 여행의 포토 카드 교환을 제안했습니다.',
+    timeText: '1시간 전',
+  },
+  { id: 3, message: '[LEGENDARY] 우리집 앞마당이 품절되었습니다.', timeText: '1시간 전' },
+  {
+    id: 4,
+    message: '[RARE] How Far I\'ll Go 3장을 성공적으로 구매했습니다.',
+    timeText: '1시간 전',
+  },
+  {
+    id: 5,
+    message: '예진쓰님과의 [COMMON] 스페인 여행의 포토카드 교환이 성사되었습니다.',
+    timeText: '1시간 전',
+  },
+];
+
 // =====================
-// Alarm dropdown content (from header-1)
+// Alarm dropdown content
 // =====================
 function AlarmDropdownContent({ items = [] }) {
+  if (!items.length) {
+    return (
+      <div className="flex h-full min-h-[200px] w-full items-center justify-center px-5">
+        <p className="text-[14px] text-white/50">알림이 없습니다.</p>
+      </div>
+    );
+  }
   return (
     <div className="h-full w-full">
       <div className="h-full overflow-y-auto no-scrollbar">
@@ -87,31 +115,11 @@ export default function Header({ onOpenAlarm }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileWrapRef = useRef(null);
 
-  // Alarm dropdown (from header-1)
-  const [isAlarmOn] = useState(true);
+  // Alarm dropdown
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(MOCK_ALARMS.length);
   const alarmWrapRef = useRef(null);
   const alarmWrapRefMobile = useRef(null);
-
-  const mockAlarms = [
-    { id: 1, message: '김머누님이 [RARE] 우리집 앞마당을 1장 구매했습니다.', timeText: '1시간 전' },
-    {
-      id: 2,
-      message: '예진쓰님이 [COMMON] 스페인 여행의 포토 카드 교환을 제안했습니다.',
-      timeText: '1시간 전',
-    },
-    { id: 3, message: '[LEGENDARY] 우리집 앞마당이 품절되었습니다.', timeText: '1시간 전' },
-    {
-      id: 4,
-      message: '[RARE] How Far I\'ll Go 3장을 성공적으로 구매했습니다.',
-      timeText: '1시간 전',
-    },
-    {
-      id: 5,
-      message: '예진쓰님과의 [COMMON] 스페인 여행의 포토카드 교환이 성사되었습니다.',
-      timeText: '1시간 전',
-    },
-  ];
 
   useEffect(() => {
     setMounted(true);
@@ -194,26 +202,30 @@ export default function Header({ onOpenAlarm }) {
                   <span>P</span>
                 </div>
 
-                {/* Alarm dropdown (from header-1) */}
+                {/* Alarm dropdown */}
                 <div ref={alarmWrapRef} className="relative">
                   <button
                     type="button"
                     onClick={() => {
-                      setIsAlarmOpen((v) => !v);
+                      const next = !isAlarmOpen;
+                      setIsAlarmOpen(next);
                       setIsProfileOpen(false);
+                      if (next) setUnreadCount(0);
                       onOpenAlarm?.();
                     }}
                     className="relative rounded p-2 text-white/70 hover:bg-white/10 hover:text-white"
                     aria-label="알림"
                   >
                     <Image
-                      src={isAlarmOn ? '/assets/icons/ic_alarm_on.svg' : '/assets/icons/ic_alarm.svg'}
+                      src={unreadCount > 0 ? '/assets/icons/ic_alarm_on.svg' : '/assets/icons/ic_alarm.svg'}
                       alt=""
                       width={24}
                       height={24}
                     />
-                    {isAlarmOn && (
-                      <span className="absolute right-[9px] top-[9px] h-[6px] w-[6px] rounded-full bg-red-500" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-black bg-red-500 px-1 text-[10px] font-bold leading-none text-white">
+                        {unreadCount > 99 ? '99+' : unreadCount}
+                      </span>
                     )}
                   </button>
                   {isAlarmOpen && (
@@ -221,7 +233,7 @@ export default function Header({ onOpenAlarm }) {
                       className="absolute right-0 top-[calc(100%+10px)] z-[9999] h-[535px] w-[300px] overflow-hidden rounded bg-[#2b2b2b] shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
                       role="menu"
                     >
-                      <AlarmDropdownContent items={mockAlarms} />
+                      <AlarmDropdownContent items={MOCK_ALARMS} />
                     </div>
                   )}
                 </div>
@@ -349,18 +361,24 @@ export default function Header({ onOpenAlarm }) {
               <div ref={alarmWrapRefMobile} className="relative">
                 <button
                   type="button"
-                  onClick={() => setIsAlarmOpen((v) => !v)}
+                  onClick={() => {
+                    const next = !isAlarmOpen;
+                    setIsAlarmOpen(next);
+                    if (next) setUnreadCount(0);
+                  }}
                   className="relative rounded p-2 text-white/70 hover:bg-white/10 hover:text-white"
                   aria-label="알림"
                 >
                   <Image
-                    src={isAlarmOn ? '/assets/icons/ic_alarm_on.svg' : '/assets/icons/ic_alarm.svg'}
+                    src={unreadCount > 0 ? '/assets/icons/ic_alarm_on.svg' : '/assets/icons/ic_alarm.svg'}
                     alt=""
                     width={24}
                     height={24}
                   />
-                  {isAlarmOn && (
-                    <span className="absolute right-[9px] top-[9px] h-[6px] w-[6px] rounded-full bg-red-500" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-black bg-red-500 px-1 text-[10px] font-bold leading-none text-white">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
                   )}
                 </button>
                 {isAlarmOpen && (
@@ -368,7 +386,7 @@ export default function Header({ onOpenAlarm }) {
                     className="absolute right-0 top-[calc(100%+10px)] z-[9999] h-[535px] w-[300px] overflow-hidden rounded bg-[#2b2b2b] shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
                     role="menu"
                   >
-                    <AlarmDropdownContent items={mockAlarms} />
+                    <AlarmDropdownContent items={MOCK_ALARMS} />
                   </div>
                 )}
               </div>
