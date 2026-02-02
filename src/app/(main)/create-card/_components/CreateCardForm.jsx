@@ -1,12 +1,14 @@
 // src/app/(main)/create-card/_components/CreateCardForm.jsx
 'use client';
 
-import { useMemo, useRef, useState, useCallback } from 'react';
+import { useMemo, useRef, useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import Input from '@/components/atoms/Input/Input';
 import TextBox from '@/components/atoms/TextBox/TextBox';
 import { ButtonPrimary } from '@/components/atoms/Button';
 import Modal from '@/components/atoms/Modal/Modal';
+import { http } from '@/lib/http/client';
 
 import CreateCardDropdown from './CreateCardDropdown';
 import FormField from './FormField';
@@ -65,7 +67,14 @@ const SUBMIT_BUTTON_CLASS = `
 
 const onlyDigits = (v) => v.replace(/\D/g, '');
 
+/** Backend expects lowercase grade: common, rare, epic, legendary */
+const gradeToBackend = (v) => {
+  const map = { COMMON: 'common', RARE: 'rare', 'SUPER RARE': 'epic', LEGENDARY: 'legendary' };
+  return map[v] ?? (v && v.toLowerCase());
+};
+
 export default function CreateCardForm() {
+  const router = useRouter();
   const fileInputRef = useRef(null);
 
   // values
@@ -76,6 +85,11 @@ export default function CreateCardForm() {
   const [total, setTotal] = useState('');
   const [desc, setDesc] = useState('');
   const [file, setFile] = useState(null);
+
+  // submit & user
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [creatorUserId, setCreatorUserId] = useState(null);
 
   // modal
   const [fileErrorOpen, setFileErrorOpen] = useState(false);
@@ -139,7 +153,21 @@ export default function CreateCardForm() {
     refs[first]?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [errors]);
 
-  const handleSubmit = (e) => {
+  // Fetch current user for creatorUserId
+  useEffect(() => {
+    let cancelled = false;
+    http
+      .get('/users/me')
+      .then((res) => {
+        if (!cancelled && res?.data?.user?.id) setCreatorUserId(res.data.user.id);
+      })
+      .catch(() => {
+        if (!cancelled) setCreatorUserId(null);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setTouched({
@@ -157,15 +185,51 @@ export default function CreateCardForm() {
       return;
     }
 
-    console.log({
-      name: name.trim(),
-      grade,
-      genre,
-      price: Number(price),
-      total: Number(total),
-      desc: desc.trim(),
-      file,
-    });
+    if (!creatorUserId) {
+      setSubmitError('로그인이 필요합니다.');
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      // 1) Upload image to Vercel Blob via Next.js API route
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const uploadRes = await fetch('/api/upload/photo-card', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadRes.ok) {
+        const data = await uploadRes.json().catch(() => ({}));
+        throw new Error(data?.error ?? `업로드 실패 (${uploadRes.status})`);
+      }
+
+      const { url: imageUrl } = await uploadRes.json();
+      if (!imageUrl) throw new Error('이미지 URL을 받지 못했습니다.');
+
+      // 2) Create photo card on backend with Blob URL
+      await http.post('/api/photo-cards', {
+        creatorUserId,
+        name: name.trim(),
+        description: desc.trim() || null,
+        genre: genre.trim(),
+        grade: gradeToBackend(grade),
+        minPrice: Number(price) || 0,
+        totalSupply: Number(total) || 1,
+        imageUrl,
+      });
+
+      router.push('/mygallery');
+      router.refresh();
+    } catch (err) {
+      setSubmitError(err?.response?.data?.message ?? err?.message ?? '생성에 실패했습니다.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // ✅ “파일 선택”은 제출이 아니라 파일창만 열기
@@ -356,20 +420,24 @@ export default function CreateCardForm() {
           </FormField>
         </div>
 
+        {submitError && (
+          <p className="text-sm text-red-500">{submitError}</p>
+        )}
+
         <div className="pt-2">
           <ButtonPrimary
             type="submit"
             size="l"
             thickness="thin"
             fullWidth
-            disabled={!isValid}
+            disabled={!isValid || submitting}
             className={
-              isValid
+              isValid && !submitting
                 ? '!text-black !bg-main hover:!bg-main'
                 : '!text-gray-300 !bg-gray-600 cursor-not-allowed'
             }
           >
-            생성하기
+            {submitting ? '생성 중…' : '생성하기'}
           </ButtonPrimary>
         </div>
       </form>
