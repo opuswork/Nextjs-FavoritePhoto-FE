@@ -223,6 +223,15 @@ export default function MarketplaceCardPurchasePage() {
         setIsPurchaseModalOpen(false);
         setQuantity(1);
         await fetchListing();
+        // Refetch current user so points update on this page
+        try {
+          const { data: meData } = await http.get('/users/me');
+          setCurrentUser(meData?.user ?? null);
+        } catch (_) {}
+        // Notify Header (and any other consumer) to refetch user so points in nav update
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('user-points-updated'));
+        }
       } else {
         setPurchaseError(res.data?.error ?? '구매 처리에 실패했습니다.');
       }

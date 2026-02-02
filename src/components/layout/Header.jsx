@@ -136,22 +136,33 @@ export default function Header({ onOpenAlarm }) {
     }
   }, [user?.id]);
 
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const { data } = await http.get('/users/me');
-        setUser(data.user ?? null);
-      } catch (err) {
-        setUser(null);
-        const redirectTo = err?.response?.data?.redirectTo;
-        if (err?.response?.status === 401 && redirectTo) {
-          router.replace(redirectTo);
-        }
-      } finally {
-        setAuthLoading(false);
+  async function fetchUser(silent = false) {
+    if (!silent) setAuthLoading(true);
+    try {
+      const { data } = await http.get('/users/me');
+      setUser(data.user ?? null);
+    } catch (err) {
+      setUser(null);
+      const redirectTo = err?.response?.data?.redirectTo;
+      if (err?.response?.status === 401 && redirectTo) {
+        router.replace(redirectTo);
       }
+    } finally {
+      if (!silent) setAuthLoading(false);
     }
+  }
+
+  useEffect(() => {
     fetchUser();
+  }, [router]);
+
+  // Refetch user when points change (e.g. after purchase) so header/menu show updated points
+  useEffect(() => {
+    function onUserPointsUpdated() {
+      fetchUser(true);
+    }
+    window.addEventListener('user-points-updated', onUserPointsUpdated);
+    return () => window.removeEventListener('user-points-updated', onUserPointsUpdated);
   }, [router]);
 
   async function handleLogout() {
