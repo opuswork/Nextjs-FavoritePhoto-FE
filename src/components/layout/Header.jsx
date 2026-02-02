@@ -136,14 +136,13 @@ export default function Header({ onOpenAlarm }) {
   }, [router]);
 
   async function handleLogout() {
+    clearAuthToken();
+    setUser(null);
+    router.replace('/');
+    router.refresh();
     try {
       await http.post('/users/logout');
-    } finally {
-      clearAuthToken();
-      setUser(null);
-      router.replace('/');
-      router.refresh();
-    }
+    } catch (_) {}
     setIsMenuOpen(false);
     setIsProfileOpen(false);
     setIsAlarmOpen(false);
