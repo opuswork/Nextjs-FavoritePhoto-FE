@@ -16,6 +16,7 @@ export default function CardOriginal({
   onClick,
   detailHref,
 }) {
+  const isExternalUrl = typeof imageSrc === 'string' && (imageSrc.startsWith('http://') || imageSrc.startsWith('https://'));
   const imageNode = (
     <Image
       src={imageSrc}
@@ -23,6 +24,7 @@ export default function CardOriginal({
       width={400}
       height={400}
       className={styles.cardImage}
+      unoptimized={isExternalUrl}
     />
   );
 

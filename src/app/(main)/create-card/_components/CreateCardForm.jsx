@@ -90,9 +90,11 @@ export default function CreateCardForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [creatorUserId, setCreatorUserId] = useState(null);
+  const [userChecked, setUserChecked] = useState(false);
 
   // modal
   const [fileErrorOpen, setFileErrorOpen] = useState(false);
+  const submitErrorRef = useRef(null);
 
   // touched
   const [touched, setTouched] = useState({
@@ -156,16 +158,30 @@ export default function CreateCardForm() {
   // Fetch current user for creatorUserId
   useEffect(() => {
     let cancelled = false;
+    setUserChecked(false);
     http
       .get('/users/me')
       .then((res) => {
-        if (!cancelled && res?.data?.user?.id) setCreatorUserId(res.data.user.id);
+        if (!cancelled) {
+          setCreatorUserId(res?.data?.user?.id ?? null);
+          setUserChecked(true);
+        }
       })
       .catch(() => {
-        if (!cancelled) setCreatorUserId(null);
+        if (!cancelled) {
+          setCreatorUserId(null);
+          setUserChecked(true);
+        }
       });
     return () => { cancelled = true; };
   }, []);
+
+  // Scroll submit error into view when it appears
+  useEffect(() => {
+    if (submitError && submitErrorRef.current) {
+      submitErrorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [submitError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -223,6 +239,10 @@ export default function CreateCardForm() {
         imageUrl,
       });
 
+      // Signal mygallery to refetch so the new card shows without reload
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('mygallery-refetch', '1');
+      }
       router.push('/mygallery');
       router.refresh();
     } catch (err) {
@@ -421,7 +441,15 @@ export default function CreateCardForm() {
         </div>
 
         {submitError && (
-          <p className="text-sm text-red-500">{submitError}</p>
+          <p ref={submitErrorRef} className="text-sm text-red-500">
+            {submitError}
+          </p>
+        )}
+
+        {userChecked && !creatorUserId && (
+          <p className="text-sm text-amber-400">
+            로그인 후 포토카드를 생성할 수 있습니다.
+          </p>
         )}
 
         <div className="pt-2">
@@ -430,9 +458,9 @@ export default function CreateCardForm() {
             size="l"
             thickness="thin"
             fullWidth
-            disabled={!isValid || submitting}
+            disabled={!isValid || submitting || !creatorUserId}
             className={
-              isValid && !submitting
+              isValid && !submitting && creatorUserId
                 ? '!text-black !bg-main hover:!bg-main'
                 : '!text-gray-300 !bg-gray-600 cursor-not-allowed'
             }
