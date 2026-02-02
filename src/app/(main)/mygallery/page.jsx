@@ -10,6 +10,7 @@ import GradeChips from './_components/GradeChips';
 import Pagination from './_components/Pagination';
 import MyGalleryFilterBar from './_components/MyGalleryFilterBar';
 import MyGalleryMobileHeader from './_components/MyGalleryMobileHeader';
+import MyGalleryMobileFilterSheet from './_components/MyGalleryMobileFilterSheet';
 
 import styles from './page.module.css';
 
@@ -25,6 +26,7 @@ export default function MyGalleryPage() {
   const [grade, setGrade] = useState('ALL');
   const [genre, setGenre] = useState('ALL');
   const [page, setPage] = useState(1);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const displayCards = useMemo(
     () => (Array.isArray(rawCards) ? rawCards.map(userCardRowToDisplay) : []),
@@ -86,7 +88,19 @@ export default function MyGalleryPage() {
         onChangeGrade={setGrade}
         genre={genre}
         onChangeGenre={setGenre}
+        onOpenMobileFilter={isMobile ? () => setMobileFilterOpen(true) : undefined}
       />
+
+      {isMobile && (
+        <MyGalleryMobileFilterSheet
+          open={mobileFilterOpen}
+          onClose={() => setMobileFilterOpen(false)}
+          grade={grade}
+          onChangeGrade={setGrade}
+          genre={genre}
+          onChangeGenre={setGenre}
+        />
+      )}
 
       <div className={styles.cardGrid}>
         {pagedCards.map((card) => (
