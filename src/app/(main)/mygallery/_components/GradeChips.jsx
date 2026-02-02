@@ -11,7 +11,7 @@ const ORDER = ['common', 'rare', 'superRare', 'legendary'];
 
 export default function GradeChips({ counts }) {
   return (
-    <div className="flex flex-wrap gap-2 sm:gap-[20px] min-w-0">
+    <div className="flex flex-wrap gap-2 md:gap-3 lg:gap-[20px] min-w-0">
       {ORDER.map((grade) => {
         const s = STYLE[grade];
         const count = counts?.[grade] ?? 0;
@@ -19,10 +19,10 @@ export default function GradeChips({ counts }) {
         return (
           <div
             key={grade}
-            className={`inline-flex items-center h-[36px] sm:h-[40px] px-3 sm:px-[20px] gap-1.5 sm:gap-[10px] border shrink-0 ${s.border}`}
+            className={`inline-flex items-center h-[34px] md:h-[36px] lg:h-[40px] px-2.5 md:px-3 lg:px-[20px] gap-1 md:gap-1.5 lg:gap-[10px] border shrink-0 ${s.border}`}
           >
             <Grade grade={grade} size="sm" className={`!font-light ${s.text}`} />
-            <span className={`text-[14px] sm:text-[16px] font-light whitespace-nowrap ${s.text}`}>{count}장</span>
+            <span className={`text-[12px] md:text-[14px] lg:text-[16px] font-light whitespace-nowrap ${s.text}`}>{count}장</span>
           </div>
         );
       })}

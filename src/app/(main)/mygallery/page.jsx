@@ -76,7 +76,7 @@ export default function MyGalleryPage() {
 
       {!isMobile && <GradeChips counts={gradeCounts} />}
 
-      {!isMobile && <div className="mt-[60px] h-px w-full bg-white/20" />}
+      {!isMobile && <div className="mt-8 md:mt-10 lg:mt-[60px] h-px w-full bg-white/20" />}
 
       <MyGalleryFilterBar
         isMobile={isMobile}
