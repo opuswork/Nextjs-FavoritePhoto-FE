@@ -65,11 +65,11 @@ export default function Home() {
       </section>
 
       {/* ================= BELOW SECTIONS ================= */}
-      <main className="bg-neutral-950 text-white">
+      <main className="w-full min-w-0 bg-neutral-950 text-white overflow-x-hidden">
         <section className="relative bg-neutral-950 overflow-hidden">
-          <div className="relative z-10 h-[800px]">
-            <Container className="h-full">
-              <div className="relative h-full rounded-[28px] overflow-hidden">
+          <div className="relative z-10 h-[800px] w-full">
+            <Container className="h-full w-full">
+              <div className="relative h-full w-full rounded-[28px] overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/images/landing/background/bg2.svg"
@@ -84,8 +84,8 @@ export default function Home() {
                   }}
                 />
 
-                <div className="relative z-10 h-full flex flex-col items-center pt-[120px] lg:items-start">
-                  <div className="text-center max-w-[560px] mx-auto lg:text-left lg:ml-[200px] lg:mx-0">
+                <div className="relative z-10 h-full w-full min-w-0 flex flex-col items-center pt-[120px] lg:items-start">
+                  <div className="w-full min-w-0 max-w-[560px] text-center mx-auto px-4 lg:px-0 lg:text-left lg:ml-[200px] lg:mx-0 self-center lg:self-auto">
                     <h2 className="text-[44px] font-bold leading-[1.2]">
                       포인트로 <span className="text-lime-400">안전하게</span> 거래하세요
                     </h2>
@@ -96,7 +96,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="mt-[35px] w-full max-w-[1068px] h-[518px] relative mx-auto">
+                  <div className="mt-[35px] w-full max-w-[1068px] h-[518px] relative mx-auto self-center lg:self-auto">
                     <Image
                       src="/images/landing/lg/img2.svg"
                       alt="포인트로 안전하게 거래하세요"
@@ -113,10 +113,10 @@ export default function Home() {
 
         {/* ================= SECTION 3 ================= */}
         <section className="relative bg-neutral-950 overflow-hidden">
-          <div className="relative z-10 h-[800px]">
-            <Container className="h-full">
+          <div className="relative z-10 h-[800px] w-full">
+            <Container className="h-full w-full">
               {/* 프레임 기준점 */}
-              <div className="relative h-full rounded-[28px] overflow-hidden">
+              <div className="relative h-full w-full rounded-[28px] overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/images/landing/background/bg3.svg" // ← 섹션3 전용 원
@@ -132,8 +132,8 @@ export default function Home() {
                 />
 
                 {/* 기존 콘텐츠 */}
-                <div className="relative z-10 h-full flex flex-col items-center pt-[120px] lg:items-start">
-                  <div className="text-center max-w-[560px] mx-auto lg:text-left lg:ml-[200px] lg:mx-0">
+                <div className="relative z-10 h-full w-full min-w-0 flex flex-col items-center pt-[120px] lg:items-start">
+                  <div className="w-full min-w-0 max-w-[560px] text-center mx-auto px-4 lg:px-0 lg:text-left lg:ml-[200px] lg:mx-0 self-center lg:self-auto">
                     <h2 className="text-[44px] font-bold leading-[1.2]">
                       알림으로 보다 <span className="text-sky-400">빨라진</span> 거래
                     </h2>
@@ -144,7 +144,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="mt-[35px] mx-auto w-full max-w-[1068px] h-[518px] relative">
+                  <div className="mt-[35px] mx-auto w-full max-w-[1068px] h-[518px] relative self-center lg:self-auto">
                     <Image
                       src="/images/landing/lg/img3.svg"
                       alt="알림으로 보다 빨라진 거래"
@@ -169,10 +169,10 @@ export default function Home() {
             }}
           />
 
-          <div className="relative z-10 h-[800px]">
-            <Container className="h-full">
-              <div className="h-full flex flex-col items-center pt-[120px] lg:items-start">
-                <div className="text-center max-w-[560px] mx-auto lg:text-left lg:ml-[200px] lg:mx-0">
+          <div className="relative z-10 h-[800px] w-full">
+            <Container className="h-full w-full">
+              <div className="h-full w-full min-w-0 flex flex-col items-center pt-[120px] lg:items-start">
+                <div className="w-full min-w-0 max-w-[560px] text-center mx-auto px-4 lg:px-0 lg:text-left lg:ml-[200px] lg:mx-0 self-center lg:self-auto">
                   <h2 className="text-[44px] font-bold leading-[1.2]">
                     랜덤 상자로 <span className="text-lime-400">포인트 받자!</span> 🎉
                   </h2>
@@ -183,7 +183,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="mt-[35px] mx-auto w-full max-w-[1068px] h-[518px] relative">
+                <div className="mt-[35px] mx-auto w-full max-w-[1068px] h-[518px] relative self-center lg:self-auto">
                   <Image
                     src="/images/landing/lg/img4.svg"
                     alt="랜덤 상자 포인트 획득 화면"
