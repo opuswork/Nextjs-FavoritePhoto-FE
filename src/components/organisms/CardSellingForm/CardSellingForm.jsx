@@ -104,14 +104,27 @@ export default function CardSellingForm({
       onSuccess?.(payload);
     } catch (err) {
       const status = err?.response?.status;
-      const dataMsg = err?.response?.data?.data?.message ?? err?.response?.data?.message;
-      const msg = status === 401
-        ? '로그인이 필요합니다.'
-        : status === 404
-          ? '보유 카드를 찾을 수 없습니다. 마켓플레이스에서 "판매하기" → "나의 포토카드" 목록에서 카드를 선택한 뒤 다시 시도해 주세요.'
-          : status === 409
-            ? '이미 판매게시판 카드입니다.'
-            : (dataMsg ?? err?.message ?? '판매 등록에 실패했습니다.');
+      const body = err?.response?.data;
+      const meta = body?.data ?? body?.meta;
+      const serverMsg = body?.message;
+      let msg;
+      if (status === 401) {
+        msg = '로그인이 필요합니다.';
+      } else if (status === 404) {
+        msg = '보유 카드를 찾을 수 없습니다. 마켓플레이스에서 "판매하기" → "나의 포토카드" 목록에서 카드를 선택한 뒤 다시 시도해 주세요.';
+      } else if (status === 409) {
+        msg = '이미 판매게시판 카드입니다.';
+      } else if (serverMsg === 'VALIDATION_ERROR' && meta?.field) {
+        const fieldMessages = {
+          pricePerUnit: '장당 가격을 입력해 주세요. (0보다 큰 숫자)',
+          quantity: meta?.rule?.includes('exceed') ? `판매 수량은 보유 수량(${meta.rule?.match(/\d+/)?.[0] ?? '?'}장)을 초과할 수 없습니다.` : '판매 수량을 확인해 주세요.',
+          userCardId: '카드 정보를 찾을 수 없습니다.',
+          sellerUserId: '로그인이 필요합니다.',
+        };
+        msg = fieldMessages[meta.field] ?? meta?.rule ?? '입력값을 확인해 주세요.';
+      } else {
+        msg = serverMsg ?? err?.message ?? '판매 등록에 실패했습니다.';
+      }
       setSubmitError(msg);
     } finally {
       setIsSubmitting(false);
