@@ -34,16 +34,25 @@ function resolveImageUrl(imageUrl) {
   return trimmed || '/assets/products/photo-card.svg';
 }
 
+/** Map API grade (common, rare, epic, legendary) to display grade (COMMON, RARE, SUPER RARE, LEGENDARY). */
+function apiGradeToDisplay(grade) {
+  if (!grade || typeof grade !== 'string') return 'COMMON';
+  const g = grade.trim().toLowerCase();
+  const map = { common: 'COMMON', rare: 'RARE', epic: 'SUPER RARE', legendary: 'LEGENDARY' };
+  return map[g] ?? (g.toUpperCase() || 'COMMON');
+}
+
 /** Map API row to display shape (id, rarity, category, description, imageSrc, quantity, etc.) for grid/cards. */
 export function userCardRowToDisplay(row) {
   const quantity = Number(row?.quantity ?? 0);
+  const displayGrade = apiGradeToDisplay(row?.grade);
   return {
     id: row?.user_card_id,
     user_card_id: row?.user_card_id,
     photo_card_id: row?.photo_card_id,
     quantity,
-    rarity: row?.grade ?? 'COMMON',
-    grade: row?.grade ?? 'COMMON',
+    rarity: displayGrade,
+    grade: displayGrade,
     category: row?.genre ?? '풍경',
     genre: row?.genre ?? '풍경',
     description: row?.name ?? row?.description ?? '-',
