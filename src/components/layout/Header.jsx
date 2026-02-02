@@ -138,8 +138,11 @@ export default function Header({ onOpenAlarm }) {
   async function handleLogout() {
     try {
       await http.post('/users/logout');
-    } catch {
-      // still clear local auth
+    } finally {
+      clearAuthToken();
+      setUser(null);
+      router.replace('/');
+      router.refresh();
     }
     clearAuthToken();
     setUser(null);

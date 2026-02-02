@@ -104,11 +104,14 @@ export default function CardSellingForm({
       onSuccess?.(payload);
     } catch (err) {
       const status = err?.response?.status;
+      const dataMsg = err?.response?.data?.data?.message ?? err?.response?.data?.message;
       const msg = status === 401
         ? '로그인이 필요합니다.'
-        : status === 409
-          ? '이미 판매게시판 카드입니다.'
-          : (err?.response?.data?.message ?? err?.response?.data?.data?.message ?? err?.message ?? '판매 등록에 실패했습니다.');
+        : status === 404
+          ? '보유 카드를 찾을 수 없습니다. 마켓플레이스에서 "판매하기" → "나의 포토카드" 목록에서 카드를 선택한 뒤 다시 시도해 주세요.'
+          : status === 409
+            ? '이미 판매게시판 카드입니다.'
+            : (dataMsg ?? err?.message ?? '판매 등록에 실패했습니다.');
       setSubmitError(msg);
     } finally {
       setIsSubmitting(false);
