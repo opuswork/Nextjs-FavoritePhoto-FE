@@ -114,7 +114,7 @@ export default function MyGalleryPage() {
             remaining={card.quantity}
             outof={card.quantity}
             imageSrc={card.imageSrc}
-            detailHref={card.photo_card_id ? `/marketplace/${card.photo_card_id}` : undefined}
+            detailHref={undefined}
           />
         ))}
       </div>

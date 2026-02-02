@@ -339,7 +339,7 @@ export default function MarketplaceCardPurchasePage() {
         <button 
           type="button" 
           className={styles.backButton}
-          onClick={() => router.push('/marketplace')}
+          onClick={() => router.back()}
           aria-label="목록으로"
         >
           <Image src="/assets/icons/ic_back.svg" alt="목록으로" width={22} height={22} />
