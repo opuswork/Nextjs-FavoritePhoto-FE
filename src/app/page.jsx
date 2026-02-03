@@ -12,7 +12,7 @@ export default function Home() {
       <Header />
 
       {/* ================= SECTION 1 : HERO ================= */}
-      <section className="relative mt-[13px] min-h-[520px] md:min-h-[700px] lg:min-h-[1100px] bg-neutral-950">
+      <section className="relative mt-[13px] min-h-[520px] md:min-h-[700px] lg:min-h-[600px] bg-neutral-950">
         {/* bg1 프레임 */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Container className="h-full">
