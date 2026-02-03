@@ -20,6 +20,8 @@ export default function Home() {
       await http.get('/users/me');
       router.push('/marketplace');
     } catch {
+      // Show spinner for 2 seconds before redirect so user doesn't see marketplace flash
+      await new Promise((r) => setTimeout(r, 2000));
       router.push('/auth/login');
     } finally {
       setCtaLoading(false);
