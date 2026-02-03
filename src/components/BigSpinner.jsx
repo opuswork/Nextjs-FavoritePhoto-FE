@@ -1,25 +1,22 @@
-import { Loader2 } from "lucide-react";
-
 const BigSpinner = () => {
-  return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">
-      <div className="relative flex items-center justify-center">
-        {/* Outer pulse ring */}
-        <div className="absolute h-20 w-20 animate-ping rounded-full bg-blue-100 opacity-75"></div>
+    return (
+      <div 
+        style={{ zIndex: 9999 }} 
+        className="fixed inset-0 flex flex-col items-center justify-center bg-black"
+      >
+        <div className="relative">
+          {/* The Spinner Circle */}
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"></div>
+          
+          {/* Inner Glow */}
+          <div className="absolute inset-0 m-auto h-8 w-8 animate-pulse rounded-full bg-blue-500/30 blur-md"></div>
+        </div>
         
-        {/* Main spinning icon */}
-        <Loader2 
-          className="h-12 w-12 animate-spin text-blue-500" 
-          strokeWidth={2.5} 
-        />
+        <p className="mt-6 text-xl font-bold tracking-widest text-white animate-pulse">
+          LOADING...
+        </p>
       </div>
-      
-      {/* Optional Loading Text */}
-      <p className="mt-4 animate-pulse text-lg font-medium text-gray-600">
-        잠시만 기다려 주세요...
-      </p>
-    </div>
-  );
-};
-
-export default BigSpinner;
+    );
+  };
+  
+  export default BigSpinner;
