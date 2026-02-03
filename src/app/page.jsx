@@ -32,9 +32,11 @@ export default function Home() {
     <>
       <Header />
 
-      {/* Only the mobile height (first class) is reduced here */}
-      <section className="relative mt-[13px] min-h-[450px] md:min-h-[700px] lg:min-h-[600px] bg-neutral-950">
-        {/* bg1 프레임 (Purple Background Box) */}
+      {/* ================= SECTION 1 : HERO ================= */}
+      {/* 1. We shorten the section height on mobile (min-h-[460px]) to remove the big gap */}
+      <section className="relative mt-[13px] min-h-[460px] md:min-h-[700px] bg-neutral-950">
+        
+        {/* bg1 프레임 (The Purple Rounded Box) */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Container className="h-full">
             <div className="relative h-full rounded-[28px] overflow-hidden">
