@@ -137,15 +137,17 @@ export default function MyGalleryShell({ children }) {
   }, [fetchUser, fetchCards]);
 
   // Refetch when landing on /mygallery after creating a card (create-card sets sessionStorage flag)
+  // Also refetch user so points (e.g. +20 for new photo) are updated in the UI
   useEffect(() => {
     if (pathname !== '/mygallery') return;
     try {
       if (typeof window !== 'undefined' && sessionStorage.getItem(MYGALLERY_REFETCH_KEY)) {
         sessionStorage.removeItem(MYGALLERY_REFETCH_KEY);
+        fetchUser();
         fetchCards();
       }
     } catch (_) {}
-  }, [pathname, fetchCards]);
+  }, [pathname, fetchUser, fetchCards]);
 
   const displayName = user?.nickname ?? user?.email ?? '유저';
   const totalCount = cards.reduce((sum, row) => sum + Number(row?.quantity ?? 0), 0);

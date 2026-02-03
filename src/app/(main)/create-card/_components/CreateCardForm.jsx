@@ -242,6 +242,7 @@ export default function CreateCardForm() {
       // Signal mygallery to refetch so the new card shows without reload
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('mygallery-refetch', '1');
+        window.dispatchEvent(new CustomEvent('user-points-updated'));
       }
       router.push('/mygallery');
       router.refresh();
