@@ -34,7 +34,7 @@ export default function Home() {
             <div className="mx-auto w-full max-w-[720px]">
               <p className="text-[18px] font-semibold tracking-[-0.02em]">최애의포토</p>
 
-              <h1 className="mt-[18px] text-[44px] leading-[1.25] font-bold tracking-[-0.02em]">
+              <h1 className="mt-[18px] text-[15px] md:text-[44px] leading-[1.25] font-bold tracking-[-0.02em]">
                 구하기 어려웠던
                 <br />
                 <span className="text-lime-400">나의 최애</span>가 여기에!
@@ -86,10 +86,10 @@ export default function Home() {
 
                 <div className="relative z-10 h-full w-full min-w-0 flex flex-col items-center pt-[40px] md:pt-[80px] lg:pt-[120px] lg:items-start">
                   <div className="w-full min-w-0 max-w-[560px] text-center mx-auto px-4 lg:px-0 lg:text-left lg:ml-[200px] lg:mx-0 self-center lg:self-auto">
-                    <h2 className="text-[36px] md:text-[44px] font-bold leading-[1.2]">
+                    <h2 className="text-[12px] md:text-[36px] lg:text-[44px] font-bold leading-[1.2]">
                       포인트로 <span className="text-lime-400">안전하게</span> 거래하세요
                     </h2>
-                    <p className="mt-3 text-neutral-300">
+                    <p className="mt-3 text-[11px] md:text-base text-neutral-300">
                       내 포토카드를 포인트로 팔고, 원하는 포토카드를
                       <br />
                       포인트로 안전하게 교환하세요
@@ -134,10 +134,10 @@ export default function Home() {
                 {/* 기존 콘텐츠 */}
                 <div className="relative z-10 h-full w-full min-w-0 flex flex-col items-center pt-[40px] md:pt-[80px] lg:pt-[120px] lg:items-start">
                   <div className="w-full min-w-0 max-w-[560px] text-center mx-auto px-4 lg:px-0 lg:text-left lg:ml-[200px] lg:mx-0 self-center lg:self-auto">
-                    <h2 className="text-[36px] md:text-[44px] font-bold leading-[1.2]">
+                    <h2 className="text-[12px] md:text-[36px] lg:text-[44px] font-bold leading-[1.2]">
                       알림으로 보다 <span className="text-sky-400">빨라진</span> 거래
                     </h2>
-                    <p className="mt-3 text-neutral-300">
+                    <p className="mt-3 text-[11px] md:text-base text-neutral-300">
                       교환 제안부터 판매 완료까지,
                       <br />
                       실시간 알림으로 놓치지 마세요
@@ -173,10 +173,10 @@ export default function Home() {
             <Container className="h-full w-full">
               <div className="h-full w-full min-w-0 flex flex-col items-center pt-[40px] md:pt-[80px] lg:pt-[120px] lg:items-start">
                 <div className="w-full min-w-0 max-w-[560px] text-center mx-auto px-4 lg:px-0 lg:text-left lg:ml-[200px] lg:mx-0 self-center lg:self-auto">
-                  <h2 className="text-[36px] md:text-[44px] font-bold leading-[1.2]">
+                  <h2 className="text-[12px] md:text-[36px] lg:text-[44px] font-bold leading-[1.2]">
                     랜덤 상자로 <span className="text-lime-400">포인트 받자!</span> 🎉
                   </h2>
-                  <p className="mt-3 text-neutral-300">
+                  <p className="mt-3 text-[11px] md:text-base text-neutral-300">
                     한 시간마다 주어지는 랜덤 상자를 열고,
                     <br />
                     포인트를 획득하세요
