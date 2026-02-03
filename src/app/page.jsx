@@ -1,12 +1,31 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Container from '@/components/layout/Container';
 import Image from 'next/image';
 import { ButtonPrimary } from '@/components/atoms/Button';
+import { http } from '@/lib/http/client';
 
 export default function Home() {
+  const router = useRouter();
+  const [ctaLoading, setCtaLoading] = useState(false);
+
+  async function handleCtaClick() {
+    if (ctaLoading) return;
+    setCtaLoading(true);
+    try {
+      await http.get('/users/me');
+      router.push('/marketplace');
+    } catch {
+      router.push('/auth/login');
+    } finally {
+      setCtaLoading(false);
+    }
+  }
+
   return (
     <>
       <Header />
@@ -220,15 +239,24 @@ export default function Home() {
                   나의 최애를 지금 찾아보세요!
                 </h2>
 
-                {/* 버튼 */}
+                {/* 버튼: auth 체크 후 marketplace 또는 login으로 이동 (스피너 표시) */}
                 <div className="mt-[24px]">
                   <ButtonPrimary
-                    href="/marketplace"
+                    type="button"
                     thickness="thin"
                     size="M"
-                    className="!w-[266px] !h-[55px] !px-0"
+                    className="!w-[266px] !h-[55px] !px-0 flex items-center justify-center gap-2"
+                    disabled={ctaLoading}
+                    onClick={handleCtaClick}
                   >
-                    최애 찾으러 가기
+                    {ctaLoading ? (
+                      <>
+                        <span className="inline-block h-[18px] w-[18px] animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden />
+                        <span className="sr-only">이동 중…</span>
+                      </>
+                    ) : (
+                      '최애 찾으러 가기'
+                    )}
                   </ButtonPrimary>
                 </div>
               </div>
