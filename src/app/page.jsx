@@ -34,7 +34,7 @@ export default function Home() {
 
       {/* Only the mobile height (first class) is reduced here */}
       <section className="relative mt-[13px] min-h-[450px] md:min-h-[700px] lg:min-h-[600px] bg-neutral-950">
-        {/* bg1 프레임 (Purple Gradient Box) */}
+        {/* bg1 프레임 (Purple Background Box) */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Container className="h-full">
             <div className="relative h-full rounded-[28px] overflow-hidden">
