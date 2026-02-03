@@ -168,21 +168,23 @@ export default function MyGalleryShell({ children }) {
 
           <div className="mt-4 md:mt-[20px] mb-6 md:mb-[50px] h-[2px] w-full bg-[#EEEEEE]" />
 
-          <div className="mt-4 md:mt-[24px] min-w-0">
-            <div className="flex flex-wrap items-end gap-2">
-              <span className="text-[16px] md:text-[20px] lg:text-[24px] font-bold leading-[100%] text-white/80 break-words">
-                {loading ? '…' : `${displayName}님이 보유한 포토카드`}
-              </span>
-              <span className="text-[14px] md:text-[16px] lg:text-[20px] font-normal leading-[100%] text-white/50 shrink-0">
-                ({loading ? '…' : totalCount}장)
-              </span>
+          {pathname === '/mygallery' && (
+            <div className="mt-4 md:mt-[24px] min-w-0">
+              <div className="flex flex-wrap items-end gap-2">
+                <span className="text-[16px] md:text-[20px] lg:text-[24px] font-bold leading-[100%] text-white/80 break-words">
+                  {loading ? '…' : `${displayName}님이 보유한 포토카드`}
+                </span>
+                <span className="text-[14px] md:text-[16px] lg:text-[20px] font-normal leading-[100%] text-white/50 shrink-0">
+                  ({loading ? '…' : totalCount}장)
+                </span>
+              </div>
+              {error && (
+                <p className="mt-2 text-sm text-red-400">{error}</p>
+              )}
             </div>
-            {error && (
-              <p className="mt-2 text-sm text-red-400">{error}</p>
-            )}
-          </div>
+          )}
 
-          <div className="mt-4 md:mt-[24px] min-w-0">{children}</div>
+          <div className={pathname === '/mygallery' ? 'mt-4 md:mt-[24px] min-w-0' : 'min-w-0'}>{children}</div>
         </Container>
       </main>
     </MyGalleryContext.Provider>
