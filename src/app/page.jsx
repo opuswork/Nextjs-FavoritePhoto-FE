@@ -34,7 +34,7 @@ export default function Home() {
             <div className="mx-auto w-full max-w-[720px]">
               <p className="text-[18px] font-semibold tracking-[-0.02em]">최애의포토</p>
 
-              <h1 className="mt-[18px] text-[15px] md:text-[44px] leading-[1.25] font-bold tracking-[-0.02em]">
+              <h1 className="mt-[18px] text-[12px] md:text-[24px] lg:text-[34px] leading-[1.25] font-bold tracking-[-0.02em]">
                 구하기 어려웠던
                 <br />
                 <span className="text-lime-400">나의 최애</span>가 여기에!
