@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import SubHeader from '@/components/organisms/SubHeader/SubHeader';
 import CardOriginal from '@/components/organisms/CardOriginal/CardOriginal';
 import CardSellingListModal from '@/components/organisms/CardSellingListModal/CardSellingListModal';
-import BigSpinner from '@/components/BigSpinner'; // Added BigSpinner import
+import BigSpinner from '@/components/BigSpinner'; 
 import { http } from '@/lib/http/client';
 import styles from './page.module.css';
 
@@ -13,10 +13,6 @@ const LISTINGS_LIMIT = 10;
 const INITIAL_COUNT = 10;
 const LOAD_MORE_COUNT = 10;
 
-/**
- * API 리스팅 항목을 카드 표시용 객체로 변환
- * @see Favorite-Express-BE: GET /api/listings 응답 형식 (data.items[]. listingId, quantity, pricePerUnit, status, photoCard)
- */
 function listingToCard(item) {
   const pc = item?.photoCard ?? {};
   const quantity = Number(item?.quantity ?? 0);
@@ -50,8 +46,12 @@ function filterCards(cards, filters) {
 
 export default function MarketplacePage() {
   const router = useRouter();
+  
+  // --- AUTH & INITIAL LOADING STATE ---
   const [currentUser, setCurrentUser] = useState(null);
-  const [userLoading, setUserLoading] = useState(true); // Added for auth flicker prevention
+  const [userLoading, setUserLoading] = useState(true); 
+
+  // --- OTHER STATES ---
   const [isSellingModalOpen, setIsSellingModalOpen] = useState(false);
   const [filters, setFilters] = useState({ rarity: 'all', genre: 'all', soldout: 'all' });
   const [displayCount, setDisplayCount] = useState(INITIAL_COUNT);
@@ -63,25 +63,35 @@ export default function MarketplacePage() {
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // 1. Authentication Guard Effect
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchUser() {
       try {
         const { data } = await http.get('/users/me');
-        setCurrentUser(data?.user ?? null);
-        setUserLoading(false); // Auth check complete
+        if (isMounted) {
+          setCurrentUser(data?.user ?? null);
+          // Small delay to ensure the spinner is visible before transitioning
+          setTimeout(() => {
+            if (isMounted) setUserLoading(false);
+          }, 200); 
+        }
       } catch (err) {
-        setCurrentUser(null);
         if (err?.response?.status === 401) {
           const redirectTo = err?.response?.data?.redirectTo;
           router.replace(redirectTo || '/auth/login');
         } else {
-          setUserLoading(false); // Stop loading even if error (not 401)
+          if (isMounted) setUserLoading(false);
         }
       }
     }
+
     fetchUser();
+    return () => { isMounted = false; };
   }, [router]);
 
+  // 2. Data Fetching Effect
   const fetchListings = useCallback(async (cursor = null, append = false) => {
     const isLoadMore = append && cursor != null;
     if (isLoadMore) setLoadMoreLoading(true);
@@ -111,9 +121,13 @@ export default function MarketplacePage() {
   }, []);
 
   useEffect(() => {
-    fetchListings();
-  }, [fetchListings]);
+    // Only fetch listings once we know the user is authenticated
+    if (!userLoading) {
+      fetchListings();
+    }
+  }, [userLoading, fetchListings]);
 
+  // --- MEMOIZED VALUES ---
   const cards = useMemo(() => listings, [listings]);
   const filteredCards = useMemo(() => filterCards(cards, filters), [cards, filters]);
   const visibleCards = useMemo(() => filteredCards.slice(0, displayCount), [filteredCards, displayCount]);
@@ -144,11 +158,13 @@ export default function MarketplacePage() {
     return () => obs.disconnect();
   }, [loadMore]);
 
-  // Prevent UI flicker by showing BigSpinner until auth is verified
+  // --- CRITICAL: SPINNER RENDER ---
+  // We return the spinner if userLoading is true OR if there is no user yet (and we're not redirected)
   if (userLoading) {
     return <BigSpinner />;
   }
 
+  // --- MAIN UI RENDER ---
   return (
     <div className="w-full bg-black text-white">
       <SubHeader
