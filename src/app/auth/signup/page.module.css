@@ -162,6 +162,16 @@
   white-space: nowrap;
 }
 
+.logoLink {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logoLink:hover {
+  opacity: 0.9;
+}
+
 .logoAccent {
   color: #efff04;
 }

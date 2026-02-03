@@ -89,7 +89,7 @@ function LoginPageContent() {
     <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
       <form onSubmit={handleSubmit} className={styles.form} noValidate>
         <h1 className={styles.logo}>
-          최애<span className={styles.logoAccent}>의</span>포토
+          <Link href="/" className={styles.logoLink}>최애<span className={styles.logoAccent}>의</span>포토</Link>
         </h1>
 
         <div className="w-full">
