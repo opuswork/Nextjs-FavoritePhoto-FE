@@ -216,7 +216,7 @@ export default function Home() {
                 </div>
 
                 {/* 텍스트 */}
-                <h2 className="text-[44px] font-bold leading-[1.2]">
+                <h2 className="text-[12px] md:text-[24px] lg:text-[34px] font-bold leading-[1.2]">
                   나의 최애를 지금 찾아보세요!
                 </h2>
 
