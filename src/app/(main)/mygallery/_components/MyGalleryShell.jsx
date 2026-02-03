@@ -163,7 +163,7 @@ export default function MyGalleryShell({ children }) {
               size="l"
               thickness="thick"
               fullWidth={isMobile}
-              className="min-w-0 w-full lg:w-auto lg:min-w-[200px] xl:w-[440px] h-[48px] md:h-[52px] lg:h-[60px] shrink-0"
+              className="min-w-0 w-full lg:w-auto lg:min-w-[170px] xl:w-[440px] h-[48px] md:h-[52px] lg:h-[60px] shrink-0"
               onClick={() => router.push('/mygallery/create')}
             >
               포토카드 생성하기
