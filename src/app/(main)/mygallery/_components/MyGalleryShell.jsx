@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Container from '@/components/layout/Container';
 import Title from '@/components/atoms/Title/Title';
 import ButtonPrimary from '@/components/atoms/Button/ButtonPrimary';
+import useBreakpoint from '@/hooks/useBreakpoint';
 import { http } from '@/lib/http/client';
 
 /** API row from GET /users/me/cards (user_card + photo_card). */
@@ -73,6 +74,8 @@ const MYGALLERY_REFETCH_KEY = 'mygallery-refetch';
 export default function MyGalleryShell({ children }) {
   const router = useRouter();
   const pathname = usePathname();
+  const bp = useBreakpoint();
+  const isMobile = bp === 'sm';
   const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -159,7 +162,8 @@ export default function MyGalleryShell({ children }) {
             <ButtonPrimary
               size="l"
               thickness="thick"
-              className="w-full lg:w-auto lg:min-w-[200px] xl:w-[440px] h-[48px] md:h-[52px] lg:h-[60px] shrink-0"
+              fullWidth={isMobile}
+              className="min-w-0 w-full lg:w-auto lg:min-w-[200px] xl:w-[440px] h-[48px] md:h-[52px] lg:h-[60px] shrink-0"
               onClick={() => router.push('/mygallery/create')}
             >
               포토카드 생성하기
