@@ -12,7 +12,7 @@ export default function Home() {
       <Header />
 
       {/* ================= SECTION 1 : HERO ================= */}
-      <section className="relative mt-[13px] min-h-[1100px] bg-neutral-950">
+      <section className="relative mt-[13px] min-h-[520px] md:min-h-[700px] lg:min-h-[1100px] bg-neutral-950">
         {/* bg1 프레임 */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Container className="h-full">
@@ -29,7 +29,7 @@ export default function Home() {
         </div>
 
         {/* 텍스트 영역 */}
-        <div className="relative z-10 h-[40%] pt-[70px] flex justify-center text-center">
+        <div className="relative z-10 h-[40%] pt-[32px] md:pt-[50px] lg:pt-[70px] flex justify-center text-center">
           <Container>
             <div className="mx-auto w-full max-w-[720px]">
               <p className="text-[18px] font-semibold tracking-[-0.02em]">최애의포토</p>
@@ -52,8 +52,8 @@ export default function Home() {
           </Container>
         </div>
 
-        {/* 하단 프리뷰 이미지 */}
-        <div className="absolute left-1/2 bottom-0 w-screen -translate-x-1/2 h-[80%] pointer-events-none z-[2]">
+        {/* 하단 프리뷰 이미지 - 모바일에서 더 위로 올려서 히어로와 겹치게 */}
+        <div className="absolute left-1/2 bottom-0 w-screen -translate-x-1/2 h-[75%] md:h-[80%] pointer-events-none z-[2]">
           <Image
             src="/images/landing/lg/img1.svg"
             alt="hero preview"
@@ -67,7 +67,7 @@ export default function Home() {
       {/* ================= BELOW SECTIONS ================= */}
       <main className="w-full min-w-0 bg-neutral-950 text-white overflow-x-hidden">
         <section className="relative bg-neutral-950 overflow-hidden">
-          <div className="relative z-10 h-[800px] w-full">
+          <div className="relative z-10 min-h-[520px] h-auto py-10 md:py-0 md:h-[650px] lg:h-[800px] w-full">
             <Container className="h-full w-full">
               <div className="relative h-full w-full rounded-[28px] overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -84,9 +84,9 @@ export default function Home() {
                   }}
                 />
 
-                <div className="relative z-10 h-full w-full min-w-0 flex flex-col items-center pt-[120px] lg:items-start">
+                <div className="relative z-10 h-full w-full min-w-0 flex flex-col items-center pt-[40px] md:pt-[80px] lg:pt-[120px] lg:items-start">
                   <div className="w-full min-w-0 max-w-[560px] text-center mx-auto px-4 lg:px-0 lg:text-left lg:ml-[200px] lg:mx-0 self-center lg:self-auto">
-                    <h2 className="text-[44px] font-bold leading-[1.2]">
+                    <h2 className="text-[36px] md:text-[44px] font-bold leading-[1.2]">
                       포인트로 <span className="text-lime-400">안전하게</span> 거래하세요
                     </h2>
                     <p className="mt-3 text-neutral-300">
@@ -96,7 +96,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="mt-[35px] w-full max-w-[1068px] h-[518px] relative mx-auto self-center lg:self-auto">
+                  <div className="mt-[20px] md:mt-[35px] w-full max-w-[1068px] h-[280px] md:h-[400px] lg:h-[518px] relative mx-auto self-center lg:self-auto">
                     <Image
                       src="/images/landing/lg/img2.svg"
                       alt="포인트로 안전하게 거래하세요"
@@ -113,7 +113,7 @@ export default function Home() {
 
         {/* ================= SECTION 3 ================= */}
         <section className="relative bg-neutral-950 overflow-hidden">
-          <div className="relative z-10 h-[800px] w-full">
+          <div className="relative z-10 min-h-[520px] h-auto py-10 md:py-0 md:h-[650px] lg:h-[800px] w-full">
             <Container className="h-full w-full">
               {/* 프레임 기준점 */}
               <div className="relative h-full w-full rounded-[28px] overflow-hidden">
@@ -132,9 +132,9 @@ export default function Home() {
                 />
 
                 {/* 기존 콘텐츠 */}
-                <div className="relative z-10 h-full w-full min-w-0 flex flex-col items-center pt-[120px] lg:items-start">
+                <div className="relative z-10 h-full w-full min-w-0 flex flex-col items-center pt-[40px] md:pt-[80px] lg:pt-[120px] lg:items-start">
                   <div className="w-full min-w-0 max-w-[560px] text-center mx-auto px-4 lg:px-0 lg:text-left lg:ml-[200px] lg:mx-0 self-center lg:self-auto">
-                    <h2 className="text-[44px] font-bold leading-[1.2]">
+                    <h2 className="text-[36px] md:text-[44px] font-bold leading-[1.2]">
                       알림으로 보다 <span className="text-sky-400">빨라진</span> 거래
                     </h2>
                     <p className="mt-3 text-neutral-300">
@@ -144,7 +144,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="mt-[35px] mx-auto w-full max-w-[1068px] h-[518px] relative self-center lg:self-auto">
+                  <div className="mt-[20px] md:mt-[35px] mx-auto w-full max-w-[1068px] h-[280px] md:h-[400px] lg:h-[518px] relative self-center lg:self-auto">
                     <Image
                       src="/images/landing/lg/img3.svg"
                       alt="알림으로 보다 빨라진 거래"
@@ -169,11 +169,11 @@ export default function Home() {
             }}
           />
 
-          <div className="relative z-10 h-[800px] w-full">
+          <div className="relative z-10 min-h-[520px] h-auto py-10 md:py-0 md:h-[650px] lg:h-[800px] w-full">
             <Container className="h-full w-full">
-              <div className="h-full w-full min-w-0 flex flex-col items-center pt-[120px] lg:items-start">
+              <div className="h-full w-full min-w-0 flex flex-col items-center pt-[40px] md:pt-[80px] lg:pt-[120px] lg:items-start">
                 <div className="w-full min-w-0 max-w-[560px] text-center mx-auto px-4 lg:px-0 lg:text-left lg:ml-[200px] lg:mx-0 self-center lg:self-auto">
-                  <h2 className="text-[44px] font-bold leading-[1.2]">
+                  <h2 className="text-[36px] md:text-[44px] font-bold leading-[1.2]">
                     랜덤 상자로 <span className="text-lime-400">포인트 받자!</span> 🎉
                   </h2>
                   <p className="mt-3 text-neutral-300">
@@ -183,7 +183,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="mt-[35px] mx-auto w-full max-w-[1068px] h-[518px] relative self-center lg:self-auto">
+                <div className="mt-[20px] md:mt-[35px] mx-auto w-full max-w-[1068px] h-[280px] md:h-[400px] lg:h-[518px] relative self-center lg:self-auto">
                   <Image
                     src="/images/landing/lg/img4.svg"
                     alt="랜덤 상자 포인트 획득 화면"
