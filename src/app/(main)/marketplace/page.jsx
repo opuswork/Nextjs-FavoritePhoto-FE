@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import SubHeader from '@/components/organisms/SubHeader/SubHeader';
 import CardOriginal from '@/components/organisms/CardOriginal/CardOriginal';
 import CardSellingListModal from '@/components/organisms/CardSellingListModal/CardSellingListModal';
+import BigSpinner from '@/components/BigSpinner'; // Added BigSpinner import
 import { http } from '@/lib/http/client';
 import styles from './page.module.css';
 
@@ -50,6 +51,7 @@ function filterCards(cards, filters) {
 export default function MarketplacePage() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState(null);
+  const [userLoading, setUserLoading] = useState(true); // Added for auth flicker prevention
   const [isSellingModalOpen, setIsSellingModalOpen] = useState(false);
   const [filters, setFilters] = useState({ rarity: 'all', genre: 'all', soldout: 'all' });
   const [displayCount, setDisplayCount] = useState(INITIAL_COUNT);
@@ -66,11 +68,14 @@ export default function MarketplacePage() {
       try {
         const { data } = await http.get('/users/me');
         setCurrentUser(data?.user ?? null);
+        setUserLoading(false); // Auth check complete
       } catch (err) {
         setCurrentUser(null);
         if (err?.response?.status === 401) {
           const redirectTo = err?.response?.data?.redirectTo;
           router.replace(redirectTo || '/auth/login');
+        } else {
+          setUserLoading(false); // Stop loading even if error (not 401)
         }
       }
     }
@@ -138,6 +143,11 @@ export default function MarketplacePage() {
     obs.observe(el);
     return () => obs.disconnect();
   }, [loadMore]);
+
+  // Prevent UI flicker by showing BigSpinner until auth is verified
+  if (userLoading) {
+    return <BigSpinner />;
+  }
 
   return (
     <div className="w-full bg-black text-white">
