@@ -166,16 +166,16 @@ export default function Header({ onOpenAlarm }) {
   }, [router]);
 
   async function handleLogout() {
+    setIsMenuOpen(false);
+    setIsProfileOpen(false);
+    setIsAlarmOpen(false);
+    try {
+      await http.post('/users/logout');
+    } catch (_) {}
     clearAuthToken();
     setUser(null);
     router.replace('/');
     router.refresh();
-    try {
-      await http.post('/users/logout');
-    } catch (_) {}
-    setIsMenuOpen(false);
-    setIsProfileOpen(false);
-    setIsAlarmOpen(false);
   }
 
   useEffect(() => {
