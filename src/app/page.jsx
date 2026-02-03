@@ -34,17 +34,19 @@ export default function Home() {
 
       {/* Only the mobile height (first class) is reduced here */}
       <section className="relative mt-[13px] min-h-[450px] md:min-h-[700px] lg:min-h-[600px] bg-neutral-950">
-        {/* bg1 프레임 */}
-        {/* We use negative bottom values (-bottom-...) to push the image down into the padding space */}
-        {/* 하단 프리뷰 이미지 - We use a negative bottom value to force it down */}
-        <div className="absolute left-1/2 -bottom-[40px] md:-bottom-[60px] w-screen -translate-x-1/2 h-[75%] md:h-[80%] pointer-events-none z-[2]">
-          <Image
-            src="/images/landing/lg/img1.svg"
-            alt="hero preview"
-            fill
-            priority
-            className="object-contain object-bottom" 
-          />
+        {/* bg1 프레임 (Purple Gradient Box) */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <Container className="h-full">
+            <div className="relative h-full rounded-[28px] overflow-hidden">
+              <Image
+                src="/images/landing/background/bg1.png"
+                alt="hero background"
+                fill
+                priority
+                className="object-cover"
+              />
+            </div>
+          </Container>
         </div>
 
         {/* 텍스트 영역 */}
