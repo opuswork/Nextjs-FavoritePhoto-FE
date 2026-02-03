@@ -103,6 +103,12 @@ export default function SellingCardPage() {
         />
       )}
 
+      {!isMobile && (
+        <h1 className="mb-6 mt-2 text-left text-[20px] font-bold text-white md:mb-8 md:mt-4 md:text-[24px] lg:mb-10 lg:mt-6 lg:text-[28px]">
+          판매 중인 포토카드
+        </h1>
+      )}
+
       {error && (
         <p className="mt-4 text-sm text-red-400">{error}</p>
       )}
