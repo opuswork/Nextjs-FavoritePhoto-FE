@@ -281,7 +281,8 @@ export default function Header({ onOpenAlarm }) {
                   </button>
                   {isProfileOpen && (
                     <div
-                      className="absolute right-0 top-[calc(100%+10px)] z-[9999] w-[260px] max-h-[min(80vh,420px)] overflow-y-auto overflow-x-hidden rounded bg-[#161616] shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
+                      //className="absolute right-0 top-[calc(100%+10px)] z-[9999] w-[260px] max-h-[min(80vh,420px)] overflow-y-auto overflow-x-hidden rounded bg-[#161616] shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
+                      className="absolute right-0 top-[calc(100%+10px)] z-[9999] w-[260px] rounded bg-[#161616] shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
                       role="menu"
                     >
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
