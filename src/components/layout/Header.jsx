@@ -13,7 +13,7 @@ import { http, clearAuthToken } from '@/lib/http/client';
 // =====================
 function ProfileDropdownContent({ userName, ownedPoint = 0, onClose }) {
   return (
-    <div className="relative h-full w-full px-[20px] pt-[20px] pb-[21px]">
+    <div className="relative h-full w-full px-[20px] pt-[20px] pb-[40px]">
       <p className="text-[20px] font-bold leading-[1.2] text-white">안녕하세요, {userName}님!</p>
 
       <div className="mt-[18px] flex items-center justify-between">
