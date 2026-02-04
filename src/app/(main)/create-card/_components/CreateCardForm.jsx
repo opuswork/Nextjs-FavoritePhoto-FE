@@ -36,22 +36,25 @@ const FIELD_ERROR = '!border-red-500';
 const FIELD_CLASS = `${FIELD_BOX} ${FIELD_TEXT}`;
 
 const FILE_BUTTON_CLASS = `
-  !h-[60px]
+  !h-[48px]
+  !min-w-0
+  !w-[120px]
+  !shrink-0
   !rounded-[2px]
   !border
-  !border-main
+  !border-white
   !bg-transparent
-  !px-[28px]
-  !py-[18px]
-  !text-[16px]
+  !px-4
+  !py-2
+  !text-[14px]
   !font-light
   !leading-[1]
   !tracking-[0]
-  !text-main
-  hover:!text-main
-  active:!text-main
-  hover:!bg-transparent
-  active:!bg-transparent
+  !text-white
+  hover:!text-white
+  active:!text-white
+  hover:!bg-white/10
+  active:!bg-white/10
   !shadow-none
 `.trim();
 
@@ -374,13 +377,13 @@ export default function CreateCardForm() {
 
         <div ref={refs.file}>
           <FormField label="사진 업로드">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <Input
                 type="text"
                 placeholder="사진 업로드"
                 value={file?.name ?? ''}
                 disabled
-                className={[`${FIELD_CLASS} flex-1`, showError('file') && FIELD_ERROR]
+                className={[`${FIELD_CLASS} flex-1 min-w-0`, showError('file') && FIELD_ERROR]
                   .filter(Boolean)
                   .join(' ')}
               />
