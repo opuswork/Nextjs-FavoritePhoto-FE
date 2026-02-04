@@ -364,6 +364,13 @@ export default function Header({ onOpenAlarm }) {
                       >
                         포토카드 구매내역
                       </Link>
+                      <Link
+                        href="/mygallery/edit-card"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block px-4 py-2 text-left text-sm text-white hover:bg-white/10"
+                      >
+                        포토카드 수정/삭제
+                      </Link>
                       <div className="my-1 h-px w-full bg-white/20" />
                       <div className="px-4 py-2 text-sm text-white">{displayName}</div>
                       <button
