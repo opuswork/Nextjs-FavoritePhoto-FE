@@ -39,6 +39,7 @@ const gradeToBackend = (v) => {
 };
 
 export default function EditCardForm({ photoCardId, creatorUserId, onSaved, onDeleted, onCancel }) {
+  const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
   const [name, setName] = useState('');
@@ -48,6 +49,8 @@ export default function EditCardForm({ photoCardId, creatorUserId, onSaved, onDe
   const [price, setPrice] = useState('');
   const [total, setTotal] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -81,6 +84,26 @@ export default function EditCardForm({ photoCardId, creatorUserId, onSaved, onDe
     return () => { cancelled = true; };
   }, [photoCardId]);
 
+  // Preview: new file object URL or existing imageUrl
+  useEffect(() => {
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+    setPreviewUrl(null);
+  }, [file]);
+
+  const handlePickFile = (e) => {
+    const picked = e.target.files?.[0] ?? null;
+    if (!picked) return;
+    const okTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!okTypes.includes(picked.type)) return;
+    setFile(picked);
+  };
+
+  const displayImageSrc = previewUrl ?? resolveImageUrl(imageUrl);
+
   const errors = useMemo(() => {
     const e = {};
     if (!name.trim()) e.name = '포토카드 이름을 입력해 주세요.';
@@ -101,6 +124,19 @@ export default function EditCardForm({ photoCardId, creatorUserId, onSaved, onDe
     setSubmitting(true);
     setSubmitError(null);
     try {
+      let finalImageUrl = imageUrl.trim();
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const uploadRes = await fetch('/api/upload/photo-card', { method: 'POST', body: formData });
+        if (!uploadRes.ok) {
+          const data = await uploadRes.json().catch(() => ({}));
+          throw new Error(data?.error ?? `업로드 실패 (${uploadRes.status})`);
+        }
+        const { url } = await uploadRes.json();
+        if (!url) throw new Error('이미지 URL을 받지 못했습니다.');
+        finalImageUrl = url;
+      }
       await http.patch(`/api/photo-cards/${photoCardId}`, {
         creatorUserId,
         name: name.trim(),
@@ -109,8 +145,9 @@ export default function EditCardForm({ photoCardId, creatorUserId, onSaved, onDe
         grade: gradeToBackend(grade),
         minPrice: Number(price) || 0,
         totalSupply: Number(total) || 1,
-        imageUrl: imageUrl.trim() || undefined,
+        imageUrl: finalImageUrl || undefined,
       });
+      setFile(null);
       onSaved?.();
     } catch (err) {
       setSubmitError(err?.response?.data?.message ?? err?.message ?? '수정에 실패했습니다.');
@@ -191,12 +228,39 @@ export default function EditCardForm({ photoCardId, creatorUserId, onSaved, onDe
           {errors.total && <p className="mt-2 text-sm text-red-500">{errors.total}</p>}
         </FormField>
         <FormField label="사진">
-          <div className="rounded-[2px] border border-gray-200 bg-black overflow-hidden">
-            <img
-              src={resolveImageUrl(imageUrl)}
-              alt={name || '미리보기'}
-              className="h-auto max-h-[280px] w-full object-contain"
-            />
+          <div className="flex flex-col gap-3">
+            <div className="flex w-full items-center gap-3">
+              <Input
+                type="text"
+                placeholder="사진"
+                value={file?.name ?? (imageUrl ? '현재 이미지' : '')}
+                disabled
+                className="flex-1 min-w-0 !h-[48px] rounded-[2px] border border-gray-200 bg-black px-[20px] py-2 text-[14px] text-gray-200"
+              />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png, image/jpeg, image/webp"
+                className="hidden"
+                onChange={handlePickFile}
+              />
+              <ButtonPrimary
+                type="button"
+                size="s"
+                thickness="thin"
+                className="!h-[48px] !min-w-0 !w-[100px] !rounded-[2px] !border !border-white !bg-transparent !text-white hover:!bg-white/10"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                사진 바꾸기
+              </ButtonPrimary>
+            </div>
+            <div className="rounded-[2px] border border-gray-200 bg-black overflow-hidden">
+              <img
+                src={displayImageSrc || '/images/preview.jpg'}
+                alt={name || '미리보기'}
+                className="h-auto max-h-[280px] w-full object-contain"
+              />
+            </div>
           </div>
         </FormField>
         <FormField label="포토카드 설명">
