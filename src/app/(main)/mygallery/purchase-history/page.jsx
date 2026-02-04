@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import useBreakpoint from '@/hooks/useBreakpoint';
 import { http } from '@/lib/http/client';
-import { apiGradeToDisplay } from '../_components/MyGalleryShell';
+import { apiGradeToDisplay, useMyGallery } from '../_components/MyGalleryShell';
 import CardOriginal from '@/components/organisms/CardOriginal/CardOriginal';
 import MyGalleryMobileHeader from '../_components/MyGalleryMobileHeader';
 import Pagination from '../_components/Pagination';
@@ -49,18 +49,29 @@ export default function PurchaseHistoryPage() {
   const router = useRouter();
   const bp = useBreakpoint();
   const isMobile = bp === 'sm';
+  const { user } = useMyGallery();
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    if (user === undefined) return; // still loading from MyGalleryShell
+    const buyerUserId = user?.id ?? user?.user_id;
+    if (buyerUserId == null) {
+      setLoading(false);
+      setPurchases([]);
+      setError('로그인이 필요합니다.');
+      return;
+    }
     let cancelled = false;
     async function fetchPurchases() {
       setLoading(true);
       setError(null);
       try {
-        const res = await http.get('/api/purchases/buyer', { params: { limit: 100 } });
+        const res = await http.get('/api/purchases/buyer', {
+          params: { buyerUserId: Number(buyerUserId), limit: 100 },
+        });
         const data = res.data?.data;
         const items = Array.isArray(data) ? data : [];
         if (!cancelled) setPurchases(items);
@@ -75,7 +86,7 @@ export default function PurchaseHistoryPage() {
     }
     fetchPurchases();
     return () => { cancelled = true; };
-  }, []);
+  }, [user?.id, user?.user_id]);
 
   const displayCards = useMemo(
     () => purchases.map(purchaseToCard),
