@@ -157,17 +157,15 @@ export default function MyGalleryShell({ children }) {
       <main className="min-h-screen bg-black text-white overflow-x-hidden">
         <Container className="pt-6 pb-4 md:pt-10 md:pb-6 lg:pt-[60px] lg:pb-[20px] min-w-0">
           {/* Title + button: stack on mobile/tablet, row on desktop (lg+) */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 lg:gap-6">
+          <div className="flex flex-col gap-3 md:gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
             <div className="text-[28px] md:text-[36px] lg:text-[48px] xl:text-[62px] leading-[100%] shrink-0 [&_h1]:!text-inherit">
               <Title text="마이갤러리" as="h1" showLine={false} />
             </div>
-            
             <ButtonPrimary
               size="l"
               thickness="thick"
               fullWidth={isMobile}
-              {/* Cleaned up the conflicting md:w classes */}
-              className="min-w-0 w-full md:w-auto md:px-6 lg:w-auto lg:min-w-[170px] xl:w-[440px] h-[48px] md:h-[52px] lg:h-[60px] shrink-0"
+              className="min-w-0 w-full md:w-[70px] md:w-1/2 lg:w-auto lg:min-w-[170px] xl:w-[440px] h-[48px] md:h-[52px] lg:h-[60px] shrink-0"
               onClick={() => router.push('/mygallery/create')}
             >
               포토카드 생성하기
