@@ -157,8 +157,7 @@ export default function MyGalleryShell({ children }) {
       <main className="min-h-screen bg-black text-white overflow-x-hidden">
         <Container className="pt-6 pb-4 md:pt-10 md:pb-6 lg:pt-[60px] lg:pb-[20px] min-w-0">
           {/* Title + button: stack on mobile/tablet, row on desktop (lg+) */}
-        {/* Change flex-col to md:flex-row and adjust alignment */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 lg:gap-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 lg:gap-6">
             <div className="text-[28px] md:text-[36px] lg:text-[48px] xl:text-[62px] leading-[100%] shrink-0 [&_h1]:!text-inherit">
               <Title text="마이갤러리" as="h1" showLine={false} />
             </div>
