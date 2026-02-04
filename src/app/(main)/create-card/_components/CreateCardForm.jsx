@@ -352,39 +352,40 @@ export default function CreateCardForm() {
 
         <div ref={refs.file}>
           <FormField label="사진 업로드">
-            <div className="flex items-center gap-3 min-w-0">
-              {/* Modified: Increased height to h-[120px] to make it at least twice as big visually */}
-              <Input
-                type="text"
-                placeholder="사진 업로드"
-                value={file?.name ?? ''}
-                disabled
-                className={[
-                  `${FIELD_TEXT} !h-[120px] flex-1 min-w-0 rounded-[2px] border border-gray-200 bg-black px-[20px] py-[18px] outline-none opacity-100`, 
-                  showError('file') && FIELD_ERROR
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-              />
+            <div className="flex w-full items-start gap-3">
+            {/* Input field: Now responsive and tall */}
+            <Input
+              type="text"
+              placeholder="사진 업로드"
+              value={file?.name ?? ''}
+              disabled
+              className={[
+                `${FIELD_TEXT} !h-[120px] flex-1 min-w-0 rounded-[2px] border border-gray-200 bg-black px-[20px] py-[18px] outline-none opacity-100`, 
+                showError('file') && FIELD_ERROR
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            />
 
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/png, image/jpeg"
-                className="hidden"
-                onChange={handlePickFile}
-              />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png, image/jpeg"
+              className="hidden"
+              onChange={handlePickFile}
+            />
 
-              <ButtonPrimary
-                type="button"
-                size="s"
-                thickness="thin"
-                className={FILE_BUTTON_CLASS}
-                onClick={openFilePicker}
-              >
-                파일 선택
-              </ButtonPrimary>
-            </div>
+            {/* Button: Matches the height of a standard input but has white text */}
+            <ButtonPrimary
+              type="button"
+              size="s"
+              thickness="thin"
+              className={FILE_BUTTON_CLASS}
+              onClick={openFilePicker}
+            >
+              파일 선택
+            </ButtonPrimary>
+          </div>
 
             {showError('file') && <p className="mt-2 text-sm text-red-500">{errors.file}</p>}
           </FormField>
@@ -392,27 +393,32 @@ export default function CreateCardForm() {
 
         <div ref={refs.desc}>
           <FormField label="포토카드 설명">
-            <TextBox
-              placeholder="카드 설명을 입력해 주세요"
-              value={desc}
-              onChange={setDesc}
-              wrapperStyle={{ marginTop: 0 }}
-              textareaStyle={{
-                minHeight: '160px',
-                fontSize: '16px',
-                fontWeight: 300,
-                lineHeight: '100%',
-                letterSpacing: '0px',
-                color: '#E5E7EB',
-                borderRadius: 0,
-                borderColor: showError('desc') ? '#ef4444' : '#E5E7EB',
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                backgroundColor: '#000',
-                padding: '18px 20px',
-                outline: 'none',
-              }}
-            />
+          <TextBox
+            placeholder="카드 설명을 입력해 주세요"
+            value={desc}
+            onChange={setDesc}
+            wrapperStyle={{ 
+              marginTop: 0,
+              width: '100%' // Ensures the wrapper fills the parent container
+            }}
+            textareaStyle={{
+              width: '100%', // Makes the textbox fit the mobile screen width
+              minHeight: '160px',
+              fontSize: '16px',
+              fontWeight: 300,
+              lineHeight: '1.4', // Improved for better readability
+              letterSpacing: '0px',
+              color: '#E5E7EB',
+              borderRadius: '2px', // Matches your other input fields
+              borderColor: showError('desc') ? '#ef4444' : '#374151', // Subtle gray border when not in error
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              backgroundColor: '#000',
+              padding: '18px 20px',
+              outline: 'none',
+              resize: 'none', // Prevents manual resizing which can break mobile layouts
+            }}
+          />
             <div className="mt-2 flex items-center justify-between">
               {showError('desc') ? (
                 <p className="text-sm text-red-500">{errors.desc}</p>
