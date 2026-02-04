@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMyGallery, apiGradeToDisplay } from '../_components/MyGalleryShell';
 import { http } from '@/lib/http/client';
@@ -62,6 +62,33 @@ export default function EditCardPage() {
   const { user, cards: rawCards, loading: contextLoading, refetchCards } = useMyGallery();
   const [deletingId, setDeletingId] = useState(null);
   const [deleteError, setDeleteError] = useState(null);
+  const [myListings, setMyListings] = useState([]);
+
+  /** Fetch my active listings (cards currently waiting for selling) */
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchListings() {
+      try {
+        const res = await http.get('/api/listings/my', { params: { limit: 100, status: 'ACTIVE' } });
+        const items = res.data?.data?.items ?? [];
+        if (!cancelled) setMyListings(Array.isArray(items) ? items : []);
+      } catch {
+        if (!cancelled) setMyListings([]);
+      }
+    }
+    if (user?.id) fetchListings();
+    return () => { cancelled = true; };
+  }, [user?.id]);
+
+  /** Photo card IDs that have an active listing (waiting for selling) — exclude these from edit list */
+  const photoCardIdsOnListing = useMemo(() => {
+    const set = new Set();
+    myListings.forEach((item) => {
+      const id = item?.photoCard?.photoCardId ?? item?.photoCardId;
+      if (id != null) set.add(Number(id));
+    });
+    return set;
+  }, [myListings]);
 
   /** Only cards the current user created (uploaded), not purchased */
   const createdCards = useMemo(() => {
@@ -70,10 +97,16 @@ export default function EditCardPage() {
     return rawCards.filter((row) => Number(row?.creator_user_id) === uid);
   }, [user?.id, rawCards]);
 
+  /** Created cards that are NOT on an active listing (so they can be edited/removed) */
+  const createdCardsNotListed = useMemo(
+    () => createdCards.filter((row) => !photoCardIdsOnListing.has(Number(row?.photo_card_id))),
+    [createdCards, photoCardIdsOnListing],
+  );
+
   const [editingPhotoCardId, setEditingPhotoCardId] = useState(null);
   const editingCard = useMemo(
-    () => createdCards.find((c) => Number(c?.photo_card_id) === Number(editingPhotoCardId)) ?? null,
-    [createdCards, editingPhotoCardId],
+    () => createdCardsNotListed.find((c) => Number(c?.photo_card_id) === Number(editingPhotoCardId)) ?? null,
+    [createdCardsNotListed, editingPhotoCardId],
   );
 
   const handleEdit = useCallback((row) => {
@@ -135,7 +168,7 @@ export default function EditCardPage() {
     <section>
       <h1 className="text-2xl md:text-3xl font-bold text-white">포토카드 수정 / 삭제</h1>
       <p className="mt-2 text-white/70 text-sm md:text-base">
-        내가 올린 포토카드만 표시됩니다. 판매 전에 정보를 수정하거나 삭제할 수 있습니다.
+        내가 올린 포토카드 중 판매 대기 중이 아닌 카드만 표시됩니다. 판매 전에 정보를 수정하거나 삭제할 수 있습니다.
       </p>
       <div className="mt-4 h-px w-full bg-white/20" />
 
@@ -154,9 +187,13 @@ export default function EditCardPage() {
           {deleteError && (
             <p className="mt-4 text-sm text-red-500">{deleteError}</p>
           )}
-          {createdCards.length === 0 ? (
+          {createdCardsNotListed.length === 0 ? (
             <div className="mt-8 py-12 text-center text-white/60 rounded-[2px] border border-gray-200/50 bg-black/50">
-              <p>내가 올린 포토카드가 없습니다.</p>
+              <p>
+                {createdCards.length === 0
+                  ? '내가 올린 포토카드가 없습니다.'
+                  : '수정/삭제할 수 있는 카드가 없습니다. (판매 대기 중인 카드는 여기서 제외됩니다)'}
+              </p>
               <button
                 type="button"
                 onClick={() => router.push('/mygallery/create')}
@@ -167,7 +204,7 @@ export default function EditCardPage() {
             </div>
           ) : (
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {createdCards.map((row) => (
+              {createdCardsNotListed.map((row) => (
                 <CreatedCardItem
                   key={row?.user_card_id ?? row?.photo_card_id ?? row?.name}
                   row={row}
