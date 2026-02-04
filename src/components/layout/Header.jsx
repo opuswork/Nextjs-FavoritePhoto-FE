@@ -47,6 +47,13 @@ function ProfileDropdownContent({ userName, ownedPoint = 0, onClose }) {
         >
           판매 중인 포토카드
         </Link>
+        <Link
+          href="/mygallery/purchase-history"
+          onClick={onClose}
+          className="text-[14px] font-bold text-white hover:text-yellow-300"
+        >
+          구매 내역
+        </Link>
       </nav>
     </div>
   );
@@ -348,6 +355,13 @@ export default function Header({ onOpenAlarm }) {
                         className="block px-4 py-2 text-left text-sm text-white hover:bg-white/10"
                       >
                         판매 중인 포토카드
+                      </Link>
+                      <Link
+                        href="/mygallery/purchase-history"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block px-4 py-2 text-left text-sm text-white hover:bg-white/10"
+                      >
+                        포토카드 구매내역
                       </Link>
                       <div className="my-1 h-px w-full bg-white/20" />
                       <div className="px-4 py-2 text-sm text-white">{displayName}</div>
