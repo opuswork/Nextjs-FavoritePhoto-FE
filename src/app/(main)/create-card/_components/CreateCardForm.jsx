@@ -85,6 +85,7 @@ export default function CreateCardForm() {
   const [total, setTotal] = useState('');
   const [desc, setDesc] = useState('');
   const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
@@ -264,6 +265,17 @@ export default function CreateCardForm() {
     setTouched((t) => ({ ...t, file: true }));
   };
 
+  // Create/revoke object URL for selected file preview
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
   return (
     <>
       <form
@@ -388,6 +400,14 @@ export default function CreateCardForm() {
           </div>
 
             {showError('file') && <p className="mt-2 text-sm text-red-500">{errors.file}</p>}
+
+            <div className="mt-3 w-full overflow-hidden rounded-[2px] border border-gray-200 bg-black">
+              <img
+                src={previewUrl ?? '/images/preview.jpg'}
+                alt="사진 미리보기"
+                className="h-auto max-h-[320px] w-full object-contain"
+              />
+            </div>
           </FormField>
         </div>
 
