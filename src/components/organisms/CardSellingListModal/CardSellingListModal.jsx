@@ -25,6 +25,7 @@ function userCardRowToCard(row) {
     id: row?.user_card_id,
     user_card_id: row?.user_card_id,
     photo_card_id: row?.photo_card_id,
+    creator_user_id: row?.creator_user_id ?? null,
     quantity,
     rarity: row?.grade ?? 'COMMON',
     category: row?.genre ?? '풍경',
@@ -120,7 +121,15 @@ export default function CardSellingListModal({ open, onClose, modalTitle = '나�
   ];
 
   /** Use only API data. No mock fallback — mock ids cause POST /api/sell to return 404 (user_card not found). */
-  const cardsFromApi = sellingList;
+  /** In sell mode, show only cards the user uploaded (created), not purchased. */
+  const cardsFromApi = useMemo(() => {
+    if (mode === 'sell' && sellerUserId != null) {
+      return sellingList.filter(
+        (c) => Number(c.creator_user_id) === Number(sellerUserId)
+      );
+    }
+    return sellingList;
+  }, [sellingList, mode, sellerUserId]);
   const filteredCards = useMemo(() => {
     let list = cardsFromApi;
     if (grade && grade !== 'all') list = list.filter((c) => c.grade === grade || c.rarity === grade);
