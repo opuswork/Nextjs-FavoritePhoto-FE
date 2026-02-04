@@ -35,21 +35,21 @@ const FIELD_BOX =
 const FIELD_ERROR = '!border-red-500';
 const FIELD_CLASS = `${FIELD_BOX} ${FIELD_TEXT}`;
 
+// Modified: Reduced width (~1/3 of before) and ensured white text
 const FILE_BUTTON_CLASS = `
   !h-[48px]
   !min-w-0
-  !w-[120px]
+  !w-[100px] 
   !shrink-0
   !rounded-[2px]
   !border
   !border-white
   !bg-transparent
-  !px-4
+  !px-2
   !py-2
-  !text-[14px]
-  !font-light
+  !text-[13px]
+  !font-normal
   !leading-[1]
-  !tracking-[0]
   !text-white
   hover:!text-white
   active:!text-white
@@ -58,7 +58,6 @@ const FILE_BUTTON_CLASS = `
   !shadow-none
 `.trim();
 
-// ✅ 피그마처럼: (disabled) 회색 버튼이길 원하면 여기 수정
 const SUBMIT_BUTTON_CLASS = `
   !h-[60px]
   !rounded-[2px]
@@ -70,7 +69,6 @@ const SUBMIT_BUTTON_CLASS = `
 
 const onlyDigits = (v) => v.replace(/\D/g, '');
 
-/** Backend expects lowercase grade: common, rare, epic, legendary */
 const gradeToBackend = (v) => {
   const map = { COMMON: 'common', RARE: 'rare', 'SUPER RARE': 'epic', LEGENDARY: 'legendary' };
   return map[v] ?? (v && v.toLowerCase());
@@ -80,7 +78,6 @@ export default function CreateCardForm() {
   const router = useRouter();
   const fileInputRef = useRef(null);
 
-  // values
   const [name, setName] = useState('');
   const [grade, setGrade] = useState('');
   const [genre, setGenre] = useState('');
@@ -89,17 +86,14 @@ export default function CreateCardForm() {
   const [desc, setDesc] = useState('');
   const [file, setFile] = useState(null);
 
-  // submit & user
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [creatorUserId, setCreatorUserId] = useState(null);
   const [userChecked, setUserChecked] = useState(false);
 
-  // modal
   const [fileErrorOpen, setFileErrorOpen] = useState(false);
   const submitErrorRef = useRef(null);
 
-  // touched
   const [touched, setTouched] = useState({
     name: false,
     grade: false,
@@ -110,7 +104,6 @@ export default function CreateCardForm() {
     desc: false,
   });
 
-  // scroll targets
   const refs = {
     name: useRef(null),
     grade: useRef(null),
@@ -123,28 +116,21 @@ export default function CreateCardForm() {
 
   const errors = useMemo(() => {
     const e = {};
-
     if (!name.trim()) e.name = '포토카드 이름을 입력해 주세요.';
     else if (name.trim().length > 20) e.name = '포토카드 이름은 20자 이내로 입력해 주세요.';
-
     if (!grade) e.grade = '등급을 선택해 주세요.';
     if (!genre) e.genre = '장르를 선택해 주세요.';
-
     if (price === '') e.price = '가격을 입력해 주세요.';
     else if (!/^\d+$/.test(price)) e.price = '가격은 숫자만 입력해 주세요.';
-
     if (total === '') e.total = '총 발행량을 입력해 주세요.';
     else if (!/^\d+$/.test(total)) e.total = '총 발행량은 숫자만 입력해 주세요.';
     else {
       const n = Number(total);
       if (n < 1 || n > 10) e.total = '총 발행량은 1~10장 이내로만 설정 가능합니다.';
     }
-
     if (!file) e.file = '이미지를 업로드해 주세요.';
-
     if (!desc.trim()) e.desc = '포토카드 설명을 입력해 주세요.';
     else if (desc.length > 500) e.desc = '포토카드 설명은 500자 이내로 입력해 주세요.';
-
     return e;
   }, [name, grade, genre, price, total, file, desc]);
 
@@ -158,7 +144,6 @@ export default function CreateCardForm() {
     refs[first]?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [errors]);
 
-  // Fetch current user for creatorUserId
   useEffect(() => {
     let cancelled = false;
     setUserChecked(false);
@@ -179,7 +164,6 @@ export default function CreateCardForm() {
     return () => { cancelled = true; };
   }, []);
 
-  // Scroll submit error into view when it appears
   useEffect(() => {
     if (submitError && submitErrorRef.current) {
       submitErrorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -188,7 +172,6 @@ export default function CreateCardForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setTouched({
       name: true,
       grade: true,
@@ -213,7 +196,6 @@ export default function CreateCardForm() {
     setSubmitError(null);
 
     try {
-      // 1) Upload image to Vercel Blob via Next.js API route
       const formData = new FormData();
       formData.append('file', file);
 
@@ -230,7 +212,6 @@ export default function CreateCardForm() {
       const { url: imageUrl } = await uploadRes.json();
       if (!imageUrl) throw new Error('이미지 URL을 받지 못했습니다.');
 
-      // 2) Create photo card on backend with Blob URL
       await http.post('/api/photo-cards', {
         creatorUserId,
         name: name.trim(),
@@ -242,7 +223,6 @@ export default function CreateCardForm() {
         imageUrl,
       });
 
-      // Signal mygallery to refetch so the new card shows without reload
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('mygallery-refetch', '1');
         window.dispatchEvent(new CustomEvent('user-points-updated'));
@@ -256,7 +236,6 @@ export default function CreateCardForm() {
     }
   };
 
-  // ✅ “파일 선택”은 제출이 아니라 파일창만 열기
   const openFilePicker = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -265,8 +244,6 @@ export default function CreateCardForm() {
 
   const handlePickFile = (e) => {
     const picked = e.target.files?.[0] ?? null;
-
-    // 사용자가 취소한 경우: 여기서 touched 처리해서 에러 노출 가능
     if (!picked) {
       setTouched((t) => ({ ...t, file: true }));
       return;
@@ -279,8 +256,6 @@ export default function CreateCardForm() {
       setFile(null);
       setTouched((t) => ({ ...t, file: true }));
       setFileErrorOpen(true);
-
-      // 같은 파일 다시 선택 가능하게 value 초기화
       e.target.value = '';
       return;
     }
@@ -378,12 +353,16 @@ export default function CreateCardForm() {
         <div ref={refs.file}>
           <FormField label="사진 업로드">
             <div className="flex items-center gap-3 min-w-0">
+              {/* Modified: Increased height to h-[120px] to make it at least twice as big visually */}
               <Input
                 type="text"
                 placeholder="사진 업로드"
                 value={file?.name ?? ''}
                 disabled
-                className={[`${FIELD_CLASS} flex-1 min-w-0`, showError('file') && FIELD_ERROR]
+                className={[
+                  `${FIELD_TEXT} !h-[120px] flex-1 min-w-0 rounded-[2px] border border-gray-200 bg-black px-[20px] py-[18px] outline-none opacity-100`, 
+                  showError('file') && FIELD_ERROR
+                ]
                   .filter(Boolean)
                   .join(' ')}
               />
@@ -474,7 +453,6 @@ export default function CreateCardForm() {
         </div>
       </form>
 
-      {/* 잘못된 파일 형식 모달 */}
       <Modal open={fileErrorOpen} onClose={() => setFileErrorOpen(false)} size="sm">
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-bold">업로드 불가</h3>
