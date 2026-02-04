@@ -54,6 +54,14 @@ function ProfileDropdownContent({ userName, ownedPoint = 0, onClose }) {
         >
           구매 내역
         </Link>
+        {/* New Menu Item Added Below */}
+        <Link
+          href="/mygallery/edit-card"
+          onClick={onClose}
+          className="text-[14px] font-bold text-white hover:text-yellow-300"
+        >
+          포토카드 수정/삭제
+        </Link>
       </nav>
     </div>
   );
