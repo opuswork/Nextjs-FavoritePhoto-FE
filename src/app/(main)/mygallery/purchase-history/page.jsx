@@ -6,6 +6,9 @@ import useBreakpoint from '@/hooks/useBreakpoint';
 import { http } from '@/lib/http/client';
 import { apiGradeToDisplay, useMyGallery } from '../_components/MyGalleryShell';
 import CardOriginal from '@/components/organisms/CardOriginal/CardOriginal';
+import GradeChips from '../_components/GradeChips';
+import MyGalleryFilterBar from '../_components/MyGalleryFilterBar';
+import MyGalleryMobileFilterSheet from '../_components/MyGalleryMobileFilterSheet';
 import MyGalleryMobileHeader from '../_components/MyGalleryMobileHeader';
 import Pagination from '../_components/Pagination';
 
@@ -54,6 +57,10 @@ export default function PurchaseHistoryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [grade, setGrade] = useState('ALL');
+  const [genre, setGenre] = useState('ALL');
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   useEffect(() => {
     if (user === undefined) return; // still loading from MyGalleryShell
@@ -93,8 +100,34 @@ export default function PurchaseHistoryPage() {
     [purchases],
   );
 
-  const totalPages = Math.max(1, Math.ceil(displayCards.length / PAGE_SIZE));
-  const pagedCards = displayCards.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const gradeCounts = useMemo(() => {
+    const initial = { total: 0, common: 0, rare: 0, superRare: 0, legendary: 0 };
+    displayCards.forEach((c) => {
+      const qty = Number(c.remaining ?? c.outof ?? 0) || 1;
+      initial.total += qty;
+      if (c.rarity === 'COMMON') initial.common += qty;
+      else if (c.rarity === 'RARE') initial.rare += qty;
+      else if (c.rarity === 'SUPER RARE') initial.superRare += qty;
+      else if (c.rarity === 'LEGENDARY') initial.legendary += qty;
+    });
+    return initial;
+  }, [displayCards]);
+
+  const filteredCards = useMemo(() => {
+    return displayCards.filter((c) => {
+      const okSearch = search
+        ? `${c.description ?? ''} ${c.owner ?? ''} ${c.category ?? ''}`.toLowerCase().includes(search.toLowerCase())
+        : true;
+      const okGrade = grade === 'ALL' ? true : c.rarity === grade;
+      const okGenre = genre === 'ALL' ? true : c.category === genre;
+      return okSearch && okGrade && okGenre;
+    });
+  }, [displayCards, search, grade, genre]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredCards.length / PAGE_SIZE));
+  const pagedCards = filteredCards.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  useEffect(() => setPage(1), [search, grade, genre]);
 
   if (loading) {
     return (
@@ -123,11 +156,44 @@ export default function PurchaseHistoryPage() {
         <p className="mt-4 text-sm text-red-400">{error}</p>
       )}
 
+      {!error && displayCards.length > 0 && (
+        <>
+          {!isMobile && <GradeChips counts={gradeCounts} />}
+          {!isMobile && <div className="mt-8 md:mt-10 lg:mt-[60px] h-px w-full bg-white/20" />}
+
+          <MyGalleryFilterBar
+            isMobile={isMobile}
+            search={search}
+            onChangeSearch={setSearch}
+            grade={grade}
+            onChangeGrade={setGrade}
+            genre={genre}
+            onChangeGenre={setGenre}
+            onOpenMobileFilter={isMobile ? () => setMobileFilterOpen(true) : undefined}
+          />
+
+          {isMobile && (
+            <MyGalleryMobileFilterSheet
+              open={mobileFilterOpen}
+              onClose={() => setMobileFilterOpen(false)}
+              grade={grade}
+              onChangeGrade={setGrade}
+              genre={genre}
+              onChangeGenre={setGenre}
+            />
+          )}
+        </>
+      )}
+
       {!error && displayCards.length === 0 && (
         <p className="mt-8 text-center text-white/60">구매 내역이 없습니다.</p>
       )}
 
-      {!error && displayCards.length > 0 && (
+      {!error && displayCards.length > 0 && filteredCards.length === 0 && (
+        <p className="mt-8 text-center text-white/60">검색 결과가 없습니다.</p>
+      )}
+
+      {!error && displayCards.length > 0 && filteredCards.length > 0 && (
         <>
           <div className={styles.cardGrid}>
             {pagedCards.map((card) => (
