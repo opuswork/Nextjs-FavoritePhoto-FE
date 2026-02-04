@@ -76,6 +76,7 @@ export default function MarketplaceCardPurchasePage() {
   const [listingError, setListingError] = useState(null);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const [purchaseError, setPurchaseError] = useState(null);
+  const [isPurchaseSuccessModalOpen, setIsPurchaseSuccessModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   const cardId = params?.cardId ?? '1';
@@ -222,6 +223,7 @@ export default function MarketplaceCardPurchasePage() {
       if (res.data?.ok && res.data?.data) {
         setIsPurchaseModalOpen(false);
         setQuantity(1);
+        setIsPurchaseSuccessModalOpen(true);
         await fetchListing();
         // Refetch current user so points update on this page
         try {
@@ -561,6 +563,28 @@ export default function MarketplaceCardPurchasePage() {
             disabled={purchaseLoading || !currentUser}
           >
             {purchaseLoading ? '처리 중...' : currentUser ? '구매하기' : '로그인 필요'}
+          </ButtonPrimary>
+        </div>
+      </Modal>
+
+      {/* Purchase success modal: content from purchase/success page, then redirect to purchase-history */}
+      <Modal
+        open={isPurchaseSuccessModalOpen}
+        onClose={() => setIsPurchaseSuccessModalOpen(false)}
+        size="purchaseConfirm"
+        showCloseButton
+      >
+        <div className={purchaseModalStyles.purchaseModalContainer}>
+          <h2 className={purchaseModalStyles.title}>구매 성공</h2>
+          <p className={purchaseModalStyles.message}>구매가 완료되었습니다.</p>
+          <ButtonPrimary
+            onClick={() => {
+              setIsPurchaseSuccessModalOpen(false);
+              router.push('/mygallery/purchase-history');
+            }}
+            className={purchaseModalStyles.purchaseButton}
+          >
+            구매 내역 보기
           </ButtonPrimary>
         </div>
       </Modal>
