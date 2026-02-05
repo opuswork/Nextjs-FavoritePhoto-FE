@@ -4,7 +4,7 @@ import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMyInfo, apiGradeToDisplay } from '../_components/MyInfoShell';
 import { http } from '@/lib/http/client';
-import EditCardForm from './_components/EditCardForm';
+import EditProfileForm from './_components/EditProfileForm';
 
 const API_BASE = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_API_BASE_URL || '') : '';
 function resolveImageUrl(imageUrl) {
