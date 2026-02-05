@@ -114,15 +114,6 @@ export default function MyInfoShell({ children }) {
             <div className="text-[28px] md:text-[36px] lg:text-[48px] xl:text-[62px] leading-[100%] shrink-0 [&_h1]:!text-inherit">
               <Title text="회원정보 관리" as="h1" showLine={false} />
             </div>
-            <ButtonPrimary
-              size="l"
-              thickness="thick"
-              fullWidth={isMobile}
-              className="min-w-0 w-full md:w-[70px] md:w-1/3 lg:w-auto lg:min-w-[170px] xl:w-[440px] h-[48px] md:h-[52px] lg:h-[60px] shrink-0"
-              onClick={() => router.push('/userinfo/reset-password')}
-            >
-              비밀번호 변경
-            </ButtonPrimary>
           </div>
 
           <div className="mt-4 md:mt-[20px] mb-6 md:mb-[50px] h-[2px] w-full bg-[#EEEEEE]" />
