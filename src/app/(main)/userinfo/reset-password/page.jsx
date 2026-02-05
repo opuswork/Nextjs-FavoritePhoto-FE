@@ -101,7 +101,7 @@ export default function ResetPasswordPage() {
   // Google 로그인 등 비밀번호가 없는 사용자는 이 페이지 사용 불가
   if (!userLoading && user && user.hasPassword === false) {
     return (
-      <div className="mt-8 max-w-[520px]">
+      <div className="mt-8 max-w-[520px] md:mx-auto">
         <p className="text-white/70">비밀번호로 가입한 계정만 비밀번호를 변경할 수 있습니다.</p>
         <Link href="/userinfo" className="mt-4 inline-block text-yellow-300 hover:underline">
           회원정보로 돌아가기
