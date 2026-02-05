@@ -1,51 +1,14 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import useBreakpoint from '@/hooks/useBreakpoint';
+import Link from 'next/link';
 import { http } from '@/lib/http/client';
-import { apiGradeToDisplay } from '../_components/MyInfoShell';
-//import MyInfoMobileHeader from '../_components/MyInfoMobileHeader';
-
-const API_BASE = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_API_BASE_URL || '') : '';
-
-function resolveImageUrl(imageUrl) {
-  if (!imageUrl || typeof imageUrl !== 'string') return '/assets/products/photo-card.svg';
-  const trimmed = imageUrl.trim();
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
-  if (API_BASE && trimmed.startsWith('/')) return API_BASE.replace(/\/$/, '') + trimmed;
-  return trimmed || '/assets/products/photo-card.svg';
-}
-
-/** Map API listing item (GET /api/listings/my) to CardOriginal display shape */
-function listingToCard(item) {
-  const pc = item?.photoCard ?? {};
-  const grade = pc?.grade;
-  const displayGrade = apiGradeToDisplay(grade);
-  const quantity = Number(item?.quantity ?? 0);
-  const pricePerUnit = Number(item?.pricePerUnit ?? 0);
-  return {
-    id: item?.listingId,
-    listingId: item?.listingId,
-    userCardId: item?.userCardId,
-    rarity: displayGrade,
-    category: pc?.genre ?? '풍경',
-    owner: item?.sellerNickname ?? '나',
-    description: pc?.name ?? pc?.description ?? '-',
-    price: `${pricePerUnit} P`,
-    remaining: quantity,
-    outof: quantity,
-    imageSrc: resolveImageUrl(pc?.imageUrl),
-    status: item?.status,
-  };
-}
-
-const PAGE_SIZE = 15;
+import { useMyInfo } from '../_components/MyInfoShell';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const bp = useBreakpoint();
-  const isMobile = bp === 'sm';
+  const { user, loading: userLoading } = useMyInfo();
   const [resetPassword, setResetPassword] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -72,6 +35,18 @@ export default function ResetPasswordPage() {
   }, []);
 
 
+  // Google 로그인 등 비밀번호가 없는 사용자는 이 페이지 사용 불가
+  if (!userLoading && user && user.hasPassword === false) {
+    return (
+      <div className="mt-8 max-w-[520px]">
+        <p className="text-white/70">비밀번호로 가입한 계정만 비밀번호를 변경할 수 있습니다.</p>
+        <Link href="/userinfo" className="mt-4 inline-block text-yellow-300 hover:underline">
+          회원정보로 돌아가기
+        </Link>
+      </div>
+    );
+  }
+
   if (loading) {
     return <p className="text-white/60">비밀번호를 불러오는 중…</p>;
   }
@@ -95,10 +70,16 @@ export default function ResetPasswordPage() {
   return (
     <div className="mt-8 max-w-[520px]">
       {resetPassword ? (
-        <ResetPasswordForm
-          resetPassword={resetPassword}
-          onResetPassword={handleResetPassword}
-        />
+        <div className="text-white/70">
+          비밀번호 변경 폼 (ResetPasswordForm 연결 후 사용)
+          <button
+            type="button"
+            onClick={handleResetPassword}
+            className="ml-2 text-yellow-300 hover:underline"
+          >
+            확인
+          </button>
+        </div>
       ) : (
         <p className="text-white/60">비밀번호 변경이 정상동작하지 않습니다.</p>
       )}
