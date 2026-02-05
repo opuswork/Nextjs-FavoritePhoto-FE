@@ -79,6 +79,18 @@
   display: block;
 }
 
+.successMessage {
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 /* Password field wrapper: input + eye icon inside */
 .inputWrapper {
   position: relative;
