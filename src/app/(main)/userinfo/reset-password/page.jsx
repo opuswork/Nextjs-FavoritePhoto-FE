@@ -6,13 +6,7 @@ import useBreakpoint from '@/hooks/useBreakpoint';
 import { http } from '@/lib/http/client';
 import { apiGradeToDisplay } from '../_components/MyInfoShell';
 import CardOriginal from '@/components/organisms/CardOriginal/CardOriginal';
-import GradeChips from '../_components/GradeChips';
-import MyGalleryFilterBar from '../_components/MyGalleryFilterBar';
-import MyGalleryMobileFilterSheet from '../_components/MyGalleryMobileFilterSheet';
-import MyGalleryMobileHeader from '../_components/MyInfoMobileHeader';
-import Pagination from '../_components/Pagination';
-
-import styles from '../page.module.css';
+import MyInfoMobileHeader from '../_components/MyInfoMobileHeader';
 
 const API_BASE = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_API_BASE_URL || '') : '';
 
@@ -122,92 +116,14 @@ export default function SellingCardPage() {
   if (loading) {
     return (
       <div className={styles.listWrapper}>
-        <p className="text-white/60">판매 중인 포토카드를 불러오는 중…</p>
+        <p className="text-white/60">비밀번호를 불러오는 중…</p>
       </div>
     );
   }
 
   return (
-    <div className={styles.listWrapper}>
-      {isMobile && (
-        <MyGalleryMobileHeader
-          title="판매 중인 포토카드"
-          onBack={() => router.back()}
-        />
-      )}
-
-      {!isMobile && (
-        <h1 className="mb-6 mt-2 text-left text-[20px] font-bold text-white md:mb-8 md:mt-4 md:text-[24px] lg:mb-10 lg:mt-6 lg:text-[28px]">
-          판매 중인 포토카드
-        </h1>
-      )}
-
-      {error && (
-        <p className="mt-4 text-sm text-red-400">{error}</p>
-      )}
-
-      {!error && displayCards.length > 0 && (
-        <>
-          {!isMobile && <GradeChips counts={gradeCounts} />}
-          {!isMobile && <div className="mt-8 md:mt-10 lg:mt-[60px] h-px w-full bg-white/20" />}
-
-          <MyGalleryFilterBar
-            isMobile={isMobile}
-            search={search}
-            onChangeSearch={setSearch}
-            grade={grade}
-            onChangeGrade={setGrade}
-            genre={genre}
-            onChangeGenre={setGenre}
-            onOpenMobileFilter={isMobile ? () => setMobileFilterOpen(true) : undefined}
-          />
-
-          {isMobile && (
-            <MyGalleryMobileFilterSheet
-              open={mobileFilterOpen}
-              onClose={() => setMobileFilterOpen(false)}
-              grade={grade}
-              onChangeGrade={setGrade}
-              genre={genre}
-              onChangeGenre={setGenre}
-            />
-          )}
-        </>
-      )}
-
-      {!error && displayCards.length === 0 && (
-        <p className="mt-8 text-center text-white/60">판매 중인 포토카드가 없습니다.</p>
-      )}
-
-      {!error && displayCards.length > 0 && filteredCards.length === 0 && (
-        <p className="mt-8 text-center text-white/60">검색 결과가 없습니다.</p>
-      )}
-
-      {!error && displayCards.length > 0 && filteredCards.length > 0 && (
-        <>
-          <div className={styles.cardGrid}>
-            {pagedCards.map((card) => (
-              <CardOriginal
-                key={card.id}
-                rarity={card.rarity}
-                category={card.category}
-                owner={card.owner}
-                description={card.description}
-                price={card.price}
-                remaining={card.remaining}
-                outof={card.outof}
-                imageSrc={card.imageSrc}
-                detailHref={`/marketplace/${card.listingId}`}
-              />
-            ))}
-          </div>
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onChange={setPage}
-          />
-        </>
-      )}
+    <div className="mt-8 max-w-[520px]">
+      <p className="text-white/70">비밀번호 변경 기능은 준비 중입니다.</p>
     </div>
   );
 }
