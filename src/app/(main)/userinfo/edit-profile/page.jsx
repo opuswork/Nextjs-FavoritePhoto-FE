@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMyGallery, apiGradeToDisplay } from '../_components/MyInfoShell';
+import { useMyInfo, apiGradeToDisplay } from '../_components/MyInfoShell';
 import { http } from '@/lib/http/client';
 import EditCardForm from './_components/EditCardForm';
 
@@ -16,24 +16,18 @@ function resolveImageUrl(imageUrl) {
 }
 
 /** Row from GET /users/me/cards (has creator_user_id). Only show rows where user created the card. */
-function CreatedCardItem({ row, onEdit, onDelete, isDeleting }) {
-  const grade = apiGradeToDisplay(row?.grade);
-  const imageSrc = resolveImageUrl(row?.image_url);
-  const name = row?.name ?? row?.description ?? '-';
-  const genre = row?.genre ?? '풍경';
-
+function EditProfileItem({ row, onEdit, onDelete, isDeleting }) { 
   return (
     <div className="rounded-[2px] border border-gray-200 bg-black overflow-hidden flex flex-col">
       <div className="aspect-square w-full relative">
         <img
-          src={imageSrc}
-          alt={name}
+          src={row?.image_url}
+          alt={row?.name}
           className="w-full h-full object-cover"
         />
       </div>
       <div className="p-3 flex flex-col gap-2">
-        <p className="text-white font-medium truncate" title={name}>{name}</p>
-        <p className="text-gray-400 text-sm">{genre} · {grade}</p>
+        <p className="text-white font-medium truncate" title={row?.name}>{row?.name}</p>
         <div className="flex gap-2 mt-2">
           <button
             type="button"
@@ -57,65 +51,27 @@ function CreatedCardItem({ row, onEdit, onDelete, isDeleting }) {
   );
 }
 
-export default function EditCardPage() {
+export default function EditProfilePage() {
   const router = useRouter();
-  const { user, cards: rawCards, loading: contextLoading, refetchCards } = useMyGallery();
   const [deletingId, setDeletingId] = useState(null);
   const [deleteError, setDeleteError] = useState(null);
-  const [myListings, setMyListings] = useState([]);
-
-  /** Fetch my active listings (cards currently waiting for selling) */
-  useEffect(() => {
-    let cancelled = false;
-    async function fetchListings() {
-      try {
-        const res = await http.get('/api/listings/my', { params: { limit: 100, status: 'ACTIVE' } });
-        const items = res.data?.data?.items ?? [];
-        if (!cancelled) setMyListings(Array.isArray(items) ? items : []);
-      } catch {
-        if (!cancelled) setMyListings([]);
-      }
-    }
-    if (user?.id) fetchListings();
-    return () => { cancelled = true; };
-  }, [user?.id]);
-
-  /** Photo card IDs that have an active listing (waiting for selling) — exclude these from edit list */
-  const photoCardIdsOnListing = useMemo(() => {
-    const set = new Set();
-    myListings.forEach((item) => {
-      const id = item?.photoCard?.photoCardId ?? item?.photoCardId;
-      if (id != null) set.add(Number(id));
-    });
-    return set;
-  }, [myListings]);
+  const [user, setUser] = useState(null);
 
   /** Only cards the current user created (uploaded), not purchased */
-  const createdCards = useMemo(() => {
-    if (!user?.id || !Array.isArray(rawCards)) return [];
+  const createdUsers = useMemo(() => {
+    if (!user?.id) return [];
     const uid = Number(user.id);
-    return rawCards.filter((row) => Number(row?.creator_user_id) === uid);
-  }, [user?.id, rawCards]);
+    return user.users.filter((row) => Number(row?.creator_user_id) === uid);
+  }, [user?.id, user?.users]);
 
-  /** Created cards that are NOT on an active listing (so they can be edited/removed) */
-  const createdCardsNotListed = useMemo(
-    () => createdCards.filter((row) => !photoCardIdsOnListing.has(Number(row?.photo_card_id))),
-    [createdCards, photoCardIdsOnListing],
-  );
-
-  const [editingPhotoCardId, setEditingPhotoCardId] = useState(null);
-  const editingCard = useMemo(
-    () => createdCardsNotListed.find((c) => Number(c?.photo_card_id) === Number(editingPhotoCardId)) ?? null,
-    [createdCardsNotListed, editingPhotoCardId],
-  );
-
+  const [editingUserId, setEditingUserId] = useState(null);
   const handleEdit = useCallback((row) => {
-    setEditingPhotoCardId(row?.photo_card_id ?? null);
+    setEditingUserId(row?.id ?? null);
   }, []);
 
   const handleDelete = useCallback(
     async (row) => {
-      const id = row?.photo_card_id;
+      const id = row?.id;
       const creatorUserId = user?.id;
       if (!id || !creatorUserId) return;
       if (!window.confirm('이 포토카드를 삭제하면 복구할 수 없습니다. 삭제하시겠습니까?')) return;
@@ -123,7 +79,7 @@ export default function EditCardPage() {
       setDeleteError(null);
       try {
         await http.delete(`/api/photo-cards/${id}`, { data: { creatorUserId } });
-        await refetchCards();
+        await refetchUser();
         if (Number(editingPhotoCardId) === Number(id)) setEditingPhotoCardId(null);
       } catch (err) {
         setDeleteError(err?.response?.data?.message ?? err?.message ?? '삭제에 실패했습니다.');
@@ -131,27 +87,27 @@ export default function EditCardPage() {
         setDeletingId(null);
       }
     },
-    [user?.id, refetchCards, editingPhotoCardId],
+    [user?.id, refetchUser, editingPhotoCardId],
   );
 
   const handleSaved = useCallback(() => {
-    refetchCards();
+    refetchUser();
     setEditingPhotoCardId(null);
-  }, [refetchCards]);
+  }, [refetchUser]);
 
   const handleDeleted = useCallback(() => {
-    refetchCards();
+    refetchUser();
     setEditingPhotoCardId(null);
-  }, [refetchCards]);
+  }, [refetchUser]);
 
   const handleCancelEdit = useCallback(() => {
     setEditingPhotoCardId(null);
   }, []);
 
-  if (contextLoading) {
+  if (loading) {
     return (
       <div className="py-8 text-white/60">
-        <p>내가 올린 포토카드를 불러오는 중…</p>
+        <p>유저 정보를 불러오는 중…</p>
       </div>
     );
   }
@@ -159,23 +115,20 @@ export default function EditCardPage() {
   if (!user) {
     return (
       <div className="py-8 text-amber-400">
-        <p>로그인 후 수정/삭제할 수 있습니다.</p>
+        <p>로그인 후 유저 정보를 수정할 수 있습니다.</p>
       </div>
     );
   }
 
   return (
     <section>
-      <h1 className="text-2xl md:text-3xl font-bold text-white">포토카드 수정 / 삭제</h1>
-      <p className="mt-2 text-white/70 text-sm md:text-base">
-        내가 올린 포토카드 중 판매 대기 중이 아닌 카드만 표시됩니다. 판매 전에 정보를 수정하거나 삭제할 수 있습니다.
-      </p>
+      <h1 className="text-2xl md:text-3xl font-bold text-white">유저 정보 수정</h1>
       <div className="mt-4 h-px w-full bg-white/20" />
 
-      {editingPhotoCardId ? (
+      {editingUserId ? (
         <div className="mt-6">
-          <EditCardForm
-            photoCardId={editingPhotoCardId}
+          <EditProfileForm
+            userId={editingUserId}
             creatorUserId={user.id}
             onSaved={handleSaved}
             onDeleted={handleDeleted}
@@ -187,30 +140,23 @@ export default function EditCardPage() {
           {deleteError && (
             <p className="mt-4 text-sm text-red-500">{deleteError}</p>
           )}
-          {createdCardsNotListed.length === 0 ? (
+          {createdUsers.length === 0 ? (
             <div className="mt-8 py-12 text-center text-white/60 rounded-[2px] border border-gray-200/50 bg-black/50">
               <p>
-                {createdCards.length === 0
-                  ? '내가 올린 포토카드가 없습니다.'
-                  : '수정/삭제할 수 있는 카드가 없습니다. (판매 대기 중인 카드는 여기서 제외됩니다)'}
+                {createdUsers.length === 0
+                  ? '유저 정보가 없습니다.'
+                  : '수정/삭제할 수 있는 유저 정보가 없습니다.'}
               </p>
-              <button
-                type="button"
-                onClick={() => router.push('/mygallery/create')}
-                className="mt-4 text-main hover:underline"
-              >
-                포토카드 생성하기
-              </button>
             </div>
           ) : (
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {createdCardsNotListed.map((row) => (
-                <CreatedCardItem
-                  key={row?.user_card_id ?? row?.photo_card_id ?? row?.name}
+              {createdUsers.map((row) => (
+                <EditProfileItem
+                  key={row?.id}
                   row={row}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
-                  isDeleting={deletingId === row?.photo_card_id}
+                  isDeleting={deletingId === row?.id}
                 />
               ))}
             </div>
