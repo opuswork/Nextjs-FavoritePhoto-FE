@@ -2,20 +2,9 @@
 
 import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMyInfo, apiGradeToDisplay } from '../_components/MyInfoShell';
 import { http } from '@/lib/http/client';
 import EditProfileForm from './_components/EditProfileForm';
 
-const API_BASE = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_API_BASE_URL || '') : '';
-function resolveImageUrl(imageUrl) {
-  if (!imageUrl || typeof imageUrl !== 'string') return '/assets/products/photo-card.svg';
-  const t = imageUrl.trim();
-  if (t.startsWith('http://') || t.startsWith('https://')) return t;
-  if (API_BASE && t.startsWith('/')) return API_BASE.replace(/\/$/, '') + t;
-  return t || '/assets/products/photo-card.svg';
-}
-
-/** Row from GET /users/me/cards (has creator_user_id). Only show rows where user created the card. */
 function EditProfileItem({ row, onEdit, onDelete, isDeleting }) { 
   return (
     <div className="rounded-[2px] border border-gray-200 bg-black overflow-hidden flex flex-col">
