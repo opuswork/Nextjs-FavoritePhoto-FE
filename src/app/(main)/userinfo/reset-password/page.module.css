@@ -1,0 +1,160 @@
+.wrap {
+  margin-top: 24px;
+  max-width: 520px;
+  min-width: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  width: 100%;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 55px;
+  box-sizing: border-box;
+}
+
+.inputField {
+  width: 100%;
+  height: 55px;
+  padding: 0 16px;
+  padding-right: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.inputField::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.inputField:focus {
+  border-color: #efff04;
+}
+
+.inputError {
+  border-color: #ef4444 !important;
+}
+
+.eyeButton {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eyeButton:hover {
+  opacity: 0.8;
+}
+
+.ruleList {
+  margin: 8px 0 0;
+  padding: 0 0 0 20px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.5);
+  list-style: none;
+}
+
+.ruleList li {
+  position: relative;
+  margin-left: -20px;
+  padding-left: 20px;
+}
+
+.ruleList li::before {
+  content: '';
+}
+
+.ruleOk {
+  color: #22c55e;
+}
+
+.errorMessage {
+  margin: 6px 0 0;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #ef4444;
+  display: block;
+}
+
+.buttonWrap {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.submitButton {
+  width: 100%;
+  max-width: 520px;
+  height: 55px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #9ca3af;
+  color: #111;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #d1d5db;
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.backLink {
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 8px;
+}
+
+.backLinkA {
+  color: #efff04;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.backLinkA:hover {
+  opacity: 0.9;
+}

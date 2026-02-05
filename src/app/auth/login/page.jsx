@@ -87,12 +87,18 @@ function LoginPageContent() {
     window.location.href = `${API_BASE_URL}/users/auth/google`;
   };
 
+  const passwordChanged = searchParams.get('message') === 'passwordChanged';
+
   return (
     <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
       <form onSubmit={handleSubmit} className={styles.form} noValidate>
         <h1 className={styles.logo}>
           <Link href="/" className={styles.logoLink}>최애<span className={styles.logoAccent}>의</span>포토</Link>
         </h1>
+
+        {passwordChanged && (
+          <p className={styles.successMessage}>비밀번호가 변경되었습니다. 다시 로그인해 주세요.</p>
+        )}
 
         <div className="w-full">
           <Label htmlFor="login-email" className={styles.label}>
