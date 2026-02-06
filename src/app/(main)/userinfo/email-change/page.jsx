@@ -20,7 +20,7 @@ export default function EmailChangePage() {
 
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+    <div className="max-w-md mx-auto p-6 bg-#695E5C rounded-xl shadow-sm border border-gray-100">
       <h2 className="text-xl font-bold mb-6 text-gray-800">이메일 주소 변경</h2>
       
       <div className="space-y-4">
@@ -50,7 +50,7 @@ export default function EmailChangePage() {
             {step === 1 && (
               <button 
                 onClick={handleSendCode}
-                className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-black transition text-sm whitespace-nowrap"
+                className="px-4 py-2 bg-#695E5C text-black rounded-lg hover:bg-#E3EB0E transition text-sm whitespace-nowrap"
               >
                 인증 요청
               </button>
