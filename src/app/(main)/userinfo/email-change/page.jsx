@@ -20,74 +20,64 @@ export default function EmailChangePage() {
 
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-#695E5C rounded-xl shadow-sm border border-gray-100">
-      <h2 className="text-xl font-bold mb-6 text-gray-800">이메일 주소 변경</h2>
+<div className="max-w-md mx-auto p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+      <h2 className="text-2xl font-bold mb-2 text-gray-900">이메일 변경</h2>
+      <p className="text-sm text-gray-500 mb-6">새로운 이메일로 인증을 진행해 주세요.</p>
       
-      <div className="space-y-4">
-        {/* 현재 이메일 (변경 불가) */}
+      <div className="space-y-5">
+        {/* Email Input Field */}
         <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1">현재 이메일</label>
-          <input 
-            type="text" 
-            value="user@example.com" 
-            disabled 
-            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-400 cursor-not-allowed"
-          />
-        </div>
-
-        {/* 새 이메일 입력 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">새 이메일 주소</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">새 이메일 주소</label>
           <div className="flex gap-2">
             <input 
               type="email" 
-              placeholder="new-email@choicephoto.app"
+              placeholder="example@choicephoto.app"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              disabled={step === 2}
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
+              disabled={step === 2 || isPending}
+              className="flex-1 p-3 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition disabled:bg-gray-50"
             />
             {step === 1 && (
               <button 
                 onClick={handleSendCode}
-                className="px-4 py-2 bg-#695E5C text-black rounded-lg hover:bg-#E3EB0E transition text-sm whitespace-nowrap"
+                disabled={isPending}
+                className="px-5 py-3 bg-black text-white font-medium rounded-xl hover:bg-gray-800 disabled:bg-gray-400 transition shadow-sm"
               >
-                인증 요청
+                {isPending ? '전송중' : '인증요청'}
               </button>
             )}
           </div>
         </div>
 
-        {/* 인증 번호 입력란 (인증 요청 후에만 표시) */}
+        {/* Verification Code Field (Visible only after request) */}
         {step === 2 && (
-          <div className="animate-fade-in-down">
-            <label className="block text-sm font-medium text-gray-700 mb-1">인증 번호 6자리</label>
-            <input 
-              type="text" 
-              maxLength={6}
-              placeholder="000000"
-              value={authCode}
-              onChange={(e) => setAuthCode(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-center tracking-widest text-lg font-bold"
-            />
-            <p className="text-xs text-gray-500 mt-2 text-right">
-              메일을 받지 못하셨나요? <button className="underline hover:text-blue-600">재발송</button>
-            </p>
+          <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">인증번호 입력</label>
+              <input 
+                type="text" 
+                maxLength="6"
+                placeholder="000000"
+                value={inputCode}
+                onChange={(e) => setInputCode(e.target.value)}
+                className="w-full p-4 border border-gray-300 rounded-xl text-center text-2xl font-bold tracking-[0.5em] focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+            <button 
+              onClick={handleVerifyAndSave}
+              disabled={isPending}
+              className="w-full py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 disabled:bg-gray-400 transition shadow-md"
+            >
+              {isPending ? '처리 중...' : '이메일 변경 완료'}
+            </button>
+            <button 
+              onClick={() => setStep(1)} 
+              className="w-full text-sm text-gray-400 hover:text-gray-600 underline"
+            >
+              이메일 다시 입력하기
+            </button>
           </div>
         )}
-
-        {/* 최종 변경 버튼 */}
-        <button 
-          onClick={handleVerifyAndSave}
-          disabled={step === 1}
-          className={`w-full py-3 rounded-lg font-semibold transition mt-4 ${
-            step === 1 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-blue-600 text-white hover:bg-blue-700'
-          }`}
-        >
-          이메일 변경 완료
-        </button>
       </div>
     </div>
   );
