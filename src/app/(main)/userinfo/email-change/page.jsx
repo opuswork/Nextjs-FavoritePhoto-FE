@@ -20,7 +20,7 @@ export default function EmailChangePage() {
 
 
   return (
-<div className="max-w-md mx-auto p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+    <div className="max-w-md mx-auto p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
       <h2 className="text-2xl font-bold mb-2 text-gray-900">이메일 변경</h2>
       <p className="text-sm text-gray-500 mb-6">새로운 이메일로 인증을 진행해 주세요.</p>
       
