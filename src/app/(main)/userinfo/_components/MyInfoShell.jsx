@@ -12,10 +12,9 @@ import { http } from '@/lib/http/client';
 /** API row from GET /users/me/cards (user_card + photo_card). */
 export const MyInfoContext = createContext({
   user: null,
-  cards: [],
   loading: true,
   error: null,
-  refetchCards: () => {},
+  refetchUser: () => {},
 });
 
 export function useMyInfo() {
@@ -61,7 +60,8 @@ export default function MyInfoShell({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchUser = useCallback(async () => {
+  const fetchUser = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const { data } = await http.get('/users/me');
       setUser(data?.user ?? null);
@@ -74,22 +74,20 @@ export default function MyInfoShell({ children }) {
       }
       setUser(null);
       return null;
+    } finally {
+      if (!silent) setLoading(false);
     }
   }, [router]);
+
+  const refetchUser = useCallback(() => fetchUser(true), [fetchUser]);
 
   // Initial load
   useEffect(() => {
     let cancelled = false;
-
-    async function load() {
-      setLoading(true);
-      setError(null);
-      const u = await fetchUser();
+    setError(null);
+    fetchUser().then(() => {
       if (cancelled) return;
-      setLoading(false);
-    }
-
-    load();
+    });
     return () => { cancelled = true; };
   }, [fetchUser]);
 
@@ -106,7 +104,7 @@ export default function MyInfoShell({ children }) {
   const displayName = user?.nickname ?? user?.email ?? '유저';
 
   return (
-    <MyInfoContext.Provider value={{ user, loading, error }}>
+    <MyInfoContext.Provider value={{ user, loading, error, refetchUser }}>
       <main className="min-h-screen bg-black text-white overflow-x-hidden">
         <Container className="pt-6 pb-4 md:pt-10 md:pb-6 lg:pt-[60px] lg:pb-[20px] min-w-0">
           {/* Title + button: stack on mobile/tablet, row on desktop (lg+) */}
