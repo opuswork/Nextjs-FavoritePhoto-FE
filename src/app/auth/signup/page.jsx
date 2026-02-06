@@ -161,7 +161,7 @@ export default function SignupPage() {
     }
   };
 
-  // Safeguard: never render the signup form until auth check is done. Logged-in users only see "확인 중..." then redirect.
+  // Safeguard: never render the signup form until auth check is done. Logged-in users see spinner then redirect.
   if (checkingAuth) {
     return (
       <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
@@ -169,7 +169,9 @@ export default function SignupPage() {
           <h1 className={styles.logo}>
             최애<span className={styles.logoAccent}>의</span>포토
           </h1>
-          <p className="text-white/70">확인 중...</p>
+          <span className="inline-flex items-center justify-center" aria-hidden>
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/50 border-t-transparent" />
+          </span>
         </div>
       </div>
     );

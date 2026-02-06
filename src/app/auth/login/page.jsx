@@ -80,10 +80,10 @@ function LoginPageContent() {
     try {
       await http.post('/users/login', { email, password });
       router.push('/mygallery');
+      // Keep loading true until page navigates; do not setLoading(false) on success
     } catch (err) {
       const message = err.response?.data?.message ?? '로그인에 실패했습니다.';
       setPasswordError(message);
-    } finally {
       setLoading(false);
     }
   };
@@ -105,7 +105,7 @@ function LoginPageContent() {
 
   const passwordChanged = searchParams.get('message') === 'passwordChanged';
 
-  // Safeguard: never render the login form until auth check is done. Logged-in users only see "확인 중..." then redirect.
+  // Safeguard: never render the login form until auth check is done. Logged-in users see spinner then redirect.
   if (checkingAuth) {
     return (
       <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
@@ -113,7 +113,9 @@ function LoginPageContent() {
           <h1 className={styles.logo}>
             최애<span className={styles.logoAccent}>의</span>포토
           </h1>
-          <p className="text-white/70">확인 중...</p>
+          <span className="inline-flex items-center justify-center" aria-hidden>
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/50 border-t-transparent" />
+          </span>
         </div>
       </div>
     );
@@ -179,7 +181,13 @@ function LoginPageContent() {
 
         <div className={styles.buttonWrap}>
           <button type="submit" className={styles.loginButton} disabled={loading}>
-            {loading ? '로그인 중...' : '로그인'}
+            {loading ? (
+              <span className="inline-flex items-center justify-center gap-2" aria-hidden>
+                <span className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-white/50 border-t-transparent" />
+              </span>
+            ) : (
+              '로그인'
+            )}
           </button>
         </div>
 
