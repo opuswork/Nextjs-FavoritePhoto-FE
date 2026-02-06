@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Modal from '@/components/atoms/Modal/Modal';
 import Input from '@/components/atoms/Input/Input';
 import Label from '@/components/atoms/Label/Label';
 import { http } from '@/lib/http/client';
@@ -25,7 +26,7 @@ export default function EmailChangePage() {
   const [emailError, setEmailError] = useState('');
   const [codeError, setCodeError] = useState('');
   const [verificationMessage, setVerificationMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
 
   const currentEmail = user?.email ?? '';
 
@@ -73,14 +74,12 @@ export default function EmailChangePage() {
         newEmail: newEmail.trim(),
         code: verificationCode.trim(),
       });
-      setSuccessMessage('이메일이 변경되었습니다.');
       setNewEmail('');
       setVerificationCode('');
       setVerificationMessage('');
       setEmailError('');
       setCodeError('');
-      await refetchUser();
-      window.dispatchEvent(new Event('user-points-updated'));
+      setSuccessModalOpen(true);
     } catch (e) {
       const msg = e?.response?.data?.message ?? e?.message ?? '이메일 변경에 실패했습니다.';
       setCodeError(msg);
@@ -127,7 +126,6 @@ export default function EmailChangePage() {
                 setEmailError('');
                 setVerificationMessage('');
                 setCodeError('');
-                setSuccessMessage('');
               }}
               className={`${styles.inputField} ${emailError ? styles.inputError : ''}`}
             />
@@ -188,16 +186,37 @@ export default function EmailChangePage() {
           {codeError && <p className={styles.errorMessage}>{codeError}</p>}
         </div>
 
-        {successMessage && (
-          <p className={styles.verificationSuccess}>{successMessage}</p>
-        )}
-
         <p className={styles.backLink}>
           <Link href="/userinfo" className={styles.backLinkA}>
             회원정보로 돌아가기
           </Link>
         </p>
       </form>
+
+      <Modal
+        open={successModalOpen}
+        onClose={() => {
+          setSuccessModalOpen(false);
+          refetchUser();
+          window.dispatchEvent(new Event('user-points-updated'));
+        }}
+        size="sm"
+      >
+        <div className={styles.successModalContent}>
+          <p className={styles.successModalMessage}>이메일이 변경되었습니다.</p>
+          <button
+            type="button"
+            className={styles.successModalButton}
+            onClick={() => {
+              setSuccessModalOpen(false);
+              refetchUser();
+              window.dispatchEvent(new Event('user-points-updated'));
+            }}
+          >
+            확인
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
