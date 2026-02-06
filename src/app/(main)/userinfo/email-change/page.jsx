@@ -41,7 +41,7 @@ export default function EmailChangePage() {
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
               disabled={step === 2 || isLoading}
-              className="flex-1 p-3 bg-white bg-opacity-10 border border-gray-400 rounded-xl outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-gray-300 transition disabled:bg-opacity-5"
+              className="flex-1 p-3 bg-white bg-opacity-10 border border-gray-400 rounded-xl outline-none focus:ring-2 focus:ring-yellow-400 text-black placeholder-gray-300 transition disabled:bg-opacity-5"
             />
             {step === 1 && (
               /* 인증 요청 버튼: 텍스트 노란색 적용 */
