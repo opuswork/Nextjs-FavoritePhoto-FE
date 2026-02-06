@@ -240,7 +240,9 @@ export default function Header({ onOpenAlarm }) {
           </Link>
           <div className="flex items-center gap-4 text-sm text-white/80">
             {authLoading ? (
-              <span className="text-white/50">...</span>
+              <span className="inline-flex h-6 w-6 items-center justify-center" aria-hidden>
+                <span className="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-transparent" />
+              </span>
             ) : user ? (
               <>
                 <div className="flex items-center gap-1">
@@ -347,7 +349,9 @@ export default function Header({ onOpenAlarm }) {
                   role="menu"
                 >
                   {authLoading ? (
-                    <div className="px-4 py-2 text-sm text-white/50">...</div>
+                    <div className="flex items-center justify-center px-4 py-2">
+                      <span className="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-transparent" aria-hidden />
+                    </div>
                   ) : user ? (
                     <>
                       <div className="flex items-center gap-1 px-4 py-2 text-sm text-white/80">
@@ -429,7 +433,9 @@ export default function Header({ onOpenAlarm }) {
           </Link>
           <div className="flex min-w-0 flex-1 justify-end">
             {authLoading ? (
-              <span className="rounded p-2 text-white/50 text-sm">...</span>
+              <span className="flex h-10 w-10 items-center justify-center rounded p-2" aria-hidden>
+                <span className="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-transparent" />
+              </span>
             ) : user ? (
               <div ref={alarmWrapRefMobile} className="relative">
                 <button
