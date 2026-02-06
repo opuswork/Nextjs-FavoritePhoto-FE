@@ -3,76 +3,83 @@
 import React, { useState } from 'react';
 
 export default function EmailChangePage() {
-  const [step, setStep] = useState(1); // 1: 입력 단계, 2: 인증 번호 단계
+  const [step, setStep] = useState(1);
   const [newEmail, setNewEmail] = useState('');
-  const [authCode, setAuthCode] = useState('');
+  const [authCode, setAuthCode] = useState(''); // inputCode 대신 authCode로 통일
+  const [isLoading, setIsLoading] = useState(false); // isPending 대신 간단한 isLoading 추가
 
-  const handleSendCode = () => {
-    // Resend API 호출 로직 (Next.js Server Action 또는 API Route)
+  const handleSendCode = async () => {
+    setIsLoading(true);
+    // 실제 구현 시 여기서 fetch 혹은 axios로 백엔드 API를 호출합니다.
     console.log(`${newEmail}로 인증 번호 전송`);
-    setStep(2);
+    
+    // 임시 딜레이 (네트워크 통신 시뮬레이션)
+    setTimeout(() => {
+      setIsLoading(false);
+      setStep(2);
+    }, 1000);
   };
 
   const handleVerifyAndSave = () => {
-    // Prisma DB 업데이트 및 인증 확인 로직
     console.log("인증 완료 및 DB 업데이트");
   };
 
-
   return (
-    <div className="max-w-md mx-auto p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
-      <h2 className="text-2xl font-bold mb-2 text-gray-900">이메일 변경</h2>
-      <p className="text-sm text-gray-500 mb-6">새로운 이메일로 인증을 진행해 주세요.</p>
+    /* 배경색 #695E5C 적용 */
+    <div className="max-w-md mx-auto p-8 rounded-2xl shadow-lg border border-opacity-10" style={{ backgroundColor: '#695E5C' }}>
+      <h2 className="text-2xl font-bold mb-2 text-white">이메일 변경</h2>
+      <p className="text-sm text-gray-200 mb-6">새로운 이메일로 인증을 진행해 주세요.</p>
       
       <div className="space-y-5">
         {/* Email Input Field */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1.5">새 이메일 주소</label>
+          <label className="block text-sm font-semibold text-gray-100 mb-1.5">새 이메일 주소</label>
           <div className="flex gap-2">
             <input 
               type="email" 
-              placeholder="example@choicephoto.app"
+              placeholder="이메일을 입력하세요!"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              disabled={step === 2 || isPending}
-              className="flex-1 p-3 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition disabled:bg-gray-50"
+              disabled={step === 2 || isLoading}
+              className="flex-1 p-3 bg-white bg-opacity-10 border border-gray-400 rounded-xl outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-gray-300 transition disabled:bg-opacity-5"
             />
             {step === 1 && (
+              /* 인증 요청 버튼: 텍스트 노란색 적용 */
               <button 
                 onClick={handleSendCode}
-                disabled={isPending}
-                className="px-5 py-3 bg-black text-white font-medium rounded-xl hover:bg-gray-800 disabled:bg-gray-400 transition shadow-sm"
+                disabled={isLoading}
+                className="px-5 py-3 bg-black bg-opacity-40 text-yellow-400 font-bold rounded-xl hover:bg-opacity-60 disabled:bg-gray-500 transition shadow-sm whitespace-nowrap"
               >
-                {isPending ? '전송중' : '인증요청'}
+                {isLoading ? '전송중' : '인증요청'}
               </button>
             )}
           </div>
         </div>
 
-        {/* Verification Code Field (Visible only after request) */}
+        {/* Verification Code Field */}
         {step === 2 && (
           <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">인증번호 입력</label>
+              <label className="block text-sm font-semibold text-gray-100 mb-1.5">인증번호 입력</label>
               <input 
                 type="text" 
                 maxLength="6"
                 placeholder="000000"
-                value={inputCode}
-                onChange={(e) => setInputCode(e.target.value)}
-                className="w-full p-4 border border-gray-300 rounded-xl text-center text-2xl font-bold tracking-[0.5em] focus:ring-2 focus:ring-blue-500 outline-none"
+                value={authCode}
+                onChange={(e) => setAuthCode(e.target.value)}
+                className="w-full p-4 border border-gray-300 rounded-xl text-center text-2xl font-bold tracking-[0.5em] focus:ring-2 focus:ring-yellow-400 outline-none"
               />
             </div>
             <button 
               onClick={handleVerifyAndSave}
-              disabled={isPending}
-              className="w-full py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 disabled:bg-gray-400 transition shadow-md"
+              disabled={isLoading}
+              className="w-full py-4 bg-yellow-400 text-[#695E5C] font-bold rounded-xl hover:bg-yellow-500 disabled:bg-gray-400 transition shadow-md"
             >
-              {isPending ? '처리 중...' : '이메일 변경 완료'}
+              {isLoading ? '처리 중...' : '이메일 변경 완료'}
             </button>
             <button 
               onClick={() => setStep(1)} 
-              className="w-full text-sm text-gray-400 hover:text-gray-600 underline"
+              className="w-full text-sm text-gray-300 hover:text-white underline"
             >
               이메일 다시 입력하기
             </button>
