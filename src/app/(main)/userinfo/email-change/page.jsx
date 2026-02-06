@@ -41,8 +41,9 @@ export default function EmailChangePage() {
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
               disabled={step === 2 || isLoading}
-              /* text-black 클래스를 추가하여 입력 텍스트를 검정색으로 설정했습니다 */
-              className="flex-1 p-3 bg-white border-2 border-transparent focus:border-yellow-400 rounded-xl outline-none transition text-black placeholder-gray-400 disabled:bg-gray-200"
+              /* text-black을 최우선으로 적용하고, 모바일 Safari 대응을 위해 opacity-100 추가 */
+              className="flex-1 p-3 bg-white border-2 border-transparent focus:border-yellow-400 rounded-xl outline-none transition text-black placeholder-gray-400 disabled:bg-gray-200 opacity-100"
+              style={{ color: '#000000', WebkitTextFillColor: '#000000' }} 
             />
             {step === 1 && (
               /* 인증 요청 버튼: 텍스트 노란색 적용 */
