@@ -346,7 +346,9 @@ export default function Header({ onOpenAlarm }) {
                   style={{ top: dropdownStyle.top, left: dropdownStyle.left }}
                   role="menu"
                 >
-                  {user ? (
+                  {authLoading ? (
+                    <div className="px-4 py-2 text-sm text-white/50">...</div>
+                  ) : user ? (
                     <>
                       <div className="flex items-center gap-1 px-4 py-2 text-sm text-white/80">
                         <span>{Number(points).toLocaleString()}</span>
@@ -426,7 +428,9 @@ export default function Header({ onOpenAlarm }) {
             최애<span className="text-yellow-300">의</span>포토
           </Link>
           <div className="flex min-w-0 flex-1 justify-end">
-            {user ? (
+            {authLoading ? (
+              <span className="rounded p-2 text-white/50 text-sm">...</span>
+            ) : user ? (
               <div ref={alarmWrapRefMobile} className="relative">
                 <button
                   type="button"
