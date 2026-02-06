@@ -55,6 +55,7 @@ export default function SignupPage() {
   // Email verification (인증코드 발송 → 6자리 입력 → 인증완료)
   const [verificationCode, setVerificationCode] = useState('');
   const [emailVerified, setEmailVerified] = useState(false);
+  const [hasVerifiedOnce, setHasVerifiedOnce] = useState(false); // true after first successful verify (re-verify requires sendCodeCount > 2)
   const [sendCodeCount, setSendCodeCount] = useState(0); // times "인증코드발송" clicked for current email
   const [sendCodeLoading, setSendCodeLoading] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
@@ -99,6 +100,7 @@ export default function SignupPage() {
         code: verificationCode.trim(),
       });
       setEmailVerified(true);
+      setHasVerifiedOnce(true);
       setVerifyError('');
       setVerificationMessage('');
     } catch (err) {
@@ -214,7 +216,7 @@ export default function SignupPage() {
                 verifyLoading ||
                 verificationCode.length !== 6 ||
                 emailVerified ||
-                sendCodeCount <= 2
+                (hasVerifiedOnce ? sendCodeCount <= 2 : sendCodeCount < 1)
               }
             >
               {verifyLoading ? '확인 중...' : '인증완료'}
