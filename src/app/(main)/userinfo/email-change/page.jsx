@@ -17,7 +17,7 @@ function validateEmail(value) {
 }
 
 export default function EmailChangePage() {
-  const { user, loading: userLoading } = useMyInfo();
+  const { user, loading: userLoading, refetchUser } = useMyInfo();
   const [newEmail, setNewEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [sendCodeLoading, setSendCodeLoading] = useState(false);
@@ -79,6 +79,7 @@ export default function EmailChangePage() {
       setVerificationMessage('');
       setEmailError('');
       setCodeError('');
+      await refetchUser();
       window.dispatchEvent(new Event('user-points-updated'));
     } catch (e) {
       const msg = e?.response?.data?.message ?? e?.message ?? '이메일 변경에 실패했습니다.';
