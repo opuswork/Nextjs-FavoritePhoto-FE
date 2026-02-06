@@ -114,6 +114,94 @@
   font-weight: 500;
 }
 
+/* Email row: input + 인증코드발송 button */
+.emailRow {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  width: 100%;
+}
+.emailRow .inputField {
+  flex: 1;
+  min-width: 0;
+}
+.sendCodeButton {
+  flex-shrink: 0;
+  height: 55px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #1a1a1a;
+  color: #efff04;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sendCodeButton:hover:not(:disabled) {
+  background: #2a2a2a;
+  border-color: #efff04;
+}
+.sendCodeButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Verification code row: 6-digit input + 인증완료 button */
+.verifyRow {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  width: 100%;
+}
+.verifyInput {
+  width: 120px;
+  max-width: 140px;
+  height: 55px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-align: center;
+  outline: none;
+  box-sizing: border-box;
+}
+.verifyInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+.verifyInput:focus {
+  border-color: #efff04;
+}
+.verifyButton {
+  flex-shrink: 0;
+  height: 55px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #1a1a1a;
+  color: #efff04;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.verifyButton:hover:not(:disabled) {
+  background: #2a2a2a;
+  border-color: #efff04;
+}
+.verifyButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.verificationSuccess {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #22c55e;
+}
+
 .buttonWrap {
   height: 55px;
   display: flex;

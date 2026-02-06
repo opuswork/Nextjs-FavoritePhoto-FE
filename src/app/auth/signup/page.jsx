@@ -10,6 +10,7 @@ import styles from './page.module.css';
 
 const PASSWORD_MIN_LENGTH = 8;
 const PASSWORD_MAX_LENGTH = 128;
+const API_AUTH = '/api/auth';
 
 function validateEmail(value) {
   if (!value.trim()) return '이메일을 입력해 주세요.';
@@ -51,8 +52,64 @@ export default function SignupPage() {
   const [submitError, setSubmitError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Email verification (인증코드 발송 → 6자리 입력 → 인증완료)
+  const [verificationCode, setVerificationCode] = useState('');
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [sendCodeLoading, setSendCodeLoading] = useState(false);
+  const [verifyLoading, setVerifyLoading] = useState(false);
+  const [verificationMessage, setVerificationMessage] = useState(''); // success or error for send
+  const [verifyError, setVerifyError] = useState('');
+
+  const handleSendCode = async () => {
+    const eErr = validateEmail(email);
+    setEmailError(eErr || '');
+    setVerificationMessage('');
+    setVerifyError('');
+    if (eErr) return;
+
+    setSendCodeLoading(true);
+    try {
+      await http.post(`${API_AUTH}/request-verification`, { email: email.trim() });
+      setVerificationMessage('인증코드가 이메일로 발송되었습니다.');
+      setVerificationCode('');
+    } catch (err) {
+      const msg = err?.response?.data?.message ?? err?.message ?? '인증코드 발송에 실패했습니다.';
+      setVerificationMessage(msg);
+    } finally {
+      setSendCodeLoading(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    const eErr = validateEmail(email);
+    setEmailError(eErr || '');
+    setVerifyError('');
+    if (eErr) return;
+    if (!verificationCode.trim()) {
+      setVerifyError('인증코드 6자리를 입력해 주세요.');
+      return;
+    }
+
+    setVerifyLoading(true);
+    try {
+      await http.post(`${API_AUTH}/verify-code`, {
+        email: email.trim(),
+        code: verificationCode.trim(),
+      });
+      setEmailVerified(true);
+      setVerifyError('');
+      setVerificationMessage('');
+    } catch (err) {
+      const msg = err?.response?.data?.message ?? err?.message ?? '인증에 실패했습니다.';
+      setVerifyError(msg);
+    } finally {
+      setVerifyLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!emailVerified) return;
     const eErr = validateEmail(email);
     const nErr = validateNickname(nickname);
     const pErr = validatePassword(password);
@@ -95,18 +152,68 @@ export default function SignupPage() {
           <Label htmlFor="signup-email" className={styles.label}>
             이메일
           </Label>
-          <Input
-            id="signup-email"
-            type="email"
-            placeholder="이메일을 입력해 주세요"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (emailError) setEmailError('');
-            }}
-            className={`${styles.inputField} ${styles.inputFieldNoIcon} ${emailError ? styles.inputError : ''}`}
-          />
+          <div className={styles.emailRow}>
+            <Input
+              id="signup-email"
+              type="email"
+              placeholder="이메일을 입력해 주세요"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError('');
+                setVerificationMessage('');
+                setVerifyError('');
+                setEmailVerified(false);
+              }}
+              className={`${styles.inputField} ${styles.inputFieldNoIcon} ${emailError ? styles.inputError : ''}`}
+            />
+            <button
+              type="button"
+              className={styles.sendCodeButton}
+              onClick={handleSendCode}
+              disabled={sendCodeLoading}
+            >
+              {sendCodeLoading ? '발송 중...' : '인증코드발송'}
+            </button>
+          </div>
           {emailError && <p className={styles.errorMessage}>{emailError}</p>}
+          {verificationMessage && (
+            <p className={verificationMessage.startsWith('인증코드가') ? styles.verificationSuccess : styles.errorMessage}>
+              {verificationMessage}
+            </p>
+          )}
+        </div>
+
+        <div className="w-full">
+          <Label htmlFor="signup-verify-code" className={styles.label}>
+            인증코드 (6자리)
+          </Label>
+          <div className={styles.verifyRow}>
+            <input
+              id="signup-verify-code"
+              type="text"
+              inputMode="numeric"
+              maxLength={6}
+              placeholder="000000"
+              value={verificationCode}
+              onChange={(e) => {
+                const v = e.target.value.replace(/\D/g, '');
+                setVerificationCode(v);
+                setVerifyError('');
+              }}
+              className={styles.verifyInput}
+            />
+            <button
+              type="button"
+              className={styles.verifyButton}
+              onClick={handleVerifyCode}
+              disabled={verifyLoading || verificationCode.length !== 6}
+            >
+              {verifyLoading ? '확인 중...' : '인증완료'}
+            </button>
+          </div>
+          {verifyError && <p className={styles.errorMessage}>{verifyError}</p>}
+          {emailVerified && <p className={styles.verificationSuccess}>이메일 인증이 완료되었습니다.</p>}
         </div>
 
         <div className="w-full">
@@ -202,7 +309,7 @@ export default function SignupPage() {
           <button
             type="submit"
             className={styles.signupButton}
-            disabled={loading}
+            disabled={loading || !emailVerified}
           >
             {loading ? '처리 중...' : '가입하기'}
           </button>
