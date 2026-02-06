@@ -181,7 +181,7 @@ function LoginPageContent() {
           <button type="submit" className={styles.loginButton} disabled={loading}>
             {loading ? (
               <span className="inline-flex items-center justify-center gap-2" aria-hidden>
-                <span className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-white/50 border-t-transparent" />
+                <span className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-black border-t-transparent" />
               </span>
             ) : (
               '로그인'
