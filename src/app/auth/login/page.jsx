@@ -78,10 +78,10 @@ function LoginPageContent() {
     try {
       await http.post('/users/login', { email, password });
       router.push('/mygallery');
+      // Keep loading true until page navigates; do not setLoading(false) on success
     } catch (err) {
       const message = err.response?.data?.message ?? '로그인에 실패했습니다.';
       setPasswordError(message);
-    } finally {
       setLoading(false);
     }
   };
@@ -177,7 +177,13 @@ function LoginPageContent() {
 
         <div className={styles.buttonWrap}>
           <button type="submit" className={styles.loginButton} disabled={loading}>
-            {loading ? '로그인 중...' : '로그인'}
+            {loading ? (
+              <span className="inline-flex items-center justify-center gap-2" aria-hidden>
+                <span className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-white/50 border-t-transparent" />
+              </span>
+            ) : (
+              '로그인'
+            )}
           </button>
         </div>
 
