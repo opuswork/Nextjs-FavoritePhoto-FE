@@ -55,6 +55,7 @@ export default function SignupPage() {
   // Email verification (인증코드 발송 → 6자리 입력 → 인증완료)
   const [verificationCode, setVerificationCode] = useState('');
   const [emailVerified, setEmailVerified] = useState(false);
+  const [sendCodeCount, setSendCodeCount] = useState(0); // times "인증코드발송" clicked for current email
   const [sendCodeLoading, setSendCodeLoading] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState(''); // success or error for send
@@ -72,6 +73,7 @@ export default function SignupPage() {
       await http.post(`${API_AUTH}/request-verification`, { email: email.trim() });
       setVerificationMessage('인증코드가 이메일로 발송되었습니다.');
       setVerificationCode('');
+      setSendCodeCount((c) => c + 1);
     } catch (err) {
       const msg = err?.response?.data?.message ?? err?.message ?? '인증코드 발송에 실패했습니다.';
       setVerificationMessage(msg);
@@ -164,6 +166,7 @@ export default function SignupPage() {
                 setVerificationMessage('');
                 setVerifyError('');
                 setEmailVerified(false);
+                setSendCodeCount(0);
               }}
               className={`${styles.inputField} ${styles.inputFieldNoIcon} ${emailError ? styles.inputError : ''}`}
             />
@@ -207,7 +210,12 @@ export default function SignupPage() {
               type="button"
               className={styles.verifyButton}
               onClick={handleVerifyCode}
-              disabled={verifyLoading || verificationCode.length !== 6}
+              disabled={
+                verifyLoading ||
+                verificationCode.length !== 6 ||
+                emailVerified ||
+                sendCodeCount <= 2
+              }
             >
               {verifyLoading ? '확인 중...' : '인증완료'}
             </button>
