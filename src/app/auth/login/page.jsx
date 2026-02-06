@@ -43,6 +43,22 @@ function LoginPageContent() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // If already logged in, redirect to mygallery (replace so back button doesn't return to login)
+  useEffect(() => {
+    let cancelled = false;
+    async function checkAuth() {
+      try {
+        await http.get('/users/me');
+        if (!cancelled) router.replace('/mygallery');
+      } catch {
+        if (!cancelled) setCheckingAuth(false);
+      }
+    }
+    checkAuth();
+    return () => { cancelled = true; };
+  }, [router]);
 
   useEffect(() => {
     const error = searchParams.get('error');
@@ -86,6 +102,19 @@ function LoginPageContent() {
   };
 
   const passwordChanged = searchParams.get('message') === 'passwordChanged';
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
+        <div className={styles.form}>
+          <h1 className={styles.logo}>
+            최애<span className={styles.logoAccent}>의</span>포토
+          </h1>
+          <p className="text-white/70">확인 중...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
