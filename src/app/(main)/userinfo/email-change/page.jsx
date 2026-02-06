@@ -35,13 +35,14 @@ export default function EmailChangePage() {
         <div>
           <label className="block text-sm font-semibold text-gray-100 mb-1.5">새 이메일 주소</label>
           <div className="flex gap-2">
-            <input 
+          <input 
               type="email" 
-              placeholder="이메일을 입력하세요!"
+              placeholder="example@choicephoto.app"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
               disabled={step === 2 || isLoading}
-              className="flex-1 p-3 bg-white bg-opacity-10 border border-gray-400 rounded-xl outline-none focus:ring-2 focus:ring-yellow-400 text-black placeholder-gray-300 transition disabled:bg-opacity-5"
+              /* text-black 클래스를 추가하여 입력 텍스트를 검정색으로 설정했습니다 */
+              className="flex-1 p-3 bg-white border-2 border-transparent focus:border-yellow-400 rounded-xl outline-none transition text-black placeholder-gray-400 disabled:bg-gray-200"
             />
             {step === 1 && (
               /* 인증 요청 버튼: 텍스트 노란색 적용 */
