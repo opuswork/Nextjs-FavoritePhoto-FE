@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Input from '@/components/atoms/Input/Input';
@@ -51,6 +51,22 @@ export default function SignupPage() {
   const [confirmError, setConfirmError] = useState('');
   const [submitError, setSubmitError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // If already logged in, redirect to mygallery (replace so back button doesn't return to signup)
+  useEffect(() => {
+    let cancelled = false;
+    async function checkAuth() {
+      try {
+        await http.get('/users/me');
+        if (!cancelled) router.replace('/mygallery');
+      } catch {
+        if (!cancelled) setCheckingAuth(false);
+      }
+    }
+    checkAuth();
+    return () => { cancelled = true; };
+  }, [router]);
 
   // Email verification (인증코드 발송 → 6자리 입력 → 인증완료)
   const [verificationCode, setVerificationCode] = useState('');
@@ -145,6 +161,21 @@ export default function SignupPage() {
     }
   };
 
+  // Safeguard: never render the signup form until auth check is done. Logged-in users only see "확인 중..." then redirect.
+  if (checkingAuth) {
+    return (
+      <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
+        <div className={styles.form}>
+          <h1 className={styles.logo}>
+            최애<span className={styles.logoAccent}>의</span>포토
+          </h1>
+          <p className="text-white/70">확인 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Only reached when user is not logged in
   return (
     <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
       <form onSubmit={handleSubmit} className={styles.form} noValidate>

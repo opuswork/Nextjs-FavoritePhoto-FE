@@ -105,6 +105,7 @@ function LoginPageContent() {
 
   const passwordChanged = searchParams.get('message') === 'passwordChanged';
 
+  // Safeguard: never render the login form until auth check is done. Logged-in users only see "확인 중..." then redirect.
   if (checkingAuth) {
     return (
       <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
@@ -118,6 +119,7 @@ function LoginPageContent() {
     );
   }
 
+  // Only reached when user is not logged in
   return (
     <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
       <form onSubmit={handleSubmit} className={styles.form} noValidate>
