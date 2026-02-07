@@ -65,6 +65,14 @@ export default function Footer() {
       <ResponsiveButton href="/marketplace">
         최애 찾으러 가기
       </ResponsiveButton>
+
+      <div className={styles.footerLinks}>
+        <span>@ 2026 Favorite Photo. All rights reserved.</span>
+        <span>|</span>
+        <span>개인정보처리방침</span>
+        <span>|</span>
+        <span>서비스 이용약관</span>
+      </div>
     </div>
   );
 }
