@@ -66,13 +66,15 @@ export default function Footer() {
         최애 찾으러 가기
       </ResponsiveButton>
 
-      <div className={styles.footerLinks}>
+      <div className="mt-12 flex w-full self-stretch flex-wrap items-center justify-between gap-2 px-4 text-sm text-white/70">
         <span>@ 2026 Favorite Photo. All rights reserved.</span>
-        <span>|</span>
-        <span>개인정보처리방침</span>
-        <span>|</span>
-        <span>서비스 이용약관</span>
+        <div className="flex items-center gap-2">
+          <span>개인정보처리방침</span>
+          <span aria-hidden>|</span>
+          <span>서비스 이용약관</span>
+        </div>
       </div>
+
     </div>
   );
 }
