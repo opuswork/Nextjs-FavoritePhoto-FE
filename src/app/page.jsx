@@ -232,7 +232,6 @@ export default function Home() {
 
                 <div className="mt-12 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 text-sm text-white/70">
                   <span>@ 2026 Favorite Photo. All rights reserved.</span>
-                  <span aria-hidden className="text-white/40">|</span>
                   <span>개인정보처리방침</span>
                   <span aria-hidden className="text-white/40">|</span>
                   <span>서비스 이용약관</span>
