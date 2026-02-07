@@ -222,42 +222,44 @@ export default function SignupPage() {
           )}
         </div>
 
-        <div className="w-full">
-          <Label htmlFor="signup-verify-code" className={styles.label}>
-            인증코드 (6자리)
-          </Label>
-          <div className={styles.verifyRow}>
-            <input
-              id="signup-verify-code"
-              type="text"
-              inputMode="numeric"
-              maxLength={6}
-              placeholder="000000"
-              value={verificationCode}
-              onChange={(e) => {
-                const v = e.target.value.replace(/\D/g, '');
-                setVerificationCode(v);
-                setVerifyError('');
-              }}
-              className={styles.verifyInput}
-            />
-            <button
-              type="button"
-              className={styles.verifyButton}
-              onClick={handleVerifyCode}
-              disabled={
-                verifyLoading ||
-                verificationCode.length !== 6 ||
-                emailVerified ||
-                (hasVerifiedOnce ? sendCodeCount <= 2 : sendCodeCount < 1)
-              }
-            >
-              {verifyLoading ? '확인 중...' : '인증완료'}
-            </button>
+        {sendCodeCount >= 1 && (
+          <div className="w-full">
+            <Label htmlFor="signup-verify-code" className={styles.label}>
+              인증코드 (6자리)
+            </Label>
+            <div className={styles.verifyRow}>
+              <input
+                id="signup-verify-code"
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="000000"
+                value={verificationCode}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/\D/g, '');
+                  setVerificationCode(v);
+                  setVerifyError('');
+                }}
+                className={styles.verifyInput}
+              />
+              <button
+                type="button"
+                className={styles.verifyButton}
+                onClick={handleVerifyCode}
+                disabled={
+                  verifyLoading ||
+                  verificationCode.length !== 6 ||
+                  emailVerified ||
+                  (hasVerifiedOnce ? sendCodeCount <= 2 : sendCodeCount < 1)
+                }
+              >
+                {verifyLoading ? '확인 중...' : '인증완료'}
+              </button>
+            </div>
+            {verifyError && <p className={styles.errorMessage}>{verifyError}</p>}
+            {emailVerified && <p className={styles.verificationSuccess}>이메일 인증이 완료되었습니다.</p>}
           </div>
-          {verifyError && <p className={styles.errorMessage}>{verifyError}</p>}
-          {emailVerified && <p className={styles.verificationSuccess}>이메일 인증이 완료되었습니다.</p>}
-        </div>
+        )}
 
         <div className="w-full">
           <Label htmlFor="signup-nickname" className={styles.label}>
