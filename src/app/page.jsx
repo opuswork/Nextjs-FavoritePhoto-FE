@@ -233,9 +233,9 @@ export default function Home() {
                 <div className="mt-12 flex flex-col items-center justify-center gap-2 px-4 text-center text-sm text-white/70">
                   <span>@ 2026 최애의포토. All rights reserved.</span>
                   <div className="flex items-center gap-2">
-                    <span>개인정보처리방침</span>
+                    <span><Link href="/about/privacy">개인정보처리방침</Link></span>
                     <span aria-hidden className="text-white/40">|</span>
-                    <span>서비스 이용약관</span>
+                    <span><Link href="/about/terms">서비스 이용약관</Link></span>
                   </div>
                 </div>
 
