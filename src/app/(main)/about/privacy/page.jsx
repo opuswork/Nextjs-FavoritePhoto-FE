@@ -13,8 +13,8 @@ export default function PrivacyPolicy() {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-3 text-blue-700">1. 개인정보 수집 항목 및 목적</h2>
-        <p className="mb-2">`choicephoto.app`은 다음과 같은 목적으로 최소한의 개인정보를 수집합니다.</p>
-        <ul className="list-disc pl-5 space-y-2">
+        <p className="mb-2 text-white">`choicephoto.app`은 다음과 같은 목적으로 최소한의 개인정보를 수집합니다.</p>
+        <ul className="list-disc pl-5 space-y-2 text-white">
           <li><strong>전자결제 및 거래:</strong> 원활한 거래 이행 및 고객 응대를 위해 <strong>전화번호, 주소, 이메일</strong>을 수집합니다.</li>
           <li><strong>서비스 운영:</strong> 디지털 사진첩 생성 및 관리, 본인 식별 및 서비스 부정 이용 방지.</li>
         </ul>
@@ -22,7 +22,7 @@ export default function PrivacyPolicy() {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-3 text-blue-700">2. 개인정보의 보유 및 이용 기간</h2>
-        <ul className="list-disc pl-5 space-y-2">
+        <ul className="list-disc pl-5 space-y-2 text-white">
           <li><strong>거래 관련 기록:</strong> 관련 법령에 따라 결제 및 공급 기록을 <strong>5년간</strong> 보관합니다.</li>
           <li><strong>정책에 따른 폐기:</strong> 보안 강화, 법률 변경 또는 서비스 운영 방침에 따라 필요한 경우, 운영진은 <strong>사전 고지 없이 정보를 폐기</strong>할 수 있습니다.</li>
         </ul>
@@ -41,15 +41,11 @@ export default function PrivacyPolicy() {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-3 text-blue-700">4. 개인정보 보호책임자</h2>
         <div className="bg-gray-50 p-4 rounded border">
-          <p><strong>성명:</strong> 태영 (Taeyoung)</p>
-          <p><strong>이메일:</strong> <a href="mailto:tseon@opuscore.net" className="underline text-blue-600">tseon@opuscore.net</a></p>
+          <p><strong>담당자:</strong> 선태영</p>
+          <p><strong>이메일:</strong> info@choicephoto.app</p>
           <p><strong>도메인:</strong> choicephoto.app</p>
         </div>
       </section>
-
-      <footer className="mt-12 pt-6 border-t text-xs text-gray-400 text-center">
-        &copy; 2026 choicephoto.app. All rights reserved.
-      </footer>
     </div>
   );
 }
