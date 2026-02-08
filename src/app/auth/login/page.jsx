@@ -13,7 +13,7 @@ import Label from '@/components/atoms/Label/Label';
 import { http } from '@/lib/http/client';
 import styles from './page.module.css';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
 
 const EMAIL_MIN_LENGTH = 8;
 const PASSWORD_MIN_LENGTH = 8;
