@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import SubHeader from '@/components/organisms/SubHeader/SubHeader';
 import CardOriginal from '@/components/organisms/CardOriginal/CardOriginal';
 import CardSellingListModal from '@/components/organisms/CardSellingListModal/CardSellingListModal';
-import BigSpinner from '@/components/BigSpinner'; 
 import { http } from '@/lib/http/client';
 import styles from './page.module.css';
 
@@ -63,33 +62,26 @@ export default function MarketplacePage() {
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // 1. Authentication Guard Effect
+  // 1. Fetch current user (optional — marketplace is viewable without login)
   useEffect(() => {
     let isMounted = true;
 
     async function fetchUser() {
       try {
         const { data } = await http.get('/users/me');
-        if (isMounted) {
-          setCurrentUser(data?.user ?? null);
-          // Small delay to ensure the spinner is visible before transitioning
-          setTimeout(() => {
-            if (isMounted) setUserLoading(false);
-          }, 200); 
-        }
+        if (isMounted) setCurrentUser(data?.user ?? null);
       } catch (err) {
         if (err?.response?.status === 401) {
-          const redirectTo = err?.response?.data?.redirectTo;
-          router.replace(redirectTo || '/auth/login');
-        } else {
-          if (isMounted) setUserLoading(false);
+          if (isMounted) setCurrentUser(null);
         }
+      } finally {
+        if (isMounted) setUserLoading(false);
       }
     }
 
     fetchUser();
     return () => { isMounted = false; };
-  }, [router]);
+  }, []);
 
   // 2. Data Fetching Effect
   const fetchListings = useCallback(async (cursor = null, append = false) => {
@@ -121,11 +113,8 @@ export default function MarketplacePage() {
   }, []);
 
   useEffect(() => {
-    // Only fetch listings once we know the user is authenticated
-    if (!userLoading) {
-      fetchListings();
-    }
-  }, [userLoading, fetchListings]);
+    fetchListings();
+  }, [fetchListings]);
 
   // --- MEMOIZED VALUES ---
   const cards = useMemo(() => listings, [listings]);
@@ -158,17 +147,19 @@ export default function MarketplacePage() {
     return () => obs.disconnect();
   }, [loadMore]);
 
-  // --- CRITICAL: SPINNER RENDER ---
-  // We return the spinner if userLoading is true OR if there is no user yet (and we're not redirected)
-  if (userLoading) {
-    return <BigSpinner />;
-  }
+  // --- MAIN UI RENDER (login not required to view marketplace) ---
+  const handleSellClick = () => {
+    if (!currentUser) {
+      router.replace('/auth/login');
+      return;
+    }
+    setIsSellingModalOpen(true);
+  };
 
-  // --- MAIN UI RENDER ---
   return (
     <div className="w-full bg-black text-white">
       <SubHeader
-        onSellClick={() => setIsSellingModalOpen(true)}
+        onSellClick={handleSellClick}
         filters={filters}
         onFiltersChange={setFilters}
         cards={cards}

@@ -161,9 +161,7 @@ export default function MarketplaceCardPurchasePage() {
         setCurrentUser(data?.user ?? null);
       } catch (err) {
         setCurrentUser(null);
-        if (err?.response?.status === 401 && err?.response?.data?.redirectTo) {
-          router.replace(err.response.data.redirectTo);
-        }
+        // Page is viewable without login; no redirect on 401
       }
     }
     fetchCurrentUser();
@@ -192,6 +190,10 @@ export default function MarketplaceCardPurchasePage() {
 
 
   const handlePurchase = () => {
+    if (!currentUser) {
+      router.replace('/auth/login');
+      return;
+    }
     setPurchaseError(null);
     setIsPurchaseModalOpen(true);
   };
