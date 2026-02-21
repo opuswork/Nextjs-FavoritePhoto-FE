@@ -29,9 +29,24 @@ function listingToCard(item) {
   };
 }
 
-function filterCards(cards, filters) {
+function filterCards(cards, filters, searchQuery = '') {
   const { rarity, genre, soldout } = filters || {};
+  const query = (searchQuery || '').trim().toLowerCase();
   return cards.filter((c) => {
+    if (query) {
+      const description = (c.description ?? '').toLowerCase();
+      const owner = (c.owner ?? '').toLowerCase();
+      const category = (c.category ?? '').toLowerCase();
+      const rarityLabel = (c.rarity ?? '').toLowerCase();
+      const price = (c.price ?? '').toLowerCase();
+      const match =
+        description.includes(query) ||
+        owner.includes(query) ||
+        category.includes(query) ||
+        rarityLabel.includes(query) ||
+        price.includes(query);
+      if (!match) return false;
+    }
     if (rarity && rarity !== 'all') {
       const r = { common: 'COMMON', rare: 'RARE', superRare: 'SUPER RARE', legendary: 'LEGENDARY' }[rarity];
       if (r && c.rarity !== r) return false;
@@ -52,6 +67,7 @@ export default function MarketplacePage() {
 
   // --- OTHER STATES ---
   const [isSellingModalOpen, setIsSellingModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({ rarity: 'all', genre: 'all', soldout: 'all' });
   const [displayCount, setDisplayCount] = useState(INITIAL_COUNT);
   const loadMoreRef = useRef(null);
@@ -118,13 +134,16 @@ export default function MarketplacePage() {
 
   // --- MEMOIZED VALUES ---
   const cards = useMemo(() => listings, [listings]);
-  const filteredCards = useMemo(() => filterCards(cards, filters), [cards, filters]);
+  const filteredCards = useMemo(
+    () => filterCards(cards, filters, searchQuery),
+    [cards, filters, searchQuery],
+  );
   const visibleCards = useMemo(() => filteredCards.slice(0, displayCount), [filteredCards, displayCount]);
   const hasMore = displayCount < filteredCards.length || nextCursor != null;
 
   useEffect(() => {
     setDisplayCount(INITIAL_COUNT);
-  }, [filters]);
+  }, [filters, searchQuery]);
 
   const loadMore = useCallback(
     (entries) => {
@@ -160,6 +179,8 @@ export default function MarketplacePage() {
     <div className="w-full bg-black text-white">
       <SubHeader
         onSellClick={handleSellClick}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
         filters={filters}
         onFiltersChange={setFilters}
         cards={cards}
@@ -172,7 +193,9 @@ export default function MarketplacePage() {
           <div className={styles.cardGrid}>{error}</div>
         ) : visibleCards.length === 0 ? (
           <div className={styles.cardGrid}>
-            <div className={styles.emptyState}>등록된 카드가 없습니다.</div>
+            <div className={styles.emptyState}>
+              {searchQuery.trim() ? '검색 결과가 없습니다.' : '등록된 카드가 없습니다.'}
+            </div>
           </div>
         ) : (
           <>
