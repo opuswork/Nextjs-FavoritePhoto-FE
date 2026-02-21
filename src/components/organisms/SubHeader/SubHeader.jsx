@@ -11,11 +11,16 @@ import styles from './SubHeader.module.css';
 
 export default function SubHeader({
   onSellClick,
+  searchQuery: controlledSearchQuery,
+  onSearchChange,
   filters: controlledFilters,
   onFiltersChange,
   cards = [],
 }) {
-  const [search, setSearch] = useState('');
+  const [internalSearch, setInternalSearch] = useState('');
+  const search = controlledSearchQuery !== undefined ? controlledSearchQuery : internalSearch;
+  const setSearch = onSearchChange ?? setInternalSearch;
+
   const [sort, setSort] = useState('lowPrice');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [internalFilters, setInternalFilters] = useState({ rarity: 'all', genre: 'all', soldout: 'all' });
@@ -98,7 +103,7 @@ export default function SubHeader({
           <div className={`mt-5 ${styles.desktopFilterArea}`}>
             <div className={styles.desktopSearchWrap}>
               <InputSearch
-                placeholder="검색"
+                placeholder="카드 설명, 판매자, 장르, 등급, 가격으로 검색"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onClick={() => {}}
@@ -145,7 +150,7 @@ export default function SubHeader({
         <div className={styles.mobileSearchWrap} style={{ padding: '11px 20px' }}>
           <InputSearch
             className={styles.mobileSearchInput}
-            placeholder="검색"
+            placeholder="카드 설명, 판매자, 장르, 등급, 가격으로 검색"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onClick={() => {}}
