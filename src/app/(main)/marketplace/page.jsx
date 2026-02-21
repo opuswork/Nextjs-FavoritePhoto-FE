@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import SubHeader from '@/components/organisms/SubHeader/SubHeader';
 import CardOriginal from '@/components/organisms/CardOriginal/CardOriginal';
 import CardSellingListModal from '@/components/organisms/CardSellingListModal/CardSellingListModal';
+import BigSpinner from '@/components/BigSpinner';
 import { http } from '@/lib/http/client';
 import styles from './page.module.css';
 
@@ -214,6 +215,10 @@ export default function MarketplacePage() {
     setIsSellingModalOpen(true);
   };
 
+  if (loading) {
+    return <BigSpinner />;
+  }
+
   return (
     <div className="w-full bg-black text-white">
       <SubHeader
@@ -228,9 +233,7 @@ export default function MarketplacePage() {
       />
 
       <div className={`mx-auto w-full max-w-[1280px] px-5 py-10 ${styles.listWrapper}`}>
-        {loading ? (
-          <div className={styles.cardGrid}>로딩 중...</div>
-        ) : error ? (
+        {error ? (
           <div className={styles.cardGrid}>{error}</div>
         ) : visibleCards.length === 0 ? (
           <div className={styles.cardGrid}>
