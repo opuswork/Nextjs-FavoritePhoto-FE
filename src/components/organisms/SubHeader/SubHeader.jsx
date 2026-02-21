@@ -15,13 +15,17 @@ export default function SubHeader({
   onSearchChange,
   filters: controlledFilters,
   onFiltersChange,
+  sortOrder: controlledSortOrder,
+  onSortChange,
   cards = [],
 }) {
   const [internalSearch, setInternalSearch] = useState('');
   const search = controlledSearchQuery !== undefined ? controlledSearchQuery : internalSearch;
   const setSearch = onSearchChange ?? setInternalSearch;
 
-  const [sort, setSort] = useState('lowPrice');
+  const [internalSort, setInternalSort] = useState('lowPrice');
+  const sort = controlledSortOrder !== undefined ? controlledSortOrder : internalSort;
+  const setSort = onSortChange ?? setInternalSort;
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [internalFilters, setInternalFilters] = useState({ rarity: 'all', genre: 'all', soldout: 'all' });
 

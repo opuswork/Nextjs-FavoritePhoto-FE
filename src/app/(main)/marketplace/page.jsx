@@ -89,6 +89,7 @@ export default function MarketplacePage() {
   const [isSellingModalOpen, setIsSellingModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({ rarity: 'all', genre: 'all', soldout: 'all' });
+  const [sortOrder, setSortOrder] = useState('lowPrice');
   const [displayCount, setDisplayCount] = useState(INITIAL_COUNT);
   const loadMoreRef = useRef(null);
 
@@ -152,30 +153,48 @@ export default function MarketplacePage() {
     fetchListings();
   }, [fetchListings]);
 
+  /** 카드 가격 숫자 추출 (예: "100 P" → 100) */
+  const getPriceValue = useCallback((c) => {
+    const match = String(c?.price ?? '').replace(/\s*P.*$/i, '').trim();
+    const n = parseInt(match, 10);
+    return Number.isNaN(n) ? 0 : n;
+  }, []);
+
   // --- MEMOIZED VALUES ---
   const cards = useMemo(() => listings, [listings]);
   const filteredCards = useMemo(
     () => filterCards(cards, filters, searchQuery),
     [cards, filters, searchQuery],
   );
-  const visibleCards = useMemo(() => filteredCards.slice(0, displayCount), [filteredCards, displayCount]);
-  const hasMore = displayCount < filteredCards.length || nextCursor != null;
+  const sortedCards = useMemo(() => {
+    const list = [...filteredCards];
+    if (sortOrder === 'lowPrice') {
+      list.sort((a, b) => getPriceValue(a) - getPriceValue(b));
+    } else if (sortOrder === 'highPrice') {
+      list.sort((a, b) => getPriceValue(b) - getPriceValue(a));
+    } else if (sortOrder === 'newest') {
+      list.sort((a, b) => (Number(b?.id) || 0) - (Number(a?.id) || 0));
+    }
+    return list;
+  }, [filteredCards, sortOrder, getPriceValue]);
+  const visibleCards = useMemo(() => sortedCards.slice(0, displayCount), [sortedCards, displayCount]);
+  const hasMore = displayCount < sortedCards.length || nextCursor != null;
 
   useEffect(() => {
     setDisplayCount(INITIAL_COUNT);
-  }, [filters, searchQuery]);
+  }, [filters, searchQuery, sortOrder]);
 
   const loadMore = useCallback(
     (entries) => {
       const [entry] = entries;
       if (!entry?.isIntersecting || loadMoreLoading) return;
-      if (displayCount < filteredCards.length) {
-        setDisplayCount((n) => Math.min(n + LOAD_MORE_COUNT, filteredCards.length));
+      if (displayCount < sortedCards.length) {
+        setDisplayCount((n) => Math.min(n + LOAD_MORE_COUNT, sortedCards.length));
       } else if (nextCursor != null) {
         fetchListings(nextCursor, true);
       }
     },
-    [displayCount, filteredCards.length, nextCursor, loadMoreLoading, fetchListings],
+    [displayCount, sortedCards.length, nextCursor, loadMoreLoading, fetchListings],
   );
 
   useEffect(() => {
@@ -203,6 +222,8 @@ export default function MarketplacePage() {
         onSearchChange={setSearchQuery}
         filters={filters}
         onFiltersChange={setFilters}
+        sortOrder={sortOrder}
+        onSortChange={setSortOrder}
         cards={cards}
       />
 
