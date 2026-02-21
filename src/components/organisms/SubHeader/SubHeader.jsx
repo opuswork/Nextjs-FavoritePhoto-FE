@@ -45,6 +45,7 @@ export default function SubHeader({
       { value: 'common', label: 'COMMON' },
       { value: 'rare', label: 'RARE' },
       { value: 'superRare', label: 'SUPER RARE' },
+      { value: 'epic', label: 'EPIC' },
       { value: 'legendary', label: 'LEGENDARY' },
     ],
     [],
@@ -55,8 +56,8 @@ export default function SubHeader({
       { value: 'all', label: '장르' },
       { value: '풍경', label: '풍경' },
       { value: '여행', label: '여행' },
-      { value: 'portrait', label: '인물' },
-      { value: 'animal', label: '동물' },
+      { value: '인물', label: '인물' },
+      { value: '동물', label: '동물' },
     ],
     [],
   );
@@ -82,6 +83,27 @@ export default function SubHeader({
   const handleFilterApply = (next) => {
     setFilters?.(next);
     setIsFilterOpen(false);
+  };
+
+  // 한 번에 한 가지 필터만 적용: 하나가 선택되면 나머지 두 개는 비활성화
+  const hasRarity = rarity !== 'all';
+  const hasGenre = genre !== 'all';
+  const hasSoldout = soldout !== 'all';
+  const disabledRarity = hasGenre || hasSoldout;
+  const disabledGenre = hasRarity || hasSoldout;
+  const disabledSoldout = hasRarity || hasGenre;
+
+  const handleRarityChange = (e) => {
+    const v = e.target.value;
+    setFilters?.({ rarity: v, genre: 'all', soldout: 'all' });
+  };
+  const handleGenreChange = (e) => {
+    const v = e.target.value;
+    setFilters?.({ genre: v, rarity: 'all', soldout: 'all' });
+  };
+  const handleSoldoutChange = (e) => {
+    const v = e.target.value;
+    setFilters?.({ soldout: v, rarity: 'all', genre: 'all' });
   };
 
   return (
@@ -115,21 +137,24 @@ export default function SubHeader({
                 <DropDown
                   options={rarityOptions}
                   value={rarity}
-                  onChange={(e) => setFilters({ ...filters, rarity: e.target.value })}
+                  onChange={handleRarityChange}
+                  disabled={disabledRarity}
                 />
               </div>
               <div className={styles.desktopDropdownItem}>
                 <DropDown
                   options={genreOptions}
                   value={genre}
-                  onChange={(e) => setFilters({ ...filters, genre: e.target.value })}
+                  onChange={handleGenreChange}
+                  disabled={disabledGenre}
                 />
               </div>
               <div className={styles.desktopDropdownItem}>
                 <DropDown
                   options={soldoutOptions}
                   value={soldout}
-                  onChange={(e) => setFilters({ ...filters, soldout: e.target.value })}
+                  onChange={handleSoldoutChange}
+                  disabled={disabledSoldout}
                 />
               </div>
             </div>

@@ -23,6 +23,12 @@
   background-color: #111;
 }
 
+.trigger:disabled,
+.trigger[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .value {
   flex: 1;
   text-align: center;
