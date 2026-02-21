@@ -29,6 +29,23 @@ function listingToCard(item) {
   };
 }
 
+/** 등급 문자열 정규화 (API 대소문자/공백 무관) */
+function normalizeRarity(rarity) {
+  if (rarity == null || rarity === '') return 'COMMON';
+  const s = String(rarity).toUpperCase().trim().replace(/\s+/g, ' ').replace(/_/g, ' ');
+  if (s === 'COMMON' || s === 'RARE' || s === 'LEGENDARY' || s === 'EPIC') return s;
+  if (s === 'SUPER RARE' || s === 'SUPERRARE') return 'SUPER RARE';
+  return 'COMMON';
+}
+
+const RARITY_FILTER_MAP = {
+  common: 'COMMON',
+  rare: 'RARE',
+  superRare: 'SUPER RARE',
+  epic: 'EPIC',
+  legendary: 'LEGENDARY',
+};
+
 function filterCards(cards, filters, searchQuery = '') {
   const { rarity, genre, soldout } = filters || {};
   const query = (searchQuery || '').trim().toLowerCase();
@@ -47,13 +64,16 @@ function filterCards(cards, filters, searchQuery = '') {
         price.includes(query);
       if (!match) return false;
     }
+    // 한 번에 한 가지 필터만 적용 (우선순위: 등급 > 장르 > 매진여부)
     if (rarity && rarity !== 'all') {
-      const r = { common: 'COMMON', rare: 'RARE', superRare: 'SUPER RARE', legendary: 'LEGENDARY' }[rarity];
-      if (r && c.rarity !== r) return false;
+      const r = RARITY_FILTER_MAP[rarity];
+      return r ? normalizeRarity(c.rarity) === r : true;
     }
-    if (genre && genre !== 'all' && c.category !== genre) return false;
-    if (soldout === 'soldout' && c.remaining > 0) return false;
-    if (soldout === 'available' && c.remaining === 0) return false;
+    if (genre && genre !== 'all') {
+      return (c.category || '').trim() === (genre || '').trim();
+    }
+    if (soldout === 'soldout') return c.remaining === 0;
+    if (soldout === 'available') return c.remaining > 0;
     return true;
   });
 }

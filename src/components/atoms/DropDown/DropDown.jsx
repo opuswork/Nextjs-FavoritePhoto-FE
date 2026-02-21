@@ -10,6 +10,7 @@ export default function DropDown({
   onChange,
   className,
   wrapperStyle,
+  disabled = false,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
@@ -47,7 +48,9 @@ export default function DropDown({
         className={styles.trigger}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        onClick={() => setIsOpen((v) => !v)}
+        aria-disabled={disabled}
+        disabled={disabled}
+        onClick={() => !disabled && setIsOpen((v) => !v)}
       >
         <span className={styles.value}>
           {selectedOption?.label ?? '선택'}

@@ -25,13 +25,29 @@ const RARITY_COLORS = {
   COMMON: '#FFD700',
   RARE: '#60a5fa',
   'SUPER RARE': '#9D4EDD',
+  EPIC: '#9D4EDD',
   LEGENDARY: '#FF1744',
 };
 
+/** API/카드에서 오는 등급 문자열을 통일된 키로 정규화 (대소문자·공백·언더스코어 무관) */
+function normalizeRarityKey(rarity) {
+  if (rarity == null || rarity === '') return 'COMMON';
+  const s = String(rarity).toUpperCase().trim().replace(/\s+/g, ' ').replace(/_/g, ' ');
+  if (s === 'COMMON') return 'COMMON';
+  if (s === 'RARE') return 'RARE';
+  if (s === 'LEGENDARY') return 'LEGENDARY';
+  if (s === 'EPIC') return 'EPIC';
+  if (s === 'SUPER RARE' || s === 'SUPERRARE') return 'SUPER RARE';
+  return 'COMMON';
+}
+
+const RARITY_MAP = { COMMON: 0, RARE: 0, 'SUPER RARE': 0, EPIC: 0, LEGENDARY: 0 };
+
 function countByGrade(cards) {
-  const map = { COMMON: 0, RARE: 0, 'SUPER RARE': 0, LEGENDARY: 0 };
+  const map = { ...RARITY_MAP };
   cards.forEach((c) => {
-    if (map[c.rarity] !== undefined) map[c.rarity]++;
+    const key = normalizeRarityKey(c.rarity);
+    if (map[key] !== undefined) map[key]++;
   });
   return map;
 }
@@ -39,7 +55,8 @@ function countByGrade(cards) {
 function countByGenre(cards) {
   const map = {};
   cards.forEach((c) => {
-    map[c.category] = (map[c.category] || 0) + 1;
+    const key = String(c.category ?? '').trim();
+    if (key) map[key] = (map[key] || 0) + 1;
   });
   return map;
 }
@@ -77,16 +94,16 @@ export default function FilterBottomSheet({
   const genreCounts = useMemo(() => countByGenre(cards), [cards]);
   const soldCounts = useMemo(() => countSold(cards), [cards]);
 
-  const rarityToCard = { common: 'COMMON', rare: 'RARE', superRare: 'SUPER RARE', legendary: 'LEGENDARY' };
+  const rarityToCard = { common: 'COMMON', rare: 'RARE', superRare: 'SUPER RARE', epic: 'EPIC', legendary: 'LEGENDARY' };
   const filteredCount = useMemo(() => {
     return cards.filter((c) => {
       if (rarity !== 'all') {
         const r = rarityToCard[rarity];
-        if (r && c.rarity !== r) return false;
+        return r ? normalizeRarityKey(c.rarity) === r : true;
       }
-      if (genre !== 'all' && c.category !== genre) return false;
-      if (soldout === 'soldout' && c.remaining > 0) return false;
-      if (soldout === 'available' && c.remaining === 0) return false;
+      if (genre !== 'all') return (c.category || '').trim() === (genre || '').trim();
+      if (soldout === 'soldout') return c.remaining === 0;
+      if (soldout === 'available') return c.remaining > 0;
       return true;
     }).length;
   }, [cards, rarity, genre, soldout]);
@@ -107,6 +124,7 @@ export default function FilterBottomSheet({
     { value: 'common', label: 'COMMON', count: gradeCounts.COMMON ?? 0 },
     { value: 'rare', label: 'RARE', count: gradeCounts.RARE ?? 0 },
     { value: 'superRare', label: 'SUPER RARE', count: gradeCounts['SUPER RARE'] ?? 0 },
+    { value: 'epic', label: 'EPIC', count: gradeCounts.EPIC ?? 0 },
     { value: 'legendary', label: 'LEGENDARY', count: gradeCounts.LEGENDARY ?? 0 },
   ];
 
@@ -162,7 +180,11 @@ export default function FilterBottomSheet({
                 key={opt.value}
                 type="button"
                 className={styles.optionRow}
-                onClick={() => setRarity(opt.value)}
+                onClick={() => {
+                  setRarity(opt.value);
+                  setGenre('all');
+                  setSoldout('all');
+                }}
               >
                 <span
                   className={styles.optionLabel}
@@ -179,7 +201,11 @@ export default function FilterBottomSheet({
                 key={opt.value}
                 type="button"
                 className={styles.optionRow}
-                onClick={() => setGenre(opt.value)}
+                onClick={() => {
+                  setGenre(opt.value);
+                  setRarity('all');
+                  setSoldout('all');
+                }}
               >
                 <span className={styles.optionLabel}>{opt.label}</span>
                 <span className={styles.optionCount}>{opt.count}개</span>
@@ -191,7 +217,11 @@ export default function FilterBottomSheet({
                 key={opt.value}
                 type="button"
                 className={styles.optionRow}
-                onClick={() => setSoldout(opt.value)}
+                onClick={() => {
+                  setSoldout(opt.value);
+                  setRarity('all');
+                  setGenre('all');
+                }}
               >
                 <span className={styles.optionLabel}>{opt.label}</span>
                 <span className={styles.optionCount}>{opt.count}개</span>
