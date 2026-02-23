@@ -33,12 +33,12 @@ export default function Home() {
         <div className="relative z-10 h-[40%] pt-[32px] md:pt-[50px] lg:pt-[70px] flex justify-center text-center">
           <Container>
             <div className="mx-auto w-full max-w-[720px]">
-              <p className="text-[18px] font-semibold tracking-[-0.02em]">최애의포토</p>
+              <p className="text-[18px] font-semibold tracking-[-0.02em]">초이스포토</p>
 
               <h1 className="mt-[18px] text-[12px] md:text-[24px] lg:text-[34px] leading-[1.25] font-bold tracking-[-0.02em]">
                 구하기 어려웠던
                 <br />
-                <span className="text-lime-400">나의 최애</span>가 여기에!
+                <span className="text-lime-400">나만의 초이스</span>가 여기에!
               </h1>
 
               <div className="mt-[28px] flex justify-center">
@@ -46,7 +46,7 @@ export default function Home() {
                   href="/marketplace"
                   className="inline-flex items-center justify-center gap-2.5 w-[226px] h-[55px] rounded-[2px] border border-[#efff04] bg-[#efff04] text-black font-bold text-[16px] leading-none whitespace-nowrap no-underline hover:opacity-90"
                 >
-                  최애 찾으러 가기
+                  초이스 찾으러 가기
                 </Link>
               </div>
             </div>
@@ -218,7 +218,7 @@ export default function Home() {
 
                 {/* 텍스트 */}
                 <h2 className="mt-3 text-[11px] md:text-base text-neutral-300">
-                  나의 최애를 지금 찾아보세요!
+                  나만만의 초이스를 지금 찾아보세요!
                 </h2>
 
                 <div className="mt-[24px]">
@@ -226,12 +226,12 @@ export default function Home() {
                     href="/marketplace"
                     className="inline-flex items-center justify-center w-[266px] h-[55px] rounded-[2px] border border-[#efff04] bg-[#efff04] text-black font-bold text-[16px] leading-none whitespace-nowrap no-underline hover:opacity-90"
                   >
-                    최애 찾으러 가기
+                    초이스 찾으러 가기
                   </Link>
                 </div>
 
                 <div className="mt-12 flex flex-col items-center justify-center gap-2 px-4 text-center text-sm text-white/70">
-                  <span>@ 2026 최애의포토. All rights reserved.</span>
+                  <span>@2026. 초이스포토. All rights reserved.</span>
                   <div className="flex items-center gap-2">
                     <span><Link href="/about/privacy">개인정보처리방침</Link></span>
                     <span aria-hidden className="text-white/40">|</span>
