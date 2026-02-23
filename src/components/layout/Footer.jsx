@@ -58,16 +58,16 @@ export default function Footer() {
           textAlign: 'center',
         }}
       >
-        나의 최애를 지금 찾아보세요!
+        나만만의 초이스를 지금 찾아보세요!
       </Label>
 
       {/* Call-to-Action Button */}
       <ResponsiveButton href="/marketplace">
-        최애 찾으러 가기
+        초이스 찾으러 가기
       </ResponsiveButton>
 
       <div className="mt-12 flex flex-col items-center justify-center gap-2 px-4 text-center text-sm text-white/70">
-        <span>@ 2026 최애의포토. All rights reserved.</span>
+        <span>@ 초이스포토. All rights reserved.</span>
         <div className="flex items-center gap-2">
           <span>개인정보처리방침</span>
           <span aria-hidden className="text-white/40">|</span>

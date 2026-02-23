@@ -429,7 +429,7 @@ export default function Header({ onOpenAlarm }) {
             href="/"
             className="flex flex-1 justify-center text-[20px] font-extrabold text-white no-underline min-[500px]:text-[24px]"
           >
-            최애<span className="text-yellow-300">의</span>포토
+            <span className="text-yellow-300">초이스</span>포토
           </Link>
           <div className="flex min-w-0 flex-1 justify-end">
             {authLoading ? (
