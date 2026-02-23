@@ -236,7 +236,7 @@ export default function Header({ onOpenAlarm }) {
         {/* Desktop (>= 768px) */}
         <div className="hidden min-[768px]:flex min-[768px]:w-full min-[768px]:items-center min-[768px]:justify-between">
           <Link href="/" className="text-[24px] font-extrabold text-white no-underline">
-            최애<span className="text-yellow-300">의</span>포토
+            <span className="text-yellow-300">초이스</span>포토
           </Link>
           <div className="flex items-center gap-4 text-sm text-white/80">
             {authLoading ? (
