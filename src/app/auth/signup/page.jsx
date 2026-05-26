@@ -167,7 +167,7 @@ export default function SignupPage() {
       <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
         <div className={styles.form}>
           <h1 className={styles.logo}>
-            최애<span className={styles.logoAccent}>의</span>포토
+            <span className={styles.logoAccent}>초이스</span>포토
           </h1>
           <span className="inline-flex items-center justify-center" aria-hidden>
             <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/50 border-t-transparent" />
@@ -182,7 +182,7 @@ export default function SignupPage() {
     <div className="min-h-full w-full bg-black flex flex-col items-center justify-center px-4 py-8">
       <form onSubmit={handleSubmit} className={styles.form} noValidate>
         <h1 className={styles.logo}>
-          <Link href="/" className={styles.logoLink}>최애<span className={styles.logoAccent}>의</span>포토</Link>
+          <Link href="/" className={styles.logoLink}><span className={styles.logoAccent}>초이스</span>포토</Link>
         </h1>
 
         <div className="w-full">
