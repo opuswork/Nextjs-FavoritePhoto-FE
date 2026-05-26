@@ -78,7 +78,7 @@ export default function CardOriginal({
       {/* Footer Logo */}
       <div className={styles.footer}>
         <span className={styles.logo}>
-          <Image src="/assets/logos/logo.svg" alt="Logo" width={100} height={100} className={styles.logo} />
+          <span className={styles.logoAccent}>초이스</span>포토
         </span>
       </div>
     </div>
